@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "GC '25",
+    "slug": "GC_App_2024",
+    "version": "1.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/appiconwhite.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#000000"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.iitbbs.gcapp"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/GClogo.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.iitbbs.gcapp",
+      "googleServicesFile": "./google-services.json"
+    },
+    "web": {
+      "favicon": "./assets/GClogo.png"
+    },
+    "scheme": "gcapp2024",
+    "extra": {
+      "eas": {
+        "projectId": "4c058831-328a-46c7-afeb-200a24a86a98"
+      }
+    },
+    "plugins": [],
+    "owner": "ayush1108g"
+  }
+}
+
+
