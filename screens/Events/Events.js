@@ -22,7 +22,7 @@ import axios from "axios";
 import { backend_link } from "../../utils/constants";
 
 export default function Events({ route, navigation }) {
-  const field = route?.params?.field || "Sports";
+  const field = route?.params?.field || "ALL";
   const [screen, setScreen] = useState(0); // 0 = ALL, 1 = UPCOMING, 2 = PAST
   const [search, setSearch] = useState("");
   const [refreshing, setRefreshing] = useState(false);

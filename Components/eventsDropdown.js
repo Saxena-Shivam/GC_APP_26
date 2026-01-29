@@ -7,7 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 const CustomHeader = () => {
   const navigation = useNavigation();
   const [visible, setVisible] = useState(false);
-  const [currentField, setCurrentField] = useState("Sports");
+  const [currentField, setCurrentField] = useState("ALL");
   const openMenu = () => setVisible(true);
 
   const closeMenu = () => setVisible(false);
