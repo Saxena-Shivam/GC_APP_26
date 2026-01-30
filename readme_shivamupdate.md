@@ -121,15 +121,14 @@ const getTimestampInMs = (timestamp) => {
 **Features Added**:
 
 - **ALL Button**: Default filter showing all sports events (Live + Upcoming + Past)
-- **PAST Button**: Shows only completed sports events
-- **ONGOING Button**: Shows currently live sports events
 - **UPCOMING Button**: Shows future sports events
+- **PAST Button**: Shows only completed sports events
 
 **Implementation**:
 
 ```javascript
-const [screen, setScreen] = useState(3); // Default to ALL
-// screen === 3: ALL, 2: PAST, 1: ONGOING, 0: UPCOMING
+const [screen, setScreen] = useState(0); // Default to ALL
+// screen === 0: ALL, 1: UPCOMING, 2: PAST
 ```
 
 ---
@@ -186,16 +185,15 @@ if (screen === 1) {
 
 **Features Added**:
 
-- New "ALL" option in event category dropdown
+- New "ALL" option in event category dropdown (default selected)
 - Menu now shows: ALL, Sports, Cultural, Tech
 - When ALL is selected, displays combined events from all three categories
 
 **Filtering Capabilities**:
 
 - ALL button: Shows all events from Sports + Tech + Cultural
-- PAST button: Shows only past events from all categories
-- ONGOING button: Shows only live/ongoing events from all categories
 - UPCOMING button: Shows only upcoming events from all categories
+- PAST button: Shows only past events from all categories
 
 **Data Transformation**:
 

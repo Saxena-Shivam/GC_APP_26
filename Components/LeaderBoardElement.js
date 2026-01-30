@@ -2,30 +2,29 @@ import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
 
 const LeaderBoardElement = (props) => {
   console.log("LeaderBoardElement", props);
+  const logoKey = props.branchData?.Name
+    ? props.branchData.Name.replace(".", "").replace("+", "")
+    : null;
+  const logoSource = logoKey ? props.logoPaths[logoKey] : null;
   return (
-    
-      <View style={styles.LeaderBoardElement}>
-        <View style={styles.LeaderBoardElementText}>
-          <Text style={styles.LeaderBoardSNo}>{props.branchData.rank}</Text>
-          <Image
-            source={
-              props.logoPaths[
-                props.branchData.Name.replace(".", "").replace("+", "")
-              ]
-            }
-            style={styles.LeaderBoardLogo}
-          />
-        </View>
-        <View style={styles.branchname}>
-          <Text style={styles.LeaderBoardNameHolder}>
-            {(props.branchData.Name === "ECE_META" ? "ECE_META_EP" : props.branchData.Name)}
-          </Text>
-        </View>
-        <View style={styles.points}>
-          <Text style={styles.LeaderBoardPoints}>{props.branchData.Score}</Text>
-        </View>
+    <View style={styles.LeaderBoardElement}>
+      <View style={styles.LeaderBoardElementText}>
+        <Text style={styles.LeaderBoardSNo}>{props.branchData.rank}</Text>
+        {logoSource ? (
+          <Image source={logoSource} style={styles.LeaderBoardLogo} />
+        ) : null}
       </View>
-    
+      <View style={styles.branchname}>
+        <Text style={styles.LeaderBoardNameHolder}>
+          {props.branchData.Name === "ECE_META"
+            ? "ECE_META_EP"
+            : props.branchData.Name}
+        </Text>
+      </View>
+      <View style={styles.points}>
+        <Text style={styles.LeaderBoardPoints}>{props.branchData.Score}</Text>
+      </View>
+    </View>
   );
 };
 
@@ -74,8 +73,8 @@ const styles = StyleSheet.create({
   },
   LeaderBoardElementText: {
     flexDirection: "row",
-    alignItems:"center",
-    justifyContent:"space-between",
+    alignItems: "center",
+    justifyContent: "space-between",
     flex: 0.75,
     padding: 20,
   },

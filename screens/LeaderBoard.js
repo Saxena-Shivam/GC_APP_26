@@ -58,13 +58,14 @@ export default function Leaderboard() {
   const [number, setNumber] = useState(0);
 
   useEffect(() => {
-    setInterval(
+    const intervalId = setInterval(
       () => {
-        setNumber(number + 1);
+        setNumber((prev) => prev + 1);
         console.log("Number updated");
       },
       1000 * 60 * 2,
     );
+    return () => clearInterval(intervalId);
   }, []);
   useEffect(() => {
     fetchDataAndUpdateScore("MTech", setBranchesData);
@@ -93,11 +94,16 @@ export default function Leaderboard() {
     fetchlastUpdated();
   }, []);
 
-  BranchesData.sort((a, b) => b.Score - a.Score);
-  const top3 = BranchesData.slice(0, 3);
-  let restData = BranchesData.slice(3).map((item, index) => {
+  const sortedBranches = [...BranchesData].sort((a, b) => b.Score - a.Score);
+  const top3 = sortedBranches.slice(0, 3);
+  let restData = sortedBranches.slice(3).map((item, index) => {
     return { ...item, rank: index + 4 };
   });
+  const getLogoSource = (name) => {
+    if (!name) return null;
+    const key = name.replace(".", "").replace("+", "").replace("-", "");
+    return logoPaths[key] || null;
+  };
   const renderItem = ({ item }) => {
     // console.log(item);
     return (
@@ -114,22 +120,18 @@ export default function Leaderboard() {
             <View style={styles.iconCont}>
               <FontAwesome5 name="crown" size={22} color="#ADABA1" />
             </View>
-            <Image
-              source={
-                logoPaths[
-                  top3[1].Name.replace(".", "")
-                    .replace("+", "")
-                    .replace("-", "")
-                ]
-              }
-              style={{ width: 90, height: 90 }}
-            />
+            {getLogoSource(top3[1]?.Name) ? (
+              <Image
+                source={getLogoSource(top3[1]?.Name)}
+                style={{ width: 90, height: 90 }}
+              />
+            ) : null}
           </View>
           <View style={styles.number2bottom}>
             <Text style={[styles.leadHeading]}>
-              {top3[1].Name === "ECE_META" ? "ECE_META_EP" : top3[1].Name}
+              {top3[1]?.Name === "ECE_META" ? "ECE_META_EP" : top3[1]?.Name}
             </Text>
-            <Text style={styles.leadScore}>{top3[1].Score}</Text>
+            <Text style={styles.leadScore}>{top3[1]?.Score}</Text>
           </View>
         </View>
         <View style={styles.containertop2}>
@@ -138,16 +140,18 @@ export default function Leaderboard() {
               <FontAwesome5 name="crown" size={24} color="#FFAA00" />
             </View>
 
-            <Image
-              source={logoPaths[top3[0].Name.replace(".", "").replace("+", "")]}
-              style={{ width: 100, height: 100 }}
-            />
+            {getLogoSource(top3[0]?.Name) ? (
+              <Image
+                source={getLogoSource(top3[0]?.Name)}
+                style={{ width: 100, height: 100 }}
+              />
+            ) : null}
           </View>
           <View style={styles.number1bottom}>
             <Text style={[styles.leadHeading]}>
-              {top3[0].Name === "ECE_META" ? "ECE_META_EP" : top3[0].Name}
+              {top3[0]?.Name === "ECE_META" ? "ECE_META_EP" : top3[0]?.Name}
             </Text>
-            <Text style={styles.leadScore}>{top3[0].Score}</Text>
+            <Text style={styles.leadScore}>{top3[0]?.Score}</Text>
           </View>
         </View>
         <View style={styles.containertop3}>
@@ -155,16 +159,18 @@ export default function Leaderboard() {
             <View style={styles.iconCont}>
               <FontAwesome5 name="crown" size={20} color="#CB7E32" />
             </View>
-            <Image
-              source={logoPaths[top3[2].Name.replace(".", "").replace("+", "")]}
-              style={{ width: 70, height: 70 }}
-            />
+            {getLogoSource(top3[2]?.Name) ? (
+              <Image
+                source={getLogoSource(top3[2]?.Name)}
+                style={{ width: 70, height: 70 }}
+              />
+            ) : null}
           </View>
           <View style={styles.number3bottom}>
             <Text style={[styles.leadHeading]}>
-              {top3[2].Name === "ECE_META" ? "ECE_META_EP" : top3[2].Name}
+              {top3[2]?.Name === "ECE_META" ? "ECE_META_EP" : top3[2]?.Name}
             </Text>
-            <Text style={styles.leadScore}>{top3[2].Score}</Text>
+            <Text style={styles.leadScore}>{top3[2]?.Score}</Text>
           </View>
         </View>
       </View>

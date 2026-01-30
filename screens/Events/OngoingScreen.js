@@ -5,7 +5,9 @@ import Loader from "../../Components/Loader";
 import { EventsContext } from "../../store/EventsContext"; // Import EventsContext
 
 const sortData = (data) => {
-  return data.sort((a, b) => new Date(a.details.timestamp) - new Date(b.details.timestamp)); // Sort by date ascending
+  return data.sort(
+    (a, b) => new Date(a.details.timestamp) - new Date(b.details.timestamp),
+  ); // Sort by date ascending
 };
 
 function OngoingScreen({ search }) {
@@ -19,19 +21,16 @@ function OngoingScreen({ search }) {
   }, [liveEvents]);
 
   useEffect(() => {
-    if (!liveEvents.length) return; // Prevent filtering if no data is available
-
+    if (!liveEvents.length) return;
     if (search.length === 0) {
-      setFilteredData(sortData(liveEvents)); // Reset if search is empty
+      setFilteredData(sortData(liveEvents));
       return;
     }
-
     const data = liveEvents.filter((item) => {
       let teamA = item?.teamA.toLowerCase();
       let teamB = item?.teamB.toLowerCase();
       let gameName = item?.gameName.toLowerCase();
       const id = item?.id.toLowerCase();
-
       return (
         teamA.includes(search.toLowerCase()) ||
         teamB.includes(search.toLowerCase()) ||
@@ -62,7 +61,12 @@ function OngoingScreen({ search }) {
         keyExtractor={(item, index) => `${item.id}-${item.gameName}-${index}`}
         alwaysBounceVertical={false}
       />
-      <Loader visible={isLoading} top={300} bottom={0} setModalVisible={() => {}} />
+      <Loader
+        visible={isLoading}
+        top={300}
+        bottom={0}
+        setModalVisible={() => {}}
+      />
     </View>
   );
 }

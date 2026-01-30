@@ -157,8 +157,8 @@ function HomepageStackNavigator({ navigation }) {
         component={Homepage}
         options={{
           headerShown: true,
-          headerTitle: ({ key, ...props }) => (
-            <Header {...props} showmodal={true} navigation={navigation} />
+          headerTitle: () => (
+            <Header showmodal={true} navigation={navigation} />
           ), // Pass navigation
           headerStyle: { backgroundColor: "#111319", height: 100 },
         }}
@@ -168,9 +168,7 @@ function HomepageStackNavigator({ navigation }) {
         component={NewsPage}
         options={{
           headerShown: false,
-          headerTitle: ({ key, ...props }) => (
-            <Header {...props} navigation={navigation} />
-          ),
+          headerTitle: () => <Header navigation={navigation} />,
           headerStyle: { backgroundColor: "#111319", height: 100 },
         }}
       />
@@ -179,9 +177,7 @@ function HomepageStackNavigator({ navigation }) {
         component={SpecificNewsPage}
         options={({ route, navigation }) => ({
           data: route.params?.data,
-          headerTitle: ({ key, ...props }) => (
-            <Header navigation={navigation} />
-          ),
+          headerTitle: () => <Header navigation={navigation} />,
           headerTintColor: "white",
           headerStyle: { backgroundColor: "#111319", height: 100 },
         })}
@@ -191,9 +187,7 @@ function HomepageStackNavigator({ navigation }) {
         component={CreditsPage}
         options={({ route }) => ({
           headerShown: false,
-          headerTitle: ({ key, ...props }) => (
-            <Header {...props} navigation={navigation} />
-          ),
+          headerTitle: () => <Header navigation={navigation} />,
           headerStyle: { backgroundColor: "#111319", height: 100 },
         })}
       />
@@ -423,7 +417,6 @@ export default function AllTabs() {
         component={TeamPoints}
         options={({ route }) => ({
           branch: route.params?.branch,
-          key: Math.random().toString(),
           tabBarIcon: ({ focused, color, size }) => (
             <TouchableOpacity onPress={handleTabPress}>
               <Icon
