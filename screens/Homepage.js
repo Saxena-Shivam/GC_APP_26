@@ -59,45 +59,11 @@ const banners = {
 
 function TeamCard({ navigation, branchCoords }) {
   const [loading, setLoading] = useState(true);
-  const { liveEvents, upcomingEvents, isLoading } = useContext(EventsContext);
+  const { liveEvents, upcomingEvents, isLoading, techData, cultData } =
+    useContext(EventsContext);
   const [allEvents, setAllEvents] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef(null);
-  const [techData, setTechData] = useState([]);
-  const [cultData, setCultData] = useState([]);
-
-  // Fetch tech events
-  const fetchTechData = async () => {
-    try {
-      const response = await axios.get(
-        backend_link + "api/event/getEventByCategory?category=tech",
-      );
-      const data = response.data.events || [];
-      const techdata = data.filter((item) => item !== null);
-      setTechData(techdata);
-    } catch (error) {
-      console.log("Error fetching tech events:", error);
-    }
-  };
-
-  // Fetch cult events
-  const fetchCultData = async () => {
-    try {
-      const response = await axios.get(
-        backend_link + "api/event/getEventByCategory?category=cult",
-      );
-      const data = response.data.events || [];
-      const cultdata = data.filter((item) => item !== null);
-      setCultData(cultdata);
-    } catch (error) {
-      console.log("Error fetching cult events:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchTechData();
-    fetchCultData();
-  }, []);
 
   useEffect(() => {
     // Combine sports events with tech/cult events
@@ -676,7 +642,10 @@ export default function HomePage({ navigation }) {
   });
 
   return (
-    <SafeAreaView style={leaderboardStyles.container}>
+    <SafeAreaView
+      style={leaderboardStyles.container}
+      {...panResponderRef.current?.panHandlers}
+    >
       <View style={{ height: 360, width: "auto", marginBottom: 10 }}>
         <TeamCard navigation={navigation} branchCoords={branchCoords} />
       </View>
@@ -701,10 +670,7 @@ export default function HomePage({ navigation }) {
         style={styles.container}
         android_ripple={{ color: "rgba(212, 29, 119, 0.1)" }}
       >
-        <View
-          style={styles.containertop}
-          {...panResponderRef.current?.panHandlers}
-        >
+        <View style={styles.containertop}>
           <View style={styles.containertop1}>
             <View style={styles.number2top}>
               <View style={styles.iconCont}>

@@ -40,13 +40,13 @@ async function handleClick(
   betTeamName,
   teamNameA,
   teamNameB,
-  navigation
+  navigation,
 ) {
   // console.log(LoginCtx.user.email);
   try {
     // ✅ Fetch the existing event data
     const response = await axios.get(
-      `${backend_link}api/event/getUpcomingEventsById?eventId=${eventName}`
+      `${backend_link}api/event/getUpcomingEventsById?eventId=${eventName}`,
     );
 
     console.log("Event ID:", eventId);
@@ -79,8 +79,13 @@ async function handleClick(
     if (userInTeamA || userInTeamB) {
       Alert.alert(
         "Bet Already Placed",
-        `You have already placed a bet on Team ${userInTeamA ? teamNameA : teamNameB }`,
-        [{ text: "OK", onPress: () => navigation.navigate("EventsStack",{reloader:1}) }]
+        `You have already placed a bet on Team ${userInTeamA ? teamNameA : teamNameB}`,
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.navigate("EventsStack", { reloader: 1 }),
+          },
+        ],
       );
       return; // ✅ Do NOT send a request to the backend
     }
@@ -122,13 +127,13 @@ async function handleClick(
 
     console.log(
       "Sending data to API:",
-      JSON.stringify(updatedEventData, null, 2)
+      JSON.stringify(updatedEventData, null, 2),
     );
 
     // ✅ Make API call to update the database
     const res = await axios.post(
       `${backend_link}api/event/scheduleLiveEventWithBets`,
-      updatedEventData
+      updatedEventData,
     );
 
     console.log("API Response:", res.data);
@@ -136,10 +141,13 @@ async function handleClick(
     Alert.alert(
       "Bet Placed",
       `Your bet on ${betTeamName === "A" ? teamNameA : teamNameB} has been placed successfully.`,
-      [{ text: "OK", onPress: () => navigation.navigate("EventsStack",{reloader:1}) }]
+      [
+        {
+          text: "OK",
+          onPress: () => navigation.navigate("EventsStack", { reloader: 1 }),
+        },
+      ],
     );
-
-
   } catch (error) {
     console.error("Error updating bets:", error.message);
   }
@@ -154,7 +162,7 @@ async function handleClick(
 //   );
 // }
 
-export default function BettingScreen({ route, navigation}) {
+export default function BettingScreen({ route, navigation }) {
   const props = route.params.data;
   const timestamp = props.details?.timestamp;
   const date = new Date(timestamp);
@@ -182,7 +190,12 @@ export default function BettingScreen({ route, navigation}) {
       Alert.alert(
         "Bet Already Placed",
         `You have already placed a bet on ${userInA ? props.teamA : props.teamB}`,
-        [{ text: "OK", onPress: () => navigation.navigate("EventsStack",{reloader:1}) }]
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.navigate("EventsStack", { reloader: 1 }),
+          },
+        ],
       );
       return;
     }
@@ -194,7 +207,7 @@ export default function BettingScreen({ route, navigation}) {
       team,
       props.teamA,
       props.teamB,
-      navigation
+      navigation,
     );
 
     // ✅ Update state after successful bet placement
@@ -205,14 +218,14 @@ export default function BettingScreen({ route, navigation}) {
     }
   }
 
-  console.log("siddarth testing: ", playersA, playersB);
+  console.log("Shivam testing: ", playersA, playersB);
 
   return (
     <View style={styles.cardContainer}>
       <Text style={styles.title}>Voting</Text>
-        <Text style={styles.note}>
-          Note: Press the team name to place your vote
-        </Text>
+      <Text style={styles.note}>
+        Note: Press the team name to place your vote
+      </Text>
       <View style={styles.cardTop}>
         <View style={styles.headerContainer}>
           <Text style={styles.detailText}>{props.gameName}</Text>
@@ -298,7 +311,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 15,
     color: "white",
-    marginTop:  20,
+    marginTop: 20,
   },
   cardTop: {
     padding: 12,

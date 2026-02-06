@@ -5,12 +5,27 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CreditsPage({ navigation }) {
   console.log("navigation test: ", navigation);
+  const organisingMembers = [
+    { title: "President", name: "Aarav Patel" },
+    { title: "Vice President", name: "Meera Singh" },
+    { title: "General Secretary", name: "Rohan Kapoor" },
+  ];
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Credits Page</Text>
+      <Text style={styles.title}>Organising Committee</Text>
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        <Text style={styles.sectionTitle}>App Lead</Text>
-        <View style={[styles.section, styles.elevation]}>
+        {/* <Text style={styles.sectionTitle}>Organising Committee</Text> */}
+        {organisingMembers.map((member) => (
+          <View key={member.title} style={[styles.section, styles.elevation]}>
+            <View style={styles.avatarPlaceholder} />
+            <View>
+              <Text style={styles.member}>{member.title}</Text>
+              <Text style={styles.subText}>{member.name}</Text>
+            </View>
+          </View>
+        ))}
+        <Text style={styles.sectionTitle}> Lead By</Text>
+        {/* <View style={[styles.section, styles.elevation]}>
           <Image
             source={require("../assets/DevTeam/Chaitanya.jpg")}
             style={styles.image}
@@ -18,36 +33,49 @@ export default function CreditsPage({ navigation }) {
           <Text style={styles.member}>Chaitanya Bharadwaj</Text>
         </View>
         <View style={[styles.section, styles.elevation]}>
-            <Image
-              source={require("../assets/DevTeam/rachit.jpeg")}
-              style={styles.image}
-            />
-            <Text style={styles.member}>Rachit Jain</Text>
-          </View>
-          <View style={[styles.section, styles.elevation]}>
-            <Image
-              source={require("../assets/DevTeam/gupta.jpeg")}
-              style={styles.image}
-            />
-            <Text style={styles.member}>Ayush Gupta</Text>
-          </View>
-
-        {/* <Text style={styles.sectionTitle}>Design Lead</Text>
+          <Image
+            source={require("../assets/DevTeam/rachit.jpeg")}
+            style={styles.image}
+          />
+          <Text style={styles.member}>Rachit Jain</Text>
+        </View>
         <View style={[styles.section, styles.elevation]}>
-          <Image source={require("../assets/DevTeam/manish.jpg")} style={styles.image} />
-          <Text style={styles.member}>Manish Mondal</Text>
+          <Image
+            source={require("../assets/DevTeam/gupta.jpeg")}
+            style={styles.image}
+          />
+          <Text style={styles.member}>Ayush Gupta</Text>
         </View> */}
-
-        <Text style={styles.sectionTitle}>Developers</Text>
-        
         <View style={[styles.section, styles.elevation]}>
+          <Image
+            // source={require("../assets/DevTeam/siddarth.jpeg")}
+            style={styles.avatarPlaceholder}
+          />
+          <Text style={styles.member}>Suvansh Sharma</Text>
+        </View>
+        <View style={[styles.section, styles.elevation]}>
+          <Image
+            source={require("../assets/DevTeam/siddarth.jpeg")}
+            style={styles.image}
+          />
+          <Text style={styles.member}>Siddarth.K</Text>
+        </View>
+        <Text style={styles.sectionTitle}>Developed by </Text>
+        <View style={[styles.section, styles.elevation]}>
+          <Image
+            // source={require("../assets/DevTeam/adarsh.jpg")}
+            style={styles.avatarPlaceholder}
+          />
+          <Text style={styles.member}>Shivam Saxena</Text>
+        </View>
+        {/* <View style={[styles.section, styles.elevation]}>
           <Image
             source={require("../assets/DevTeam/adarsh.jpg")}
             style={styles.image}
           />
           <Text style={styles.member}>Adarsh Chandra</Text>
-        </View>
-        <View style={[styles.section, styles.elevation]}>
+        </View> */}
+        {/* <View style={[styles.section, styles.elevation]}>
           <Image
             source={require("../assets/DevTeam/avirat.jpeg")}
             style={styles.image}
@@ -67,16 +95,8 @@ export default function CreditsPage({ navigation }) {
             style={styles.image}
           />
           <Text style={styles.member}>Prince Kumar</Text>
-        </View>
-        <View style={[styles.section, styles.elevation]}>
-          <Image
-            source={require("../assets/DevTeam/siddarth.jpeg")}
-            style={styles.image}
-          />
-          <Text style={styles.member}>Siddarth.K</Text>
-        </View>
-
-        <Text style={styles.sectionTitle}>Special Thanks</Text>
+        </View> */}
+        {/* <Text style={styles.sectionTitle}>Special Thanks</Text> */}
         {/* <View style={[styles.section, styles.elevation]}>
           <Image source={require("../assets/DevTeam/Sambit.jpg")} style={styles.image} />
           <View style={{ alignItems: "center" }}>
@@ -85,8 +105,7 @@ export default function CreditsPage({ navigation }) {
             <Text style={styles.subText}>STC, Students' Gymkhana</Text>
           </View>
         </View> */}
-
-        <View style={[styles.section, styles.elevation, { marginBottom: 30 }]}>
+        {/* <View style={[styles.section, styles.elevation, { marginBottom: 30 }]}>
           <Image
             source={require("../assets/DevTeam/upadhyay.jpeg")}
             style={styles.image}
@@ -98,7 +117,7 @@ export default function CreditsPage({ navigation }) {
             <Text style={styles.subText}>General Secretary</Text>
             <Text style={styles.subText}>STC, Students' Gymkhana</Text>
           </View>
-        </View>
+        </View> */}
       </ScrollView>
     </SafeAreaView>
   );
@@ -111,7 +130,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   contentContainer: {
-    paddingBottom: 20,
+    paddingBottom: 60,
   },
   title: {
     color: "#323232",
@@ -146,6 +165,13 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 50,
     marginRight: 15,
+  },
+  avatarPlaceholder: {
+    width: 50,
+    height: 50,
+    borderRadius: 50,
+    marginRight: 15,
+    backgroundColor: "#555",
   },
   member: {
     fontSize: 20,

@@ -405,13 +405,17 @@ export default function AllTabs() {
             iconName = focused ? "cog" : "cog-outline";
             // Using React Native Elements for Icons
           } else if (route.name === "   ") {
-            iconName = focused ? "account-group" : "account-group-outline";
+            iconName = focused ? "trophy" : "trophy-outline";
           } else if (route.name === "    ") {
             iconName = focused ? "home" : "home-outline";
           } else if (route.name === "      ") {
             iconName = focused ? "bell" : "bell-outline";
           } else if (route.name === "       ") {
             iconName = focused ? "currency-usd" : "currency  -usd";
+          } else if (route.name === "        ") {
+            iconName = focused
+              ? "account-multiple-check"
+              : "account-multiple-check-outline";
           }
           return (
             <Icon
@@ -435,7 +439,6 @@ export default function AllTabs() {
           tabBarButton: () => null,
         }}
       />
-      <Tab.Screen name="    " component={HomepageStackNavigator} />
       <Tab.Screen
         name="   "
         component={TeamPoints}
@@ -444,7 +447,7 @@ export default function AllTabs() {
           tabBarIcon: ({ focused, color, size }) => (
             <TouchableOpacity onPress={handleTabPress}>
               <Icon
-                name="account-group"
+                name={focused ? "medal" : "medal-outline"}
                 type="material-community"
                 size={27}
                 color={color}
@@ -453,10 +456,12 @@ export default function AllTabs() {
           ),
         })}
       />
+      <Tab.Screen name="    " component={HomepageStackNavigator} />
       {LoginCtx.isAdmin && (
         <Tab.Screen name="     " component={AdminDashboardStackNavigator} />
       )}
       <Tab.Screen name="      " component={NotificationsPage} />
+      <Tab.Screen name="        " component={CreditsPage} />
       <Tab.Screen
         name="       "
         component={FollowTeam}

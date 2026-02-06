@@ -46,7 +46,7 @@ function TechCultEventCard(props) {
   };
 
   console.log(
-    "resting by siddarth",
+    "resting by Shivam",
     eventData.data.details?.title,
     LoginCtx.isAdmin,
     checkBranch(),

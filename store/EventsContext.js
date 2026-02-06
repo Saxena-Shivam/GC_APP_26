@@ -8,6 +8,8 @@ const EventsContext = createContext({
   liveEvents: [],
   upcomingEvents: [],
   pastEvents: [],
+  techData: [],
+  cultData: [],
   isLoading: false,
   fetchAllLiveEvents: async () => {},
 });
@@ -17,6 +19,8 @@ const EventsProvider = ({ children }) => {
   const [liveEvents, setLiveEvents] = useState([]);
   const [upcomingEvents, setUpcomingEvents] = useState([]);
   const [pastEvents, setPastEvents] = useState([]);
+  const [techData, setTechData] = useState([]);
+  const [cultData, setCultData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   // Helper function to convert timestamp to milliseconds
@@ -204,9 +208,32 @@ const EventsProvider = ({ children }) => {
     }
   };
 
-  // useEffect(() => {
-  //   fetchAllLiveEvents();
-  // }, []);
+  // Fetch tech and cult events
+  const fetchTechCultEvents = async () => {
+    try {
+      const [techResponse, cultResponse] = await Promise.all([
+        axios.get(backend_link + "api/event/getEventByCategory?category=tech"),
+        axios.get(backend_link + "api/event/getEventByCategory?category=cult"),
+      ]);
+
+      const techdata = (techResponse.data.events || []).filter(
+        (item) => item !== null,
+      );
+      const cultdata = (cultResponse.data.events || []).filter(
+        (item) => item !== null,
+      );
+
+      setTechData(techdata);
+      setCultData(cultdata);
+    } catch (error) {
+      console.log("Error fetching tech/cult events:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAllLiveEvents();
+    fetchTechCultEvents();
+  }, []);
 
   return (
     <EventsContext.Provider
@@ -215,6 +242,8 @@ const EventsProvider = ({ children }) => {
         liveEvents,
         upcomingEvents,
         pastEvents,
+        techData,
+        cultData,
         isLoading,
         fetchAllLiveEvents,
       }}

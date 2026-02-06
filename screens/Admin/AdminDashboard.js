@@ -192,7 +192,7 @@ const AdminDashboard = ({ navigation }) => {
 
           {/* Row 4 */}
           <View style={styles.row}>
-            /* View Contentions */
+            {/* View Contentions */}
             <Pressable
               style={({ pressed }) => [
                 styles.card,
@@ -211,9 +211,28 @@ const AdminDashboard = ({ navigation }) => {
               <Text style={styles.cardTitle}>View Contentions</Text>
               <Text style={styles.cardDescription}>Manage Complaints</Text>
             </Pressable>
+
+            {/* Register Team */}
+            <Pressable
+              style={({ pressed }) => [
+                styles.card,
+                styles.registerCard,
+                pressed && styles.cardPressed,
+              ]}
+              // onPress={() => navigation.navigate("/")}
+            >
+              <View style={styles.cardIconContainer}>
+                <MaterialCommunityIcons
+                  name="account-plus"
+                  size={28}
+                  color="#fff"
+                />
+              </View>
+              <Text style={styles.cardTitle}>Register Team</Text>
+              <Text style={styles.cardDescription}>Add Participants</Text>
+            </Pressable>
           </View>
         </View>
-
         <View style={{ height: 40 }} />
       </ScrollView>
     </View>
@@ -331,6 +350,10 @@ const styles = StyleSheet.create({
     borderColor: "#d41d77",
   },
   viewCard: {
+    backgroundColor: "#1a1a1a",
+    borderColor: "#444",
+  },
+  registerCard: {
     backgroundColor: "#1a1a1a",
     borderColor: "#444",
   },
