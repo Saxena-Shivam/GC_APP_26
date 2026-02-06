@@ -50,7 +50,8 @@ function OngoingEventCard(props) {
           }}
         >
           <Text style={{ fontWeight: "600", fontSize: 20, marginTop: -12 }}>
-            {(props.teamA === "ECE_META" ? "ECE_META_EP" : props.teamA)} v/s {(props.teamB === "ECE_META" ? "ECE_META_EP" : props.teamB)}
+            {props.teamA === "ECE_META" ? "ECE_META_EP" : props.teamA} v/s{" "}
+            {props.teamB === "ECE_META" ? "ECE_META_EP" : props.teamB}
           </Text>
           <Text
             style={{

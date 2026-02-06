@@ -393,7 +393,7 @@ export default function AllTabs() {
           } else if (route.name === "      ") {
             iconName = focused ? "bell" : "bell-outline";
           } else if (route.name === "       ") {
-            iconName = focused ? "currency-usd" : "currency-usd";
+            iconName = focused ? "currency-usd" : "currency  -usd";
           }
           return (
             <Icon

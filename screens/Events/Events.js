@@ -40,6 +40,7 @@ export default function Events({ route, navigation }) {
   const [dataLoaded, setDataLoaded] = useState(false); */
   const [techData, setTechData] = useState([]);
   const [cultData, setCultData] = useState([]);
+  const [branchCoords, setBranchCoords] = useState({});
 
   const sortData = (data) => {
     console.log("data", data);
@@ -114,10 +115,22 @@ export default function Events({ route, navigation }) {
     }
   };
 
+  const fetchBranchCoords = async () => {
+    try {
+      const response = await axios.get(
+        `${backend_link}api/event/getBranchCoord`,
+      );
+      setBranchCoords(response.data.branch_coordinators);
+    } catch (error) {
+      console.log("error fetching branch coords", error);
+    }
+  };
+
   useEffect(() => {
     fetchAllLiveEvents();
     fetchTechData();
     fetchCultData();
+    fetchBranchCoords();
   }, []);
 
   // Pull-to-refresh
@@ -126,6 +139,7 @@ export default function Events({ route, navigation }) {
     await fetchAllLiveEvents();
     await fetchTechData();
     await fetchCultData();
+    await fetchBranchCoords();
     setRefreshing(false);
   }, []);
 
@@ -189,51 +203,66 @@ export default function Events({ route, navigation }) {
             {screen === 0 ? (
               <AllEventsScreen
                 search={search}
+                navigation={navigation}
+                branchCoords={branchCoords}
                 allEvents={[
-                  ...liveEvents.map((e) => ({ ...e, category: "Sports" })),
-                  ...upcomingEvents.map((e) => ({ ...e, category: "Sports" })),
-                  ...pastEvents.map((e) => ({ ...e, category: "Sports" })),
+                  ...liveEvents.map((e) => ({
+                    ...e,
+                    eventType: e.eventType || "sports",
+                  })),
+                  ...upcomingEvents.map((e) => ({
+                    ...e,
+                    eventType: e.eventType || "sports",
+                  })),
+                  ...pastEvents.map((e) => ({
+                    ...e,
+                    eventType: e.eventType || "sports",
+                  })),
                   ...techData.map((item) => ({
+                    originalData: item,
                     id: item.data.eventId,
                     gameName: item.data.details?.title,
                     teamA: item.data.details?.location || "N/A",
-                    teamB: "",
-                    scoreA: 0,
-                    scoreB: 0,
                     details: item.data.details,
-                    category: "Tech",
+                    timeStamp: new Date(item.data.details?.timestamp).getTime(),
+                    eventType: "techCult",
                   })),
                   ...cultData.map((item) => ({
+                    originalData: item,
                     id: item.data.eventId,
                     gameName: item.data.details?.title,
                     teamA: item.data.details?.location || "N/A",
-                    teamB: "",
-                    scoreA: 0,
-                    scoreB: 0,
                     details: item.data.details,
-                    category: "Cultural",
+                    timeStamp: new Date(item.data.details?.timestamp).getTime(),
+                    eventType: "techCult",
                   })),
                 ]}
               />
             ) : screen === 1 ? (
               <AllEventsScreen
                 search={search}
+                navigation={navigation}
+                branchCoords={branchCoords}
                 allEvents={[
-                  ...upcomingEvents.map((e) => ({ ...e, category: "Sports" })),
+                  ...upcomingEvents.map((e) => ({
+                    ...e,
+                    eventType: e.eventType || "sports",
+                  })),
                   ...techData
                     .filter(
                       (item) =>
                         new Date(item.data.details?.timestamp) > new Date(),
                     )
                     .map((item) => ({
+                      originalData: item,
                       id: item.data.eventId,
                       gameName: item.data.details?.title,
                       teamA: item.data.details?.location || "N/A",
-                      teamB: "",
-                      scoreA: 0,
-                      scoreB: 0,
                       details: item.data.details,
-                      category: "Tech",
+                      timeStamp: new Date(
+                        item.data.details?.timestamp,
+                      ).getTime(),
+                      eventType: "techCult",
                     })),
                   ...cultData
                     .filter(
@@ -241,36 +270,43 @@ export default function Events({ route, navigation }) {
                         new Date(item.data.details?.timestamp) > new Date(),
                     )
                     .map((item) => ({
+                      originalData: item,
                       id: item.data.eventId,
                       gameName: item.data.details?.title,
                       teamA: item.data.details?.location || "N/A",
-                      teamB: "",
-                      scoreA: 0,
-                      scoreB: 0,
                       details: item.data.details,
-                      category: "Cultural",
+                      timeStamp: new Date(
+                        item.data.details?.timestamp,
+                      ).getTime(),
+                      eventType: "techCult",
                     })),
                 ]}
               />
             ) : (
               <AllEventsScreen
                 search={search}
+                navigation={navigation}
+                branchCoords={branchCoords}
                 allEvents={[
-                  ...pastEvents.map((e) => ({ ...e, category: "Sports" })),
+                  ...pastEvents.map((e) => ({
+                    ...e,
+                    eventType: e.eventType || "sports",
+                  })),
                   ...techData
                     .filter(
                       (item) =>
                         new Date(item.data.details?.timestamp) < new Date(),
                     )
                     .map((item) => ({
+                      originalData: item,
                       id: item.data.eventId,
                       gameName: item.data.details?.title,
                       teamA: item.data.details?.location || "N/A",
-                      teamB: "",
-                      scoreA: 0,
-                      scoreB: 0,
                       details: item.data.details,
-                      category: "Tech",
+                      timeStamp: new Date(
+                        item.data.details?.timestamp,
+                      ).getTime(),
+                      eventType: "techCult",
                     })),
                   ...cultData
                     .filter(
@@ -278,14 +314,15 @@ export default function Events({ route, navigation }) {
                         new Date(item.data.details?.timestamp) < new Date(),
                     )
                     .map((item) => ({
+                      originalData: item,
                       id: item.data.eventId,
                       gameName: item.data.details?.title,
                       teamA: item.data.details?.location || "N/A",
-                      teamB: "",
-                      scoreA: 0,
-                      scoreB: 0,
                       details: item.data.details,
-                      category: "Cultural",
+                      timeStamp: new Date(
+                        item.data.details?.timestamp,
+                      ).getTime(),
+                      eventType: "techCult",
                     })),
                 ]}
               />
@@ -325,12 +362,34 @@ export default function Events({ route, navigation }) {
             {screen === 0 ? (
               <AllEventsScreen
                 search={search}
-                allEvents={[...liveEvents, ...upcomingEvents, ...pastEvents]}
+                navigation={navigation}
+                branchCoords={branchCoords}
+                allEvents={[
+                  ...liveEvents.map((e) => ({ ...e, eventType: "sports" })),
+                  ...upcomingEvents.map((e) => ({ ...e, eventType: "sports" })),
+                  ...pastEvents.map((e) => ({ ...e, eventType: "sports" })),
+                ]}
               />
             ) : screen === 1 ? (
-              <UpcomingScreen search={search} navigation={navigation} />
+              <AllEventsScreen
+                search={search}
+                navigation={navigation}
+                branchCoords={branchCoords}
+                allEvents={upcomingEvents.map((e) => ({
+                  ...e,
+                  eventType: "sports",
+                }))}
+              />
             ) : (
-              <PastScreen search={search} />
+              <AllEventsScreen
+                search={search}
+                navigation={navigation}
+                branchCoords={branchCoords}
+                allEvents={pastEvents.map((e) => ({
+                  ...e,
+                  eventType: "sports",
+                }))}
+              />
             )}
           </View>
         </>

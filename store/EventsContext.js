@@ -42,13 +42,15 @@ const EventsProvider = ({ children }) => {
   const fetchAllLiveEvents = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
+      // Fetch sports events only
+      const sportsResponse = await axios.get(
         `${backend_link}api/event/getAllLiveEvents`,
       );
-      const data = response.data.events;
-      console.log("Raw events data:", data);
+      const sportsData = sportsResponse.data.events || [];
+      console.log("Raw sports events data:", sportsData);
 
-      let events = data.flatMap((item) => {
+      // Parse sports events
+      let sportEvents = sportsData.flatMap((item) => {
         const eventName = item.eventId;
         const subEvents = item.subEvents;
         const gameName = eventName;
@@ -58,19 +60,31 @@ const EventsProvider = ({ children }) => {
           const teamB = match_item.data.points.teamB;
           const details = match_item.data.details;
 
-          // Get timestamps and convert to milliseconds for consistent comparison
           const startTimestampMs = getTimestampInMs(details?.timestamp);
-          const endTimestampMs = getTimestampInMs(
-            match_item.data?.endTimeStamp,
+          let endTimestampMs = getTimestampInMs(match_item.data?.endTimeStamp);
+
+          // If endTimeStamp is missing or 0, estimate it as start + 2 hours
+          if (!endTimestampMs || endTimestampMs === 0) {
+            endTimestampMs = startTimestampMs + 2 * 60 * 60 * 1000; // 2 hours
+            console.log(
+              `  WARNING: endTimeStamp missing for ${match_item.subEventId}, estimated as ${new Date(endTimestampMs).toLocaleString()}`,
+            );
+          }
+
+          console.log(`Event: ${match_item.subEventId}`);
+          console.log(
+            `  Start: ${new Date(startTimestampMs).toLocaleString()}`,
           );
+          console.log(`  End: ${new Date(endTimestampMs).toLocaleString()}`);
+          console.log(`  Status from backend: ${match_item.data.status}`);
 
           return {
             details: details,
-            status: match_item.data.status, // Live, Upcoming, Past
+            status: match_item.data.status,
             gameName: gameName,
             id: match_item.subEventId,
-            timeStamp: startTimestampMs, // Event start time in milliseconds
-            endTimeStamp: endTimestampMs, // Event end time in milliseconds
+            timeStamp: startTimestampMs,
+            endTimeStamp: endTimestampMs,
             teamA: teamA?.name || match_item.subEventId.split(" vs ")[0],
             teamB: teamB?.name || match_item.subEventId.split(" vs ")[1],
             scoreA: teamA?.points || 0,
@@ -79,31 +93,78 @@ const EventsProvider = ({ children }) => {
             betsB: teamB?.bets,
             playersA: teamA?.players,
             playersB: teamB?.players,
+            eventType: "sports",
           };
         });
       });
 
+      let events = sportEvents;
       events = sortData(events);
       setEvents(events);
       await AsyncStorage.setItem("events", JSON.stringify(events));
 
-      // Categorizing events into Live, Upcoming, and Past using current time
+      // Categorize into Live, Upcoming, and Past
       const now = Date.now();
       console.log("Current time (ms):", now);
+      console.log("Current time:", new Date(now).toLocaleString());
 
-      const live = events.filter((event) => {
-        const isLive = event.timeStamp <= now && event.endTimeStamp >= now;
+      const past = [];
+      const live = [];
+      const upcoming = [];
+
+      events.forEach((event) => {
+        console.log(`\nCategorizing: ${event.id}`);
         console.log(
-          `Event ${event.id}: start=${event.timeStamp}, end=${event.endTimeStamp}, isLive=${isLive}`,
+          `  timeStamp: ${event.timeStamp}, endTimeStamp: ${event.endTimeStamp}`,
         );
-        return isLive;
+        console.log(
+          `  Start Date: ${new Date(event.timeStamp).toLocaleString()}`,
+        );
+        console.log(
+          `  End Date: ${new Date(event.endTimeStamp).toLocaleString()}`,
+        );
+        console.log(`  Backend status: ${event.status}`);
+
+        // Primary: Use backend status if available and recognized
+        if (event.status && typeof event.status === "string") {
+          const statusLower = event.status.toLowerCase();
+          if (statusLower === "past" || statusLower === "completed") {
+            console.log(`  -> PAST (from backend status: ${event.status})`);
+            past.push(event);
+            return;
+          } else if (statusLower === "live" || statusLower === "ongoing") {
+            console.log(`  -> LIVE (from backend status: ${event.status})`);
+            live.push(event);
+            return;
+          } else if (
+            statusLower === "upcoming" ||
+            statusLower === "scheduled"
+          ) {
+            console.log(`  -> UPCOMING (from backend status: ${event.status})`);
+            upcoming.push(event);
+            return;
+          }
+        }
+
+        // Fallback: Use timestamp-based categorization
+        if (event.endTimeStamp < now) {
+          console.log(
+            `  -> PAST (endTimeStamp ${event.endTimeStamp} < now ${now})`,
+          );
+          past.push(event);
+        } else if (event.timeStamp <= now && event.endTimeStamp >= now) {
+          console.log(`  -> LIVE`);
+          live.push(event);
+        } else if (event.timeStamp > now) {
+          console.log(
+            `  -> UPCOMING (timeStamp ${event.timeStamp} > now ${now})`,
+          );
+          upcoming.push(event);
+        }
       });
 
-      const upcoming = events.filter((event) => event.timeStamp > now);
-      const past = events.filter((event) => event.endTimeStamp < now);
-
       console.log(
-        `Categorized - Live: ${live.length}, Upcoming: ${upcoming.length}, Past: ${past.length}`,
+        `\nCategorized - Live: ${live.length}, Upcoming: ${upcoming.length}, Past: ${past.length}`,
       );
 
       setLiveEvents(live);
@@ -111,7 +172,6 @@ const EventsProvider = ({ children }) => {
       setPastEvents(past);
     } catch (err) {
       console.error("Error fetching events:", err);
-      // Alert.alert("Error", "Something went wrong", [{ text: "Okay" }]);
     } finally {
       setIsLoading(false);
     }
