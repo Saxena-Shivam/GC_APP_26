@@ -102,22 +102,106 @@ function TeamCard({ navigation, branchCoords }) {
     // Combine sports events with tech/cult events
     const now = Date.now();
 
-    // Get live and upcoming sports events ONLY (no past events)
-    const sportsEvents = [...(liveEvents || []), ...(upcomingEvents || [])];
+    console.log("=== HOMEPAGE FILTERING DEBUG ===");
+    console.log("Current time:", now, new Date(now).toISOString());
+
+    // Filter sports events - double-check they're actually ongoing/upcoming
+    console.log("\n--- SPORTS EVENTS FROM EVENTSCONTEXT ---");
+    console.log("Raw liveEvents count:", (liveEvents || []).length);
+    console.log("Raw upcomingEvents count:", (upcomingEvents || []).length);
+
+    const filteredSportsEvents = [
+      ...(liveEvents || []),
+      ...(upcomingEvents || []),
+    ].filter((item) => {
+      const startTime = item.details?.timestamp || item.timeStamp || 0;
+      const endTime =
+        item.details?.endTimeStamp ||
+        item.endTimeStamp ||
+        startTime + 2 * 60 * 60 * 1000;
+      const startMs = new Date(startTime).getTime();
+      const endMs = new Date(endTime).getTime();
+
+      const isActuallyPast = endMs < now;
+
+      if (isActuallyPast) {
+        console.log(
+          `❌ SPORTS: Filtering out past event - ${item.gameName || item.id}`,
+        );
+        console.log(`   End: ${new Date(endMs).toISOString()}`);
+        return false;
+      }
+
+      console.log(`✅ SPORTS: Including ${item.gameName || item.id}`);
+      return true;
+    });
+
+    const sportsEvents = filteredSportsEvents;
+
+    console.log("\n=== TECH/CULT FILTERING ===");
 
     // Process tech/cult events - filter for ongoing and upcoming only (NO PAST)
     const techCultEvents = [...techData, ...cultData]
       .filter((item) => {
         const timestamp = new Date(item.data?.details?.timestamp).getTime();
-        const endTimestamp = timestamp + 2 * 60 * 60 * 1000; // Assume 2 hour duration
 
+        // Check if there's an actual endTimeStamp in the data
+        const actualEndTimestamp = item.data?.details?.endTimeStamp;
+        const endTimestamp = actualEndTimestamp
+          ? new Date(actualEndTimestamp).getTime()
+          : timestamp + 2 * 60 * 60 * 1000; // Default 2 hour duration
+
+        // Check backend status if available
+        const status = (
+          item.data?.status ||
+          item.data?.details?.status ||
+          ""
+        ).toLowerCase();
+
+        console.log(`\nEvent: ${item.data?.details?.title}`);
+        console.log(`  Status: ${status || "none"}`);
+        console.log(`  Start: ${new Date(timestamp).toISOString()}`);
+        console.log(`  End: ${new Date(endTimestamp).toISOString()}`);
+        console.log(`  Has actual endTimeStamp: ${!!actualEndTimestamp}`);
+
+        // Priority 1: Check backend status
+        if (status === "past" || status === "completed") {
+          console.log(`  ❌ FILTERED OUT: Status is ${status}`);
+          return false;
+        }
+        if (status === "live" || status === "ongoing") {
+          console.log(`  ✅ INCLUDED: Status is ${status}`);
+          return true;
+        }
+        if (status === "upcoming" || status === "scheduled") {
+          console.log(`  ✅ INCLUDED: Status is ${status}`);
+          return true;
+        }
+
+        // Priority 2: Timestamp-based filtering
         // Show only if event is ongoing (started but not ended) OR upcoming (hasn't started)
-        // Ongoing: timestamp <= now AND endTimestamp >= now
-        // Upcoming: timestamp > now
         const isOngoing = timestamp <= now && endTimestamp >= now;
         const isUpcoming = timestamp > now;
+        const isPast = endTimestamp < now;
 
-        return isOngoing || isUpcoming;
+        console.log(
+          `  isOngoing: ${isOngoing}, isUpcoming: ${isUpcoming}, isPast: ${isPast}`,
+        );
+
+        if (isPast) {
+          console.log(`  ❌ FILTERED OUT: Event has ended`);
+          return false;
+        }
+
+        if (isOngoing || isUpcoming) {
+          console.log(
+            `  ✅ INCLUDED: Event is ${isOngoing ? "ongoing" : "upcoming"}`,
+          );
+          return true;
+        }
+
+        console.log(`  ❌ FILTERED OUT: Doesn't match any criteria`);
+        return false;
       })
       .map((item) => ({
         originalData: item,
@@ -131,6 +215,21 @@ function TeamCard({ navigation, branchCoords }) {
       }));
 
     const combined = [...sportsEvents, ...techCultEvents];
+
+    console.log(`\n=== FINAL HOMEPAGE EVENTS ===`);
+    console.log(`Sports events (after filtering): ${sportsEvents.length}`);
+    console.log(`Tech/Cult events (after filtering): ${techCultEvents.length}`);
+    console.log(`Total events to display: ${combined.length}`);
+
+    // List all final events with timestamps
+    console.log("\nFinal events list:");
+    combined.forEach((event, idx) => {
+      const ts = event.details?.timestamp || event.timeStamp;
+      console.log(
+        `${idx + 1}. ${event.gameName || event.teamA} - ${new Date(ts).toISOString()}`,
+      );
+    });
+
     setAllEvents(combined);
 
     if (!isLoading) {
