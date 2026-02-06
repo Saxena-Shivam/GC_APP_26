@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { View, FlatList, StyleSheet } from "react-native";
 import OngoingEventCard from "../../Components/OngoingEventCard";
+import TechCultEventCard from "../../Components/TechCultEventCard";
 import Loader from "../../Components/Loader";
 
 const sortData = (data) => {
@@ -9,7 +10,7 @@ const sortData = (data) => {
   ); // Sort by date descending
 };
 
-function AllEventsScreen({ search, allEvents }) {
+function AllEventsScreen({ search, allEvents, navigation, branchCoords }) {
   const [filteredData, setFilteredData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -49,17 +50,25 @@ function AllEventsScreen({ search, allEvents }) {
       <FlatList
         key={1}
         data={filteredData}
-        renderItem={({ item }) => (
-          <OngoingEventCard
-            details={item.details}
-            gameName={item.gameName}
-            id={item.id}
-            teamA={item.teamA}
-            teamB={item.teamB}
-            scoreA={item.scoreA}
-            scoreB={item.scoreB}
-          />
-        )}
+        renderItem={({ item }) =>
+          item.eventType === "techCult" ? (
+            <TechCultEventCard
+              data={{ item: item.originalData }}
+              navigation={navigation}
+              branchCoords={branchCoords}
+            />
+          ) : (
+            <OngoingEventCard
+              details={item.details}
+              gameName={item.gameName}
+              id={item.id}
+              teamA={item.teamA}
+              teamB={item.teamB}
+              scoreA={item.scoreA}
+              scoreB={item.scoreB}
+            />
+          )
+        }
         keyExtractor={(item, index) => `${item.id}-${item.gameName}-${index}`}
         alwaysBounceVertical={false}
       />

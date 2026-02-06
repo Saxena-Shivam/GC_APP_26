@@ -18,17 +18,19 @@ const deviceHeight = Dimensions.get("window").height;
 function TechCultEventCard(props) {
   const navigation = props.navigation;
   const eventData = props?.data?.data || props?.data?.item || props?.data;
-  const eventTimeStamp = eventData.data.details?.timestamp;
+  const isCompact = props.compact === true;
+  const details = eventData?.data?.details || eventData?.details || {};
+  const eventTimeStamp = details?.timestamp;
 
-  const formattedDate = new Date(
-    eventData.data.details?.timestamp,
-  ).toLocaleDateString();
-  const formattedTime = new Date(
-    eventData.data.details?.timestamp,
-  ).toLocaleTimeString([], {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  const formattedDate = eventTimeStamp
+    ? new Date(eventTimeStamp).toLocaleDateString()
+    : "TBA";
+  const formattedTime = eventTimeStamp
+    ? new Date(eventTimeStamp).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      })
+    : "";
 
   const { branchCoords } = props;
 
@@ -65,70 +67,63 @@ function TechCultEventCard(props) {
         end={{ x: 0.7, y: 1 }}
         locations={[0.2, 0.8]}
         colors={["#B0B0B0", "#E0E0E0"]}
-        style={styles.cardTop}
+        style={[styles.cardTop, isCompact && styles.cardTopCompact]}
       >
         <View
-          style={{
-            height: 0.07 * deviceHeight,
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: 10,
-          }}
+          style={[styles.topContent, isCompact && styles.topContentCompact]}
         >
-          <Text style={{ fontWeight: "600", fontSize: 20 }}>
-            {eventData.data.details?.title}
+          <Text
+            style={[styles.titleText, isCompact && styles.titleTextCompact]}
+          >
+            {details?.title || "Event"}
           </Text>
         </View>
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            marginBottom: 15,
-          }}
-        >
-          <TouchableOpacity
-            style={styles.navigateButton}
-            onPress={() => {
-              navigation.navigate("PlayerScreen", { data: props });
-            }}
-          >
-            <Text style={styles.navigateText}>Participants</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.navigateButton}
-            onPress={() => {
-              navigation.navigate("SpecificEvent", {
-                data: eventData.data,
-              });
-            }}
-          >
-            <Text style={styles.navigateText}>Result</Text>
-          </TouchableOpacity>
-        </View>
-        {LoginCtx.isAdmin && checkBranch() && eventTimeStamp > Date.now() && (
-          <TouchableOpacity
-            style={styles.registerButton}
-            onPress={() =>
-              props.navigation.navigate("TeamRegistration", {
-                data: props,
-                user: user_email,
-                event_category: "all_events",
-                branch: user_branch,
-              })
-            }
-          >
-            <Text style={styles.registerButtonText}>Register Team</Text>
-          </TouchableOpacity>
+        {!isCompact && (
+          <View style={styles.buttonRow}>
+            <TouchableOpacity
+              style={styles.navigateButton}
+              onPress={() => {
+                navigation.navigate("PlayerScreen", { data: props });
+              }}
+            >
+              <Text style={styles.navigateText}>Participants</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.navigateButton}
+              onPress={() => {
+                navigation.navigate("SpecificEvent", {
+                  data: eventData.data,
+                });
+              }}
+            >
+              <Text style={styles.navigateText}>Result</Text>
+            </TouchableOpacity>
+          </View>
         )}
+        {!isCompact &&
+          LoginCtx.isAdmin &&
+          checkBranch() &&
+          eventTimeStamp > Date.now() && (
+            <TouchableOpacity
+              style={styles.registerButton}
+              onPress={() =>
+                props.navigation.navigate("TeamRegistration", {
+                  data: props,
+                  user: user_email,
+                  event_category: "all_events",
+                  branch: user_branch,
+                })
+              }
+            >
+              <Text style={styles.registerButtonText}>Register Team</Text>
+            </TouchableOpacity>
+          )}
       </LinearGradient>
 
       <View style={styles.cardBottom}>
         <View>
           <Text style={styles.BottomTextTeams}>
-            {eventData.data.details?.location}
+            {details?.location || "TBA"}
           </Text>
         </View>
         <View
@@ -167,6 +162,36 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
+  },
+  cardTopCompact: {
+    marginTop: 12,
+    paddingVertical: 10,
+  },
+  topContent: {
+    height: 0.07 * deviceHeight,
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 10,
+  },
+  topContentCompact: {
+    height: 0.06 * deviceHeight,
+    paddingVertical: 6,
+  },
+  titleText: {
+    fontWeight: "600",
+    fontSize: 20,
+    textAlign: "center",
+  },
+  titleTextCompact: {
+    fontSize: 18,
+  },
+  buttonRow: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 15,
   },
   navigateButton: {
     backgroundColor: "#d42070",
@@ -209,7 +234,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   BottomTextTeams: {
-    color: "white",
+    color: "gray",
     fontSize: 18,
   },
   BottomTextTime: {

@@ -1,5 +1,6 @@
 import { LoginContext } from "../store/LoginContext.js";
-import { useState, useEffect, useContext } from "react";
+import { EventsContext } from "../store/EventsContext.js";
+import { useState, useEffect, useContext, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   Pressable,
@@ -14,14 +15,11 @@ import {
   FlatList,
 } from "react-native";
 
-import Carousel, {
-  Pagination,
-  ParallaxImage,
-} from "react-native-snap-carousel-new";
 import { LinearGradient } from "expo-linear-gradient";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import { useNavigation } from "@react-navigation/native";
-import CarouselCard from "../Components/CarouselCard";
+import OngoingEventCard from "../Components/OngoingEventCard";
+import TechCultEventCard from "../Components/TechCultEventCard";
 import axios from "axios";
 import { backend_link } from "../utils/constants";
 import { ActivityIndicator } from "react-native-paper";
@@ -58,181 +56,294 @@ const banners = {
 //     Team h - msc + itep
 // }
 
-function TeamCard() {
+function TeamCard({ navigation, branchCoords }) {
   const [loading, setLoading] = useState(true);
-  const navigation = useNavigation();
-  const [currentItemIndex, setCurrentItemIndex] = useState(0);
+  const { liveEvents, upcomingEvents, isLoading } = useContext(EventsContext);
+  const [allEvents, setAllEvents] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const flatListRef = useRef(null);
+  const [techData, setTechData] = useState([]);
+  const [cultData, setCultData] = useState([]);
 
-  const handleSnapToItem = (index) => {
-    console.log("snapped to", index);
-    setCurrentItemIndex(index);
+  // Fetch tech events
+  const fetchTechData = async () => {
+    try {
+      const response = await axios.get(
+        backend_link + "api/event/getEventByCategory?category=tech",
+      );
+      const data = response.data.events || [];
+      const techdata = data.filter((item) => item !== null);
+      setTechData(techdata);
+    } catch (error) {
+      console.log("Error fetching tech events:", error);
+    }
+  };
+
+  // Fetch cult events
+  const fetchCultData = async () => {
+    try {
+      const response = await axios.get(
+        backend_link + "api/event/getEventByCategory?category=cult",
+      );
+      const data = response.data.events || [];
+      const cultdata = data.filter((item) => item !== null);
+      setCultData(cultdata);
+    } catch (error) {
+      console.log("Error fetching cult events:", error);
+    }
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    fetchTechData();
+    fetchCultData();
   }, []);
-
-  const [activeIndex, setActiveIndex] = useState(1);
-
-  const [Ids, setIds] = useState([]);
-  const [cardata, setcardata] = useState([]);
-
-  const [newsIds, setnewsIds] = useState([]);
-  const [newscardata, setnewscardata] = useState([]);
 
   useEffect(() => {
-    const getAllCarousels = async () => {
-      try {
-        const response = await axios.get(
-          backend_link + "api/assets/getCarouselImages",
+    // Combine sports events with tech/cult events
+    const now = Date.now();
+
+    console.log("=== HOMEPAGE FILTERING DEBUG ===");
+    console.log("Current time:", now, new Date(now).toISOString());
+
+    // Filter sports events - double-check they're actually ongoing/upcoming
+    console.log("\n--- SPORTS EVENTS FROM EVENTSCONTEXT ---");
+    console.log("Raw liveEvents count:", (liveEvents || []).length);
+    console.log("Raw upcomingEvents count:", (upcomingEvents || []).length);
+
+    const filteredSportsEvents = [
+      ...(liveEvents || []),
+      ...(upcomingEvents || []),
+    ].filter((item) => {
+      const startTime = item.details?.timestamp || item.timeStamp || 0;
+      const endTime =
+        item.details?.endTimeStamp ||
+        item.endTimeStamp ||
+        startTime + 2 * 60 * 60 * 1000;
+      const startMs = new Date(startTime).getTime();
+      const endMs = new Date(endTime).getTime();
+
+      const isActuallyPast = endMs < now;
+
+      if (isActuallyPast) {
+        console.log(
+          `❌ SPORTS: Filtering out past event - ${item.gameName || item.id}`,
         );
-        console.log("response", response.data);
-        const ids = Object.keys(response.data);
-        console.log(ids);
-        console.log(response.data);
-        setIds(ids);
-        setcardata(response.data);
-      } catch (err) {
-        console.log("Failed to get Carousel Images", err);
+        console.log(`   End: ${new Date(endMs).toISOString()}`);
+        return false;
       }
-    };
 
-    const getNewsCarousels = async () => {
-      try {
-        const response = await axios.get(
-          backend_link + "api/assets/getNewsImages",
-        );
-        console.log("response", response.data);
-        const ids = Object.keys(response.data);
-        console.log(ids);
-        console.log(response.data);
-        setnewsIds(ids);
-        setnewscardata(response.data);
-      } catch (err) {
-        console.log("Failed to get Carousel Images", err);
-      }
-    };
-    getAllCarousels();
-    getNewsCarousels();
-  }, []);
-
-  data = {
-    banners: [
-      require("../assets/CarouselBanners/Banner1.jpg"),
-      require("../assets/CarouselBanners/Banner1.jpg"),
-    ],
-    teams: [
-      // require("../assets/TeamBanners/CSE.jpg"),
-      // require("../assets/TeamBanners/ECE.jpg"),
-      // require("../assets/TeamBanners/EE.jpg"),
-      // require("../assets/TeamBanners/CE.jpg"),
-      // require("../assets/TeamBanners/ME.jpg"),
-      banners.CSE,
-      banners.ECE_META,
-      banners.EE,
-      banners.CE,
-      banners.ME,
-      banners.MTech,
-      banners.MSc_ITEP,
-      banners.PhD,
-    ],
-    news: [
-      require("../assets/news/news1.jpg"),
-      require("../assets/news/news1.jpg"),
-    ],
-  };
-
-  const teams = [
-    "CSE",
-    "ECE_META",
-    "EE",
-    "CIVIL",
-    "MECH",
-    "MTech",
-    "MSc_ITEP",
-    "PHD",
-  ];
-
-  const renderPagination = () => {
-    return (
-      <Pagination
-        dotsLength={cardata?.length || 2}
-        activeDotIndex={activeIndex}
-        containerStyle={styles.paginationContainer}
-        dotStyle={styles.paginationDot}
-        inactiveDotOpacity={0.4}
-        inactiveDotScale={0.6}
-      />
-    );
-  };
-  const handlePress = () => {
-    console.log("Pressed", currentItemIndex);
-    console.log(teams[currentItemIndex]);
-    navigation.navigate("   ", {
-      branch: teams[currentItemIndex],
+      console.log(`✅ SPORTS: Including ${item.gameName || item.id}`);
+      return true;
     });
-  };
+
+    const sportsEvents = filteredSportsEvents;
+
+    console.log("\n=== TECH/CULT FILTERING ===");
+
+    // Process tech/cult events - filter for ongoing and upcoming only (NO PAST)
+    const techCultEvents = [...techData, ...cultData]
+      .filter((item) => {
+        const timestamp = new Date(item.data?.details?.timestamp).getTime();
+
+        // Check if there's an actual endTimeStamp in the data
+        const actualEndTimestamp = item.data?.details?.endTimeStamp;
+        const endTimestamp = actualEndTimestamp
+          ? new Date(actualEndTimestamp).getTime()
+          : timestamp + 2 * 60 * 60 * 1000; // Default 2 hour duration
+
+        // Check backend status if available
+        const status = (
+          item.data?.status ||
+          item.data?.details?.status ||
+          ""
+        ).toLowerCase();
+
+        console.log(`\nEvent: ${item.data?.details?.title}`);
+        console.log(`  Status: ${status || "none"}`);
+        console.log(`  Start: ${new Date(timestamp).toISOString()}`);
+        console.log(`  End: ${new Date(endTimestamp).toISOString()}`);
+        console.log(`  Has actual endTimeStamp: ${!!actualEndTimestamp}`);
+
+        // Priority 1: Check backend status
+        if (status === "past" || status === "completed") {
+          console.log(`  ❌ FILTERED OUT: Status is ${status}`);
+          return false;
+        }
+        if (status === "live" || status === "ongoing") {
+          console.log(`  ✅ INCLUDED: Status is ${status}`);
+          return true;
+        }
+        if (status === "upcoming" || status === "scheduled") {
+          console.log(`  ✅ INCLUDED: Status is ${status}`);
+          return true;
+        }
+
+        // Priority 2: Timestamp-based filtering
+        // Show only if event is ongoing (started but not ended) OR upcoming (hasn't started)
+        const isOngoing = timestamp <= now && endTimestamp >= now;
+        const isUpcoming = timestamp > now;
+        const isPast = endTimestamp < now;
+
+        console.log(
+          `  isOngoing: ${isOngoing}, isUpcoming: ${isUpcoming}, isPast: ${isPast}`,
+        );
+
+        if (isPast) {
+          console.log(`  ❌ FILTERED OUT: Event has ended`);
+          return false;
+        }
+
+        if (isOngoing || isUpcoming) {
+          console.log(
+            `  ✅ INCLUDED: Event is ${isOngoing ? "ongoing" : "upcoming"}`,
+          );
+          return true;
+        }
+
+        console.log(`  ❌ FILTERED OUT: Doesn't match any criteria`);
+        return false;
+      })
+      .map((item) => ({
+        originalData: item,
+        id: item.data?.eventId || item.id,
+        gameName: item.data?.details?.title,
+        teamA: item.data?.details?.title || "Event",
+        teamB: item.data?.details?.location || "TBA",
+        details: item.data?.details,
+        timeStamp: new Date(item.data?.details?.timestamp).getTime(),
+        eventType: "techCult",
+      }));
+
+    const combined = [...sportsEvents, ...techCultEvents];
+
+    console.log(`\n=== FINAL HOMEPAGE EVENTS ===`);
+    console.log(`Sports events (after filtering): ${sportsEvents.length}`);
+    console.log(`Tech/Cult events (after filtering): ${techCultEvents.length}`);
+    console.log(`Total events to display: ${combined.length}`);
+
+    // List all final events with timestamps
+    console.log("\nFinal events list:");
+    combined.forEach((event, idx) => {
+      const ts = event.details?.timestamp || event.timeStamp;
+      console.log(
+        `${idx + 1}. ${event.gameName || event.teamA} - ${new Date(ts).toISOString()}`,
+      );
+    });
+
+    setAllEvents(combined);
+
+    if (!isLoading) {
+      setLoading(false);
+    }
+  }, [liveEvents, upcomingEvents, techData, cultData, isLoading]);
+
+  useEffect(() => {
+    if (allEvents.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => {
+        const nextIndex = (prevIndex + 1) % allEvents.length;
+        flatListRef.current?.scrollToIndex({
+          index: nextIndex,
+          animated: true,
+          viewPosition: 0.5,
+        });
+        return nextIndex;
+      });
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [allEvents.length]);
+
+  if (loading || allEvents.length === 0) {
+    return (
+      <View style={styles_1.container}>
+        <StatusBar style="light" />
+        {loading ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "#000",
+            }}
+          >
+            <ActivityIndicator size="large" color="#fff" />
+          </View>
+        ) : (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "#000",
+            }}
+          >
+            <Text style={{ color: "white", fontSize: 16 }}>
+              No ongoing or upcoming matches
+            </Text>
+          </View>
+        )}
+      </View>
+    );
+  }
 
   return (
     <SafeAreaView style={styles_1.container}>
       <StatusBar style="light" />
-      {loading && (
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: "#000",
-          }}
-        >
-          <ActivityIndicator size="large" color="#fff" />
-        </View>
-      )}
-      {!loading && (
-        <>
-          <View style={styles_1.content}>
-            <View style={styles_1.teamsSection}>
-              <Text style={styles_1.teamsTitle}>ALL TEAMS</Text>
-
-              <Carousel
-                enableMomentum={true}
-                decelerationRate={0.9}
-                layout="default"
-                data={data.teams}
-                renderItem={({ item }) => (
-                  <Pressable onPress={handlePress}>
-                    <CarouselCard
-                      item={item}
-                      height={"100%"}
-                      width={width * 0.9}
-                      borderRadius={15}
-                    />
-                  </Pressable>
+      <View style={styles_1.content}>
+        <View style={styles_1.teamsSection}>
+          {/* <Text style={styles_1.teamsTitle}>ONGOING & UPCOMING MATCHES</Text> */}
+          <FlatList
+            ref={flatListRef}
+            horizontal
+            pagingEnabled={false}
+            showsHorizontalScrollIndicator={false}
+            data={allEvents}
+            renderItem={({ item }) => (
+              <View
+                style={{
+                  width: width * 0.85,
+                  marginRight: 15,
+                  height: 340,
+                  marginLeft: 15,
+                }}
+              >
+                {item.eventType === "techCult" && item.originalData ? (
+                  <TechCultEventCard
+                    data={{ item: item.originalData }}
+                    navigation={navigation}
+                    branchCoords={branchCoords}
+                    compact
+                  />
+                ) : (
+                  <OngoingEventCard
+                    details={item.details}
+                    gameName={item.gameName}
+                    id={item.id}
+                    teamA={item.teamA}
+                    teamB={item.teamB}
+                    scoreA={item.scoreA || 0}
+                    scoreB={item.scoreB || 0}
+                  />
                 )}
-                firstItem={1}
-                onSnapToItem={handleSnapToItem}
-                sliderWidth={width}
-                itemWidth={width * 0.87}
-                inactiveSlideOpacity={0.4}
-                vertical={false}
-                slideStyle={{ display: "flex", alignItems: "center" }}
-                loop={true}
-                autoplay={true}
-
-                // enableSnap={true}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              width: "100%",
-              height: 200,
-            }}
-          ></View>
-        </>
-      )}
+              </View>
+            )}
+            keyExtractor={(item, index) =>
+              `${item.id}-${item.gameName}-${index}`
+            }
+            scrollEventThrottle={16}
+            decelerationRate="fast"
+            snapToInterval={width * 0.85 + 15}
+          />
+        </View>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          height: 50,
+        }}
+      />
     </SafeAreaView>
   );
 }
@@ -315,6 +426,7 @@ export default function HomePage({ navigation }) {
   const [user, setUser] = useState({});
   const [BranchesData, setBranchesData] = useState(initialBranchesData);
   const [number, setNumber] = useState(0);
+  const [branchCoords, setBranchCoords] = useState({});
 
   const onCLickHandler = () => {
     navigation.navigate("  ");
@@ -353,8 +465,20 @@ export default function HomePage({ navigation }) {
     });
   };
 
+  const fetchBranchCoords = async () => {
+    try {
+      const response = await axios.get(
+        `${backend_link}api/event/getBranchCoord`,
+      );
+      setBranchCoords(response.data.branch_coordinators);
+    } catch (error) {
+      console.log("error fetching branch coords", error);
+    }
+  };
+
   useEffect(() => {
     fetchLeaderboardData();
+    fetchBranchCoords();
   }, []);
 
   // async function updateCoinsForWinners() {
@@ -527,10 +651,10 @@ export default function HomePage({ navigation }) {
 
   return (
     <SafeAreaView style={leaderboardStyles.container}>
-      <View style={{ height: 150, width: "auto", marginBottom: 10 }}>
-        <TeamCard />
+      <View style={{ height: 360, width: "auto", marginBottom: 10 }}>
+        <TeamCard navigation={navigation} branchCoords={branchCoords} />
       </View>
-      <Text
+      {/* <Text
         style={{
           fontWeight: "bold",
           fontSize: 36,
@@ -539,7 +663,7 @@ export default function HomePage({ navigation }) {
         }}
       >
         LEADERBOARD
-      </Text>
+      </Text> */}
       {/*
                 <View style={leaderboardStyles.item}>
         <Text style={leaderboardStyles.name}>{user?.name || "Unknown"}</Text>
@@ -881,10 +1005,9 @@ const styles_1 = StyleSheet.create({
     paddingLeft: 5,
   },
   teamsSection: {
-    width: 370,
-    height: 135,
-    justifyContent: "center",
-    paddingHorizontal: 10,
+    width: "100%",
+    height: 350,
+    justifyContent: "flex-start",
     alignItems: "center",
   },
   teamsTitle: {
