@@ -314,6 +314,7 @@ function TeamCard({ navigation, branchCoords }) {
                     data={{ item: item.originalData }}
                     navigation={navigation}
                     branchCoords={branchCoords}
+                    compact
                   />
                 ) : (
                   <OngoingEventCard
