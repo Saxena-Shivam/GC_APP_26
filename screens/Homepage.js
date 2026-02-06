@@ -651,7 +651,7 @@ export default function HomePage({ navigation }) {
 
   return (
     <SafeAreaView style={leaderboardStyles.container}>
-      <View style={{ height: 150, width: "auto", marginBottom: 10 }}>
+      <View style={{ height: 360, width: "auto", marginBottom: 10 }}>
         <TeamCard navigation={navigation} branchCoords={branchCoords} />
       </View>
       {/* <Text
