@@ -428,7 +428,13 @@ export default function AllTabs() {
       initialRouteName="    "
     >
       <Tab.Screen name=" " component={EventsStackNavigator} />
-      <Tab.Screen name="  " component={LeaderboardStackNavigator} />
+      <Tab.Screen
+        name="  "
+        component={LeaderboardStackNavigator}
+        options={{
+          tabBarButton: () => null,
+        }}
+      />
       <Tab.Screen name="    " component={HomepageStackNavigator} />
       <Tab.Screen
         name="   "

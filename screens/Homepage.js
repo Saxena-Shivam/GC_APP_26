@@ -13,6 +13,7 @@ import {
   ScrollView,
   TouchableOpacity,
   FlatList,
+  PanResponder,
 } from "react-native";
 
 import { LinearGradient } from "expo-linear-gradient";
@@ -428,6 +429,31 @@ export default function HomePage({ navigation }) {
   const [number, setNumber] = useState(0);
   const [branchCoords, setBranchCoords] = useState({});
 
+  // Swipe up detection for leaderboard
+  const panResponderRef = useRef(null);
+
+  useEffect(() => {
+    panResponderRef.current = PanResponder.create({
+      onStartShouldSetPanResponder: () => false, // Don't block initial touch
+      onMoveShouldSetPanResponder: (evt, gestureState) => {
+        const { dy } = gestureState;
+        // Only activate on actual movement
+        return Math.abs(dy) > 10;
+      },
+      onPanResponderRelease: (evt, gestureState) => {
+        const { dy, vy } = gestureState;
+        const SWIPE_THRESHOLD = 50;
+        const SWIPE_VELOCITY_THRESHOLD = 0.5;
+
+        // Detect swipe up: negative dy and sufficient velocity
+        if (dy < -SWIPE_THRESHOLD && vy < -SWIPE_VELOCITY_THRESHOLD) {
+          onCLickHandler();
+        }
+      },
+      onShouldBlockNativeResponder: () => false, // Allow Pressable to work
+    });
+  }, []);
+
   const onCLickHandler = () => {
     navigation.navigate("  ");
   };
@@ -670,8 +696,15 @@ export default function HomePage({ navigation }) {
         <Text style={leaderboardStyles.points}>{user?.coins}</Text>
       </View>
                 */}
-      <Pressable onPress={() => onCLickHandler()} style={styles.container}>
-        <View style={styles.containertop}>
+      <Pressable
+        onPress={() => onCLickHandler()}
+        style={styles.container}
+        android_ripple={{ color: "rgba(212, 29, 119, 0.1)" }}
+      >
+        <View
+          style={styles.containertop}
+          {...panResponderRef.current?.panHandlers}
+        >
           <View style={styles.containertop1}>
             <View style={styles.number2top}>
               <View style={styles.iconCont}>
