@@ -53,7 +53,7 @@ const AddNotification = ({ navigation }) => {
         },
         { text: "Yes", onPress: handleSubmit },
       ],
-      { cancelable: false }
+      { cancelable: false },
     );
   };
 
@@ -85,7 +85,7 @@ const AddNotification = ({ navigation }) => {
           title,
           description,
           data,
-          LoginCtx.user?.email
+          LoginCtx.user?.email,
         );
       } else {
         await sendNotificationTeam(
@@ -93,7 +93,7 @@ const AddNotification = ({ navigation }) => {
           description,
           team,
           data,
-          LoginCtx.user?.email
+          LoginCtx.user?.email,
         );
       }
       const newtitle = title.split(" ").join("+");
@@ -103,7 +103,9 @@ const AddNotification = ({ navigation }) => {
           "api/announcements/addAnnouncement?title=" +
           newtitle +
           "&description=" +
-          newdescription
+          newdescription +
+          "&team=" +
+          team,
       );
       console.log(response.data, "Response");
       Alert.alert("Success", "Notification sent successfully");

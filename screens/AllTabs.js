@@ -33,11 +33,13 @@ import CheckSportUpdateEvent from "../Components/CheckSportUpdateEvent";
 import AddNotification from "./Admin/AddNotification";
 import SportPoints from "./Admin/SportPoints";
 import PlayerScreen from "./Events/PlayerScreen";
+import AddContention from "./Admin/AddContention";
+import ViewContentions from "./Admin/ViewContentions";
 
 import setProperTeamName from "../utils/setProperTeamName";
 import CreditsPage from "./CreditsPage";
 import ModalComponent from "../Components/Modal";
-// import FollowTeam from "./FollowTeam";
+import NotificationsPage from "./NotificationsPage";
 
 import TeamRegistration from "./Events/TeamRegistration";
 
@@ -337,6 +339,22 @@ function AdminDashboardStackNavigator() {
           headerShown: false,
         }}
       />
+      <AdminDashboardStack.Screen
+        name="AddContention"
+        component={AddContention}
+        options={{
+          headerTitle: () => <Header />,
+          headerTintColor: "white",
+          headerStyle: { backgroundColor: "#111319" },
+        }}
+      />
+      <AdminDashboardStack.Screen
+        name="ViewContentions"
+        component={ViewContentions}
+        options={{
+          headerShown: false,
+        }}
+      />
     </AdminDashboardStack.Navigator>
   );
 }
@@ -432,7 +450,14 @@ export default function AllTabs() {
       {LoginCtx.isAdmin && (
         <Tab.Screen name="     " component={AdminDashboardStackNavigator} />
       )}
-      <Tab.Screen name="      " component={FollowTeam} />
+      <Tab.Screen name="      " component={NotificationsPage} />
+      <Tab.Screen
+        name="       "
+        component={FollowTeam}
+        options={{
+          tabBarButton: () => null,
+        }}
+      />
     </Tab.Navigator>
   );
 }

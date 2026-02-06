@@ -26,9 +26,11 @@ const handleBetsUpdate = async () => {
       `${backend_link}api/points/updateFantasyPoints`,
       {
         backend_link,
-      }
+      },
     );
-    const res2 = await axios.get(`${backend_link}api/points/updateTechCultPoints`);
+    const res2 = await axios.get(
+      `${backend_link}api/points/updateTechCultPoints`,
+    );
     // console.log("Updated Fantasy Points");
     // console.log(res.data);
     if (res.data.message != "success") {
@@ -47,205 +49,193 @@ const AdminDashboard = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View style={{ maxHeight: "95%", paddingTop: 40 }}>
-        <Text style={styles.heading}>Admin</Text>
-        <Text style={styles.text}>
-          Please click on the specific tile for the options related to that
-          particular feature/option.
-        </Text>
-        <ScrollView>
-          <View style={styles.subcontainer}>
-            {/* Left Column */}
-            <View style={styles.column}>
-              <Pressable
-                style={({ pressed }) => [
-                  styles.cardView,
-                  pressed ? styles.cardPressed : {},
-                ]}
-                onPress={() => {
-                  navigation.navigate("AddNotification");
-                }}
-              >
-                <MaterialCommunityIcons
-                  name="bell"
-                  size={30}
-                  color="#0066FF"
-                  style={{ paddingVertical: 2 }}
-                />
-                <Text style={styles.cardTitle}>Notifications</Text>
-                <Text style={styles.cardDescription}>
-                  Send or Delete Notifications
-                </Text>
-                <AntDesign name="arrowright" size={20} color="white" />
-              </Pressable>
-              <Pressable
-                style={({ pressed }) => [
-                  styles.cardView,
-                  pressed ? styles.cardPressed : {},
-                ]}
-                onPress={() => {
-                  AddPoints();
-                }}
-              >
-                <Octicons
-                  name="north-star"
-                  size={30}
-                  color="#0066FF"
-                  style={{ paddingVertical: 2 }}
-                />
-                <Text style={styles.cardTitle}>Add Score</Text>
-                <Text style={styles.cardDescription}>Only for Sports</Text>
-                <AntDesign name="arrowright" size={20} color="white" />
-              </Pressable>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {/* Header Section */}
+        <View style={styles.headerSection}>
+          <View style={styles.headerContent}>
+            <Text style={styles.heading}>Admin Panel</Text>
+            <Text style={styles.subtitle}>
+              Manage all platform features and settings
+            </Text>
+          </View>
+          <View style={styles.headerIcon}>
+            <MaterialCommunityIcons
+              name="shield-admin"
+              size={40}
+              color="#d41d77"
+            />
+          </View>
+        </View>
 
-              {/* <Pressable
-                style={({ pressed }) => [
-                  styles.cardView,
-                  pressed ? styles.cardPressed : {},
-                ]}
-                onPress={() => {
-                  navigation.navigate("AddNewsImage");
-                }}
-              >
-                <View style={{ paddingVertical: 15 }}>
-                  <Image
-                    source={require("../../assets/news.png")}
-                    style={{ alignSelf: "center" }}
-                  />
-                </View>
-                <Text style={styles.cardTitle}>News</Text>
-                <Text style={styles.cardDescription}>
-                  Only for Oracle Members
-                </Text>
-                <AntDesign name="arrowright" size={20} color="white" />
-              </Pressable> */}
-
-              {/* <Pressable
-                style={({ pressed }) => [
-                  styles.cardView,
-                  pressed ? styles.cardPressed : {},
-                ]}
-                onPress={() => {
-                  AddPoints();
-                }}
-              >
-                <Octicons
-                  name="north-star"
-                  size={30}
-                  color="#0066FF"
-                  style={{ paddingVertical: 2 }}
-                />
-                <Text style={styles.cardTitle}>Add Score</Text>
-                <AntDesign name="arrowright" size={20} color="white" />
-              </Pressable> */}
-            </View>
-            {/* Right Column */}
-            <View style={styles.column}>
-              <Pressable
-                style={({ pressed }) => [
-                  styles.cardView,
-                  pressed ? styles.cardPressed : {},
-                ]}
-                onPress={() => {
-                  navigation.navigate("LiveEvents");
-                }}
-              >
-                <View style={{ paddingVertical: 10 }}>
-                  <Image
-                    source={require("../../assets/liveEvents.png")}
-                    style={{ alignSelf: "center" }}
-                  />
-                </View>
-                <Text style={styles.cardTitle}>Live Events</Text>
-                <Text style={styles.cardDescription}>
-                  Add or Update a Live Event
-                </Text>
-                <AntDesign name="arrowright" size={20} color="white" />
-              </Pressable>
-
-              <Pressable
+        {/* Main Grid */}
+        <View style={styles.gridContainer}>
+          {/* Row 1 */}
+          <View style={styles.row}>
+            {/* Notifications */}
+            <Pressable
               style={({ pressed }) => [
-                styles.cardView,
-                pressed ? styles.cardPressed : {},
+                styles.card,
+                styles.notificationCard,
+                pressed && styles.cardPressed,
               ]}
-              onPress={() => {
-                // console.log("Test button pressed");
-                handleBetsUpdate();
-                // navigation.navigate("UpdateFantasyPoints");
-              }}
+              onPress={() => navigation.navigate("AddNotification")}
             >
-              <MaterialCommunityIcons
-                name="star-circle"
-                size={30}
-                color="#0066FF"
-                style={{ paddingVertical: 2 }}
-              />
-              <Text style={styles.cardTitle}>Update User Points</Text>
-              <Text style={styles.cardDescription}>
-                Click to Update fantasy League points for Users
-              </Text>
-              {/* <AntDesign name="arrowright" size={20} color="white" /> */}
+              <View style={styles.cardIconContainer}>
+                <MaterialCommunityIcons name="bell" size={28} color="#fff" />
+              </View>
+              <Text style={styles.cardTitle}>Notifications</Text>
+              <Text style={styles.cardDescription}>Send or Delete</Text>
             </Pressable>
-            </View>
-            {/* Right Column */}
-            <View style={styles.column}>
-              {/* <Pressable
-            style={({ pressed }) => [
-              styles.cardView,
-              pressed ? styles.cardPressed : {},
-            ]}
-            onPress={() => {navigation.navigate('LiveEvents');}}
-          >
-            <View style={{ paddingVertical: 10 }}>
-              <Image
-                source={require("../assets/liveEvents.png")}
-                style={{ alignSelf: "center" }}
-              /> */}
-              <Pressable
-                style={({ pressed }) => [
-                  styles.cardView,
-                  pressed ? styles.cardPressed : {},
-                ]}
-                onPress={() => {
-                  navigation.navigate("AddCarouselImage");
-                }}
-              >
-                <Image
-                  source={require("../../assets/carousel.png")}
-                  style={{ alignSelf: "center" }}
-                />
-                <Text style={styles.cardTitle}>Carousel Image</Text>
-                <Text style={styles.cardDescription}>
-                  Add or Delete Carousel Image
-                </Text>
-                <AntDesign name="arrowright" size={20} color="white" />
-              </Pressable>
 
-              <Pressable
-                style={({ pressed }) => [
-                  styles.cardView,
-                  pressed ? styles.cardPressed : {},
-                ]}
-                onPress={() => {
-                  navigation.navigate("SportPoints");
-                }}
-              >
-                <FontAwesome5
-                  name="trophy"
-                  size={30}
-                  color="#0066FF"
-                  style={{ paddingVertical: 2 }}
+            {/* Add Score */}
+            <Pressable
+              style={({ pressed }) => [
+                styles.card,
+                styles.scoreCard,
+                pressed && styles.cardPressed,
+              ]}
+              onPress={() => navigation.navigate("AdminAddScoreStack")}
+            >
+              <View style={styles.cardIconContainer}>
+                <MaterialCommunityIcons
+                  name="star-circle"
+                  size={28}
+                  color="#fff"
                 />
-                <Text style={styles.cardTitle}>Add Sports Result</Text>
-                <AntDesign name="arrowright" size={20} color="white" />
-              </Pressable>
-            </View>
+              </View>
+              <Text style={styles.cardTitle}>Add Score</Text>
+              <Text style={styles.cardDescription}>Sports Events</Text>
+            </Pressable>
           </View>
-          <View style={{alignItems: "center"}}>
-            
+
+          {/* Row 2 */}
+          <View style={styles.row}>
+            {/* Live Events */}
+            <Pressable
+              style={({ pressed }) => [
+                styles.card,
+                styles.liveCard,
+                pressed && styles.cardPressed,
+              ]}
+              onPress={() => navigation.navigate("LiveEvents")}
+            >
+              <View style={styles.cardIconContainer}>
+                <MaterialCommunityIcons
+                  name="broadcast-live"
+                  size={28}
+                  color="#fff"
+                />
+              </View>
+              <Text style={styles.cardTitle}>Live Events</Text>
+              <Text style={styles.cardDescription}>Add or Update</Text>
+            </Pressable>
+
+            {/* Update Points */}
+            <Pressable
+              style={({ pressed }) => [
+                styles.card,
+                styles.pointsCard,
+                pressed && styles.cardPressed,
+              ]}
+              onPress={() => handleBetsUpdate()}
+            >
+              <View style={styles.cardIconContainer}>
+                <MaterialCommunityIcons
+                  name="chart-line"
+                  size={28}
+                  color="#fff"
+                />
+              </View>
+              <Text style={styles.cardTitle}>Update Points</Text>
+              <Text style={styles.cardDescription}>Fantasy League</Text>
+            </Pressable>
           </View>
-        </ScrollView>
-      </View>
+
+          {/* Row 3 */}
+          <View style={styles.row}>
+            {/* Carousel */}
+            <Pressable
+              style={({ pressed }) => [
+                styles.card,
+                styles.carouselCard,
+                pressed && styles.cardPressed,
+              ]}
+              onPress={() => navigation.navigate("AddCarouselImage")}
+            >
+              <View style={styles.cardIconContainer}>
+                <MaterialCommunityIcons
+                  name="image-multiple"
+                  size={28}
+                  color="#fff"
+                />
+              </View>
+              <Text style={styles.cardTitle}>Carousel</Text>
+              <Text style={styles.cardDescription}>Images & Banners</Text>
+            </Pressable>
+
+            {/* Sports Result */}
+            <Pressable
+              style={({ pressed }) => [
+                styles.card,
+                styles.resultsCard,
+                pressed && styles.cardPressed,
+              ]}
+              onPress={() => navigation.navigate("SportPoints")}
+            >
+              <View style={styles.cardIconContainer}>
+                <MaterialCommunityIcons name="trophy" size={28} color="#fff" />
+              </View>
+              <Text style={styles.cardTitle}>Sports Result</Text>
+              <Text style={styles.cardDescription}>Add Results</Text>
+            </Pressable>
+          </View>
+
+          {/* Row 4 */}
+          <View style={styles.row}>
+            {/* Report Cheating */}
+            <Pressable
+              style={({ pressed }) => [
+                styles.card,
+                styles.contentionCard,
+                pressed && styles.cardPressed,
+              ]}
+              onPress={() => navigation.navigate("AddContention")}
+            >
+              <View style={styles.cardIconContainer}>
+                <MaterialCommunityIcons
+                  name="alert-octagon"
+                  size={28}
+                  color="#fff"
+                />
+              </View>
+              <Text style={styles.cardTitle}>Report Cheating</Text>
+              <Text style={styles.cardDescription}>File Complaint</Text>
+            </Pressable>
+
+            {/* View Contentions */}
+            <Pressable
+              style={({ pressed }) => [
+                styles.card,
+                styles.viewCard,
+                pressed && styles.cardPressed,
+              ]}
+              onPress={() => navigation.navigate("ViewContentions")}
+            >
+              <View style={styles.cardIconContainer}>
+                <MaterialCommunityIcons
+                  name="clipboard-check"
+                  size={28}
+                  color="#fff"
+                />
+              </View>
+              <Text style={styles.cardTitle}>View Contentions</Text>
+              <Text style={styles.cardDescription}>Manage Complaints</Text>
+            </Pressable>
+          </View>
+        </View>
+
+        <View style={{ height: 40 }} />
+      </ScrollView>
     </View>
   );
 };
@@ -255,50 +245,117 @@ export default AdminDashboard;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 15,
     backgroundColor: "#000",
+    paddingTop: 20,
+  },
+  headerSection: {
+    flexDirection: "row",
+    paddingHorizontal: 20,
+    paddingVertical: 24,
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  headerContent: {
+    flex: 1,
+  },
+  headerIcon: {
+    marginLeft: 20,
+    width: 60,
+    height: 60,
+    borderRadius: 12,
+    backgroundColor: "#1a1a1a",
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#333",
   },
   heading: {
-    color: "#d21d76",
-    fontSize: 32,
-    fontWeight: "500",
-    marginVertical: 8,
+    color: "#d41d77",
+    fontSize: 36,
+    fontWeight: "700",
+    marginBottom: 6,
   },
-  text: {
-    color: "#78889B",
-    fontSize: 15,
+  subtitle: {
+    color: "#999",
+    fontSize: 13,
     fontWeight: "400",
+    lineHeight: 18,
   },
-  subcontainer: {
+  gridContainer: {
+    paddingHorizontal: 16,
+    gap: 16,
+    paddingBottom: 20,
+  },
+  row: {
     flexDirection: "row",
-    marginTop: 15,
+    gap: 16,
   },
-  column: {
+  card: {
     flex: 1,
-    margin: 4,
-    borderRadius: 10,
-    gap: 8,
+    borderRadius: 16,
+    paddingVertical: 24,
+    paddingHorizontal: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 160,
+    borderWidth: 1,
   },
-  cardView: {
-    backgroundColor: "#111319",
-    padding: 10,
-    borderRadius: 10,
-    paddingVertical: 15,
-    marginBottom: 8,
+  cardIconContainer: {
+    width: 56,
+    height: 56,
+    borderRadius: 14,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 12,
   },
   cardTitle: {
-    color: "#d21d76",
-    fontSize: 15,
-    fontWeight: "500",
-    paddingVertical: 3,
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: "600",
+    textAlign: "center",
+    marginBottom: 4,
   },
   cardDescription: {
-    color: "#78889B",
-    fontSize: 12,
+    color: "#999",
+    fontSize: 11,
     fontWeight: "400",
-    paddingVertical: 2,
+    textAlign: "center",
   },
   cardPressed: {
-    opacity: 0.5,
+    opacity: 0.8,
+    transform: [{ scale: 0.95 }],
+  },
+  notificationCard: {
+    backgroundColor: "#1a2a3a",
+    borderColor: "#0066FF",
+  },
+  scoreCard: {
+    backgroundColor: "#2a2a1a",
+    borderColor: "#FFC700",
+  },
+  liveCard: {
+    backgroundColor: "#1a3a2a",
+    borderColor: "#00D4AA",
+  },
+  pointsCard: {
+    backgroundColor: "#2a1a2a",
+    borderColor: "#BB86FC",
+  },
+  carouselCard: {
+    backgroundColor: "#3a2a1a",
+    borderColor: "#FF9F00",
+  },
+  resultsCard: {
+    backgroundColor: "#1a2a2a",
+    borderColor: "#64B5F6",
+  },
+  contentionCard: {
+    backgroundColor: "#3a1a1a",
+    borderColor: "#FF6B6B",
+  },
+  viewCard: {
+    backgroundColor: "#2a2a2a",
+    borderColor: "#FF9800",
   },
 });
