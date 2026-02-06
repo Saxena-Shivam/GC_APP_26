@@ -15,8 +15,7 @@ import Icon from "react-native-vector-icons/MaterialIcons";
 import Modal from "./Modal";
 import EventDropDown from "./eventsDropdown";
 
-
-export default function Header({ events, showmodal, navigation}) {
+export default function Header({ events, showmodal, navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const openModal = () => {
     setModalVisible(true);
@@ -47,7 +46,7 @@ export default function Header({ events, showmodal, navigation}) {
         />
         <Text style={{ color: "white", fontSize: 23, fontWeight: "bold" }}>
           {" "}
-          GC 2025
+          GC 2026
         </Text>
       </View>
       {/* <MaskedView
@@ -85,12 +84,19 @@ export default function Header({ events, showmodal, navigation}) {
       </View>
       {showmodal && (
         <View>
-          <TouchableOpacity onPress={openModal} style={{borderWidth:2,borderColor:"#fff",borderRadius:50}}>
+          <TouchableOpacity
+            onPress={openModal}
+            style={{ borderWidth: 2, borderColor: "#fff", borderRadius: 50 }}
+          >
             <Icon name="person" size={27} color="white" />
           </TouchableOpacity>
         </View>
       )}
-      <Modal modalVisible={modalVisible} setModalVisible={setModalVisible} navigation={navigation}/>
+      <Modal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        navigation={navigation}
+      />
     </View>
   );
 }
@@ -105,4 +111,3 @@ styles = StyleSheet.create({
     backgroundColor: "#111319",
   },
 });
-

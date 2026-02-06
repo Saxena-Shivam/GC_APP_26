@@ -80,8 +80,8 @@ const AddContention = ({ navigation }) => {
 
   const showConfirmationAlert = () => {
     Alert.alert(
-      "Submit Contention?",
-      "Are you sure you want to submit this cheating complaint? It will be reviewed by admins.",
+      "Submit Complaint?",
+      "This will be reviewed by administrators.",
       [
         {
           text: "Cancel",
@@ -117,10 +117,7 @@ const AddContention = ({ navigation }) => {
         contentionData,
       );
       console.log(response.data, "Response");
-      Alert.alert(
-        "Success",
-        "Contention submitted successfully. Admins will review it shortly.",
-      );
+      Alert.alert("Success", "Complaint submitted successfully.");
 
       // Reset form
       setEventName("");
@@ -199,10 +196,7 @@ const AddContention = ({ navigation }) => {
             size={40}
             color="#FF6B6B"
           />
-          <Text style={styles.headerTitle}>Report Cheating/Irregularity</Text>
-          <Text style={styles.headerSubtitle}>
-            Submitted by {coordinatorBranch} Coordinator
-          </Text>
+          <Text style={styles.headerTitle}>Submit Complaint</Text>
         </View>
 
         {/* Form */}
@@ -221,7 +215,7 @@ const AddContention = ({ navigation }) => {
                 containerStyle={styles.inputIcon}
               />
               <TextInput
-                placeholder="e.g., Cricket - Finals 2024"
+                placeholder="Cricket Finals"
                 style={styles.textInput}
                 placeholderTextColor="#666"
                 value={eventName}
@@ -290,7 +284,7 @@ const AddContention = ({ navigation }) => {
           {/* Description */}
           <View style={styles.fieldGroup}>
             <Text style={styles.fieldLabel}>
-              <Text style={styles.required}>*</Text> Detailed Description
+              <Text style={styles.required}>*</Text> Description
             </Text>
             <View style={[styles.inputWrapper, styles.textAreaWrapper]}>
               <Icon
@@ -301,7 +295,7 @@ const AddContention = ({ navigation }) => {
                 containerStyle={styles.textAreaIcon}
               />
               <TextInput
-                placeholder="Describe the cheating/irregularity in detail..."
+                placeholder="Describe the incident"
                 style={styles.textArea}
                 placeholderTextColor="#666"
                 value={description}
@@ -314,8 +308,8 @@ const AddContention = ({ navigation }) => {
 
           {/* Evidence Details */}
           <View style={styles.fieldGroup}>
-            <Text style={styles.fieldLabel}>Evidence/Proof Details</Text>
-            <Text style={styles.fieldHelper}>Optional but recommended</Text>
+            <Text style={styles.fieldLabel}>Evidence</Text>
+            <Text style={styles.fieldHelper}>Optional</Text>
             <View style={[styles.inputWrapper, styles.textAreaWrapper]}>
               <Icon
                 name="paperclip"
@@ -325,7 +319,7 @@ const AddContention = ({ navigation }) => {
                 containerStyle={styles.textAreaIcon}
               />
               <TextInput
-                placeholder="Provide any evidence, player names, or additional details..."
+                placeholder="Add supporting details"
                 style={styles.textArea}
                 placeholderTextColor="#666"
                 value={evidenceDetails}
@@ -372,8 +366,7 @@ const AddContention = ({ navigation }) => {
               color="#4169E1"
             />
             <Text style={styles.infoText}>
-              All submissions are reviewed by admins. False reports may result
-              in penalties.
+              Admin review required. False reports will be penalized.
             </Text>
           </View>
         </View>

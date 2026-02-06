@@ -60,7 +60,7 @@ const AdminDashboard = ({ navigation }) => {
           </View>
           <View style={styles.headerIcon}>
             <MaterialCommunityIcons
-              name="shield-admin"
+              name="lightning-bolt"
               size={40}
               color="#d41d77"
             />
@@ -121,7 +121,7 @@ const AdminDashboard = ({ navigation }) => {
             >
               <View style={styles.cardIconContainer}>
                 <MaterialCommunityIcons
-                  name="broadcast-live"
+                  name="flag-checkered"
                   size={28}
                   color="#fff"
                 />
@@ -153,26 +153,6 @@ const AdminDashboard = ({ navigation }) => {
 
           {/* Row 3 */}
           <View style={styles.row}>
-            {/* Carousel */}
-            <Pressable
-              style={({ pressed }) => [
-                styles.card,
-                styles.carouselCard,
-                pressed && styles.cardPressed,
-              ]}
-              onPress={() => navigation.navigate("AddCarouselImage")}
-            >
-              <View style={styles.cardIconContainer}>
-                <MaterialCommunityIcons
-                  name="image-multiple"
-                  size={28}
-                  color="#fff"
-                />
-              </View>
-              <Text style={styles.cardTitle}>Carousel</Text>
-              <Text style={styles.cardDescription}>Images & Banners</Text>
-            </Pressable>
-
             {/* Sports Result */}
             <Pressable
               style={({ pressed }) => [
@@ -188,10 +168,7 @@ const AdminDashboard = ({ navigation }) => {
               <Text style={styles.cardTitle}>Sports Result</Text>
               <Text style={styles.cardDescription}>Add Results</Text>
             </Pressable>
-          </View>
 
-          {/* Row 4 */}
-          <View style={styles.row}>
             {/* Report Cheating */}
             <Pressable
               style={({ pressed }) => [
@@ -211,8 +188,11 @@ const AdminDashboard = ({ navigation }) => {
               <Text style={styles.cardTitle}>Report Cheating</Text>
               <Text style={styles.cardDescription}>File Complaint</Text>
             </Pressable>
+          </View>
 
-            {/* View Contentions */}
+          {/* Row 4 */}
+          <View style={styles.row}>
+            /* View Contentions */
             <Pressable
               style={({ pressed }) => [
                 styles.card,
@@ -327,35 +307,31 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.95 }],
   },
   notificationCard: {
-    backgroundColor: "#1a2a3a",
-    borderColor: "#0066FF",
+    backgroundColor: "#1a1a1a",
+    borderColor: "#444",
   },
   scoreCard: {
-    backgroundColor: "#2a2a1a",
-    borderColor: "#FFC700",
+    backgroundColor: "#1a1a1a",
+    borderColor: "#444",
   },
   liveCard: {
-    backgroundColor: "#1a3a2a",
-    borderColor: "#00D4AA",
+    backgroundColor: "#1a1a1a",
+    borderColor: "#d41d77",
   },
   pointsCard: {
-    backgroundColor: "#2a1a2a",
-    borderColor: "#BB86FC",
-  },
-  carouselCard: {
-    backgroundColor: "#3a2a1a",
-    borderColor: "#FF9F00",
+    backgroundColor: "#1a1a1a",
+    borderColor: "#444",
   },
   resultsCard: {
-    backgroundColor: "#1a2a2a",
-    borderColor: "#64B5F6",
+    backgroundColor: "#1a1a1a",
+    borderColor: "#444",
   },
   contentionCard: {
-    backgroundColor: "#3a1a1a",
-    borderColor: "#FF6B6B",
+    backgroundColor: "#1a1a1a",
+    borderColor: "#d41d77",
   },
   viewCard: {
-    backgroundColor: "#2a2a2a",
-    borderColor: "#FF9800",
+    backgroundColor: "#1a1a1a",
+    borderColor: "#444",
   },
 });
