@@ -61,7 +61,9 @@ const EventsProvider = ({ children }) => {
           const details = match_item.data.details;
 
           const startTimestampMs = getTimestampInMs(details?.timestamp);
-          let endTimestampMs = getTimestampInMs(match_item.data?.endTimeStamp);
+          let endTimestampMs = getTimestampInMs(
+            details?.endTimeStamp ?? match_item.data?.endTimeStamp,
+          );
 
           // If endTimeStamp is missing or 0, estimate it as start + 2 hours
           if (!endTimestampMs || endTimestampMs === 0) {
@@ -125,37 +127,62 @@ const EventsProvider = ({ children }) => {
         );
         console.log(`  Backend status: ${event.status}`);
 
-        // Primary: Use backend status if available and recognized
+        const isPastByTime = event.endTimeStamp < now;
+        const isLiveByTime =
+          event.timeStamp <= now && event.endTimeStamp >= now;
+        const isUpcomingByTime = event.timeStamp > now;
+
+        // Primary: Use backend status when it does not conflict with timestamps
         if (event.status && typeof event.status === "string") {
           const statusLower = event.status.toLowerCase();
           if (statusLower === "past" || statusLower === "completed") {
-            console.log(`  -> PAST (from backend status: ${event.status})`);
-            past.push(event);
-            return;
+            if (isUpcomingByTime || isLiveByTime) {
+              console.log(
+                `  -> STATUS PAST but time indicates UPCOMING/LIVE, using timestamp`,
+              );
+            } else {
+              console.log(`  -> PAST (from backend status: ${event.status})`);
+              past.push(event);
+              return;
+            }
           } else if (statusLower === "live" || statusLower === "ongoing") {
-            console.log(`  -> LIVE (from backend status: ${event.status})`);
-            live.push(event);
-            return;
+            if (isPastByTime) {
+              console.log(
+                `  -> STATUS LIVE but time indicates PAST, using timestamp`,
+              );
+            } else {
+              console.log(`  -> LIVE (from backend status: ${event.status})`);
+              live.push(event);
+              return;
+            }
           } else if (
             statusLower === "upcoming" ||
             statusLower === "scheduled"
           ) {
-            console.log(`  -> UPCOMING (from backend status: ${event.status})`);
-            upcoming.push(event);
-            return;
+            if (isPastByTime || isLiveByTime) {
+              console.log(
+                `  -> STATUS UPCOMING but time indicates PAST/LIVE, using timestamp`,
+              );
+            } else {
+              console.log(
+                `  -> UPCOMING (from backend status: ${event.status})`,
+              );
+              upcoming.push(event);
+              return;
+            }
           }
         }
 
         // Fallback: Use timestamp-based categorization
-        if (event.endTimeStamp < now) {
+        if (isPastByTime) {
           console.log(
             `  -> PAST (endTimeStamp ${event.endTimeStamp} < now ${now})`,
           );
           past.push(event);
-        } else if (event.timeStamp <= now && event.endTimeStamp >= now) {
+        } else if (isLiveByTime) {
           console.log(`  -> LIVE`);
           live.push(event);
-        } else if (event.timeStamp > now) {
+        } else if (isUpcomingByTime) {
           console.log(
             `  -> UPCOMING (timeStamp ${event.timeStamp} > now ${now})`,
           );
