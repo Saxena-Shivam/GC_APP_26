@@ -224,7 +224,7 @@ const TeamRegistrationForm = ({ route, navigation }) => {
                 {
                   backgroundColor:
                     category?.toLowerCase() === "sports"
-                      ? "#FF6B6B"
+                      ? "#118d49"
                       : category?.toLowerCase() === "tech"
                         ? "#4ECDC4"
                         : "#FFE66D",
@@ -360,7 +360,7 @@ const TeamRegistrationForm = ({ route, navigation }) => {
                     <MaterialCommunityIcons
                       name="trash-can"
                       size={18}
-                      color="#FF6B6B"
+                      color="#D41D77"
                     />
                   </TouchableOpacity>
                 )}
@@ -535,7 +535,7 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingHorizontal: 10,
     paddingVertical: 6,
-    backgroundColor: "#FF6B6B",
+    backgroundColor: "#D41D77",
     borderRadius: 6,
   },
   addBtnText: {
@@ -581,7 +581,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: "#FF6B6B",
+    backgroundColor: "#D41D77",
     justifyContent: "center",
     alignItems: "center",
     marginTop: 4,
@@ -637,7 +637,7 @@ const styles = StyleSheet.create({
     color: "#888",
   },
   submitBtn: {
-    backgroundColor: "#FF6B6B",
+    backgroundColor: "#D41D77",
   },
   submitBtnText: {
     fontSize: 13,

@@ -107,86 +107,81 @@ export default function Leaderboard() {
   const renderItem = ({ item }) => {
     // console.log(item);
     return (
-      <View style={{ padding: 5, margin: 6, marginBottom: 0 }}>
+      <View style={styles.listItemWrap}>
         <LeaderBoardElement branchData={item} logoPaths={logoPaths} />
       </View>
     );
   };
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.containertop}>
-        <View style={styles.containertop1}>
-          <View style={styles.number2top}>
-            <View style={styles.iconCont}>
-              <FontAwesome5 name="crown" size={22} color="#ADABA1" />
-            </View>
-            {getLogoSource(top3[1]?.Name) ? (
-              <Image
-                source={getLogoSource(top3[1]?.Name)}
-                style={{ width: 90, height: 90 }}
-              />
-            ) : null}
-          </View>
-          <View style={styles.number2bottom}>
-            <Text style={[styles.leadHeading]}>
-              {top3[1]?.Name === "ECE_META" ? "ECE_META_EP" : top3[1]?.Name}
-            </Text>
-            <Text style={styles.leadScore}>{top3[1]?.Score}</Text>
-          </View>
-        </View>
-        <View style={styles.containertop2}>
-          <View style={styles.number1top}>
-            <View style={styles.iconCont}>
-              <FontAwesome5 name="crown" size={24} color="#FFAA00" />
-            </View>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Leaderboard</Text>
+        <Text style={styles.headerSubtitle}>Overall standings and scores</Text>
+      </View>
 
-            {getLogoSource(top3[0]?.Name) ? (
-              <Image
-                source={getLogoSource(top3[0]?.Name)}
-                style={{ width: 100, height: 100 }}
-              />
-            ) : null}
+      <View style={styles.podiumWrap}>
+        <View style={[styles.podiumCard, styles.podiumSilver]}>
+          <View style={styles.crownWrap}>
+            <FontAwesome5 name="crown" size={18} color="#B6B6B6" />
           </View>
-          <View style={styles.number1bottom}>
-            <Text style={[styles.leadHeading]}>
-              {top3[0]?.Name === "ECE_META" ? "ECE_META_EP" : top3[0]?.Name}
-            </Text>
-            <Text style={styles.leadScore}>{top3[0]?.Score}</Text>
-          </View>
+          {getLogoSource(top3[1]?.Name) ? (
+            <Image
+              source={getLogoSource(top3[1]?.Name)}
+              style={styles.podiumLogo}
+            />
+          ) : null}
+          <Text style={styles.podiumName}>
+            {top3[1]?.Name === "ECE_META" ? "ECE_META_EP" : top3[1]?.Name}
+          </Text>
+          <Text style={styles.podiumScore}>{top3[1]?.Score}</Text>
         </View>
-        <View style={styles.containertop3}>
-          <View style={styles.number3top}>
-            <View style={styles.iconCont}>
-              <FontAwesome5 name="crown" size={20} color="#CB7E32" />
-            </View>
-            {getLogoSource(top3[2]?.Name) ? (
-              <Image
-                source={getLogoSource(top3[2]?.Name)}
-                style={{ width: 70, height: 70 }}
-              />
-            ) : null}
+
+        <View style={[styles.podiumCard, styles.podiumGold]}>
+          <View style={styles.crownWrap}>
+            <FontAwesome5 name="crown" size={20} color="#FFB020" />
           </View>
-          <View style={styles.number3bottom}>
-            <Text style={[styles.leadHeading]}>
-              {top3[2]?.Name === "ECE_META" ? "ECE_META_EP" : top3[2]?.Name}
-            </Text>
-            <Text style={styles.leadScore}>{top3[2]?.Score}</Text>
+          {getLogoSource(top3[0]?.Name) ? (
+            <Image
+              source={getLogoSource(top3[0]?.Name)}
+              style={styles.podiumLogoLarge}
+            />
+          ) : null}
+          <Text style={styles.podiumName}>
+            {top3[0]?.Name === "ECE_META" ? "ECE_META_EP" : top3[0]?.Name}
+          </Text>
+          <Text style={styles.podiumScore}>{top3[0]?.Score}</Text>
+        </View>
+
+        <View style={[styles.podiumCard, styles.podiumBronze]}>
+          <View style={styles.crownWrap}>
+            <FontAwesome5 name="crown" size={16} color="#C07B3A" />
           </View>
+          {getLogoSource(top3[2]?.Name) ? (
+            <Image
+              source={getLogoSource(top3[2]?.Name)}
+              style={styles.podiumLogoSmall}
+            />
+          ) : null}
+          <Text style={styles.podiumName}>
+            {top3[2]?.Name === "ECE_META" ? "ECE_META_EP" : top3[2]?.Name}
+          </Text>
+          <Text style={styles.podiumScore}>{top3[2]?.Score}</Text>
         </View>
       </View>
-      <View style={styles.container2}>
+
+      <View style={styles.listHeader}>
+        <Text style={styles.listTitle}>All Teams</Text>
+        <Text style={styles.listMeta}>Updated: {lastUpdated}</Text>
+      </View>
+
+      <View style={styles.listContainer}>
         <FlatList
           data={restData}
           renderItem={renderItem}
           keyExtractor={(item, index) => item.Name + "-" + index}
-          // style={styles.LeaderBoardList}
+          showsVerticalScrollIndicator={false}
         />
       </View>
-      <View style={styles.bottomcont}>
-        <Text style={styles.text01}>Last Updated on: </Text>
-        <Text style={styles.text02}>{lastUpdated}</Text>
-      </View>
-      <View style={styles.bottomnav}></View>
     </SafeAreaView>
   );
 }
@@ -194,140 +189,107 @@ export default function Leaderboard() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000000",
-    color: "white",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
+    backgroundColor: "#0F1419",
+    paddingTop: 24,
   },
-  containertop: {
-    flex: 1.5,
-    backgroundColor: "#000000",
-    color: "white",
-    flexDirection: "row",
-  },
-  containertop1: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "flex-end",
-  },
-  containertop2: {
-    flex: 1.25,
-    flexDirection: "column",
-    justifyContent: "flex-end",
-  },
-  containertop3: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "flex-end",
-  },
-  number1top: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    padding: 10,
-  },
-  number1bottom: {
-    flex: 0.75,
-    backgroundColor: "#746030",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    width: "100%",
-
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  number2top: {
-    flex: 1.5,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    padding: 10,
-  },
-  number2bottom: {
-    flex: 0.75,
-    backgroundColor: "#52514F",
-    borderTopLeftRadius: 12,
-    borderBottomLeftRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  number3top: {
-    flex: 2,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    padding: 10,
-  },
-  number3bottom: {
-    flex: 0.75,
-    backgroundColor: "#795038",
-    borderTopRightRadius: 12,
-    borderBottomRightRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  iconCont: {
-    padding: 0,
-  },
-  container2: {
-    flex: 2,
-    width: "100%",
-    backgroundColor: "#000",
-    color: "white",
-    flexDirection: "row",
+  header: {
+    paddingHorizontal: 20,
     paddingTop: 10,
+    paddingBottom: 8,
   },
-  leadHeading: {
-    fontSize: 15,
-    color: "white",
-
-    fontWeight: "bold",
-  },
-  leadScore: {
-    fontSize: 20,
-    color: "white",
-
-    fontWeight: "bold",
-  },
-
-  text: {
-    color: "white",
-  },
-  LeaderBoardList: {
-    flex: 1,
-    backgroundColor: "#000000",
-    gap: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 100,
-  },
-  bottomcont: {
-    flex: 0.3,
-    flexDirection: "row",
-    backgroundColor: "#000000",
-    color: "white",
-    alignItems: "center",
-    justifyContent: "center",
-    bottomMargin: 0,
-  },
-  text01: {
+  headerTitle: {
+    fontSize: 32,
+    fontWeight: "700",
     color: "#D41D77",
-    alignItems: "center",
-
-    paddingBottom: 0,
+    letterSpacing: 0.4,
   },
-  text02: {
-    color: "white",
-    fontWeight: "bold",
-    alignContent: "center",
-
-    paddingBottom: 0,
+  headerSubtitle: {
+    fontSize: 13,
+    color: "#9AA3AF",
+    marginTop: 6,
   },
-  bottomnav: {
-    flex: 0.4,
-    backgroundColor: "#000000",
-    color: "white",
+  podiumWrap: {
+    flexDirection: "row",
+    gap: 10,
+    paddingHorizontal: 16,
+    paddingBottom: 6,
+  },
+  podiumCard: {
+    flex: 1,
+    backgroundColor: "#1A1F26",
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#2A3038",
+    paddingVertical: 12,
     alignItems: "center",
-    justifyContent: "center",
-    height: 50,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  podiumGold: {
+    transform: [{ translateY: -6 }],
+    borderColor: "#3A2A12",
+  },
+  podiumSilver: {
+    transform: [{ translateY: 6 }],
+  },
+  podiumBronze: {
+    transform: [{ translateY: 10 }],
+  },
+  crownWrap: {
+    marginBottom: 6,
+  },
+  podiumLogoLarge: {
+    width: 92,
+    height: 92,
+  },
+  podiumLogo: {
+    width: 76,
+    height: 76,
+  },
+  podiumLogoSmall: {
+    width: 64,
+    height: 64,
+  },
+  podiumName: {
+    marginTop: 10,
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#F9FAFB",
+  },
+  podiumScore: {
+    marginTop: 4,
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#F9FAFB",
+  },
+  listHeader: {
+    marginTop: 10,
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  listTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#E5E7EB",
+    textTransform: "uppercase",
+    letterSpacing: 0.4,
+  },
+  listMeta: {
+    fontSize: 12,
+    color: "#9AA3AF",
+  },
+  listContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+  },
+  listItemWrap: {
+    paddingHorizontal: 4,
+    marginBottom: 6,
   },
 });

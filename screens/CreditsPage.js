@@ -1,123 +1,108 @@
 import React from "react";
 import { View, Text, ScrollView, StyleSheet, Image } from "react-native";
-import { Button } from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CreditsPage({ navigation }) {
-  console.log("navigation test: ", navigation);
   const organisingMembers = [
     { title: "President", name: "Aarav Patel" },
     { title: "Vice President", name: "Meera Singh" },
     { title: "General Secretary", name: "Rohan Kapoor" },
   ];
+
+  const leadBy = [
+    { name: "Suvansh Sharma" },
+    { name: "Siddarth.K", image: require("../assets/DevTeam/siddarth.jpeg") },
+  ];
+
+  const developedBy = [
+    { name: "Adarsh Chandra", image: require("../assets/DevTeam/adarsh.jpg") },
+    { name: "Avirat Joshi", image: require("../assets/DevTeam/avirat.jpeg") },
+    {
+      name: "Jeeban Jyoti Patra",
+      image: require("../assets/DevTeam/jeeban.jpeg"),
+    },
+    { name: "Prince Kumar", image: require("../assets/DevTeam/prince.jpeg") },
+  ];
+
+  const getInitials = (name) => {
+    return name
+      .split(" ")
+      .map((part) => part[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase();
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Organising Committee</Text>
+      <View style={styles.hero}>
+        <Text style={styles.title}>Credits</Text>
+        <Text style={styles.subtitle}>Organizing and development team</Text>
+      </View>
+
       <ScrollView contentContainerStyle={styles.contentContainer}>
-        {/* <Text style={styles.sectionTitle}>Organising Committee</Text> */}
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Organising Committee</Text>
+          <View style={styles.sectionRule} />
+        </View>
+
         {organisingMembers.map((member) => (
-          <View key={member.title} style={[styles.section, styles.elevation]}>
-            <View style={styles.avatarPlaceholder} />
-            <View>
-              <Text style={styles.member}>{member.title}</Text>
-              <Text style={styles.subText}>{member.name}</Text>
+          <View key={member.title} style={styles.card}>
+            <View style={styles.avatarPlaceholder}>
+              <Text style={styles.avatarText}>{getInitials(member.name)}</Text>
+            </View>
+            <View style={styles.cardText}>
+              <Text style={styles.cardTitle}>{member.title}</Text>
+              <Text style={styles.cardSubtitle}>{member.name}</Text>
             </View>
           </View>
         ))}
-        <Text style={styles.sectionTitle}> Lead By</Text>
-        {/* <View style={[styles.section, styles.elevation]}>
-          <Image
-            source={require("../assets/DevTeam/Chaitanya.jpg")}
-            style={styles.image}
-          />
-          <Text style={styles.member}>Chaitanya Bharadwaj</Text>
+
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Lead By</Text>
+          <View style={styles.sectionRule} />
         </View>
-        <View style={[styles.section, styles.elevation]}>
-          <Image
-            source={require("../assets/DevTeam/rachit.jpeg")}
-            style={styles.image}
-          />
-          <Text style={styles.member}>Rachit Jain</Text>
-        </View>
-        <View style={[styles.section, styles.elevation]}>
-          <Image
-            source={require("../assets/DevTeam/gupta.jpeg")}
-            style={styles.image}
-          />
-          <Text style={styles.member}>Ayush Gupta</Text>
-        </View> */}
-        <View style={[styles.section, styles.elevation]}>
-          <Image
-            // source={require("../assets/DevTeam/siddarth.jpeg")}
-            style={styles.avatarPlaceholder}
-          />
-          <Text style={styles.member}>Suvansh Sharma</Text>
-        </View>
-        <View style={[styles.section, styles.elevation]}>
-          <Image
-            source={require("../assets/DevTeam/siddarth.jpeg")}
-            style={styles.image}
-          />
-          <Text style={styles.member}>Siddarth.K</Text>
-        </View>
-        <Text style={styles.sectionTitle}>Developed by </Text>
-        {/* <View style={[styles.section, styles.elevation]}>
-          <Image
-            // source={require("../assets/DevTeam/adarsh.jpg")}
-            style={styles.avatarPlaceholder}
-          />
-          <Text style={styles.member}>Shivam Saxena</Text>
-        </View> */}
-        <View style={[styles.section, styles.elevation]}>
-          <Image
-            source={require("../assets/DevTeam/adarsh.jpg")}
-            style={styles.image}
-          />
-          <Text style={styles.member}>Adarsh Chandra</Text>
-        </View>
-        <View style={[styles.section, styles.elevation]}>
-          <Image
-            source={require("../assets/DevTeam/avirat.jpeg")}
-            style={styles.image}
-          />
-          <Text style={styles.member}>Avirat Joshi</Text>
-        </View>
-        <View style={[styles.section, styles.elevation]}>
-          <Image
-            source={require("../assets/DevTeam/jeeban.jpeg")}
-            style={styles.image}
-          />
-          <Text style={styles.member}>Jeeban Jyoti Patra</Text>
-        </View>
-        <View style={[styles.section, styles.elevation]}>
-          <Image
-            source={require("../assets/DevTeam/prince.jpeg")}
-            style={styles.image}
-          />
-          <Text style={styles.member}>Prince Kumar</Text>
-        </View>
-        {/* <Text style={styles.sectionTitle}>Special Thanks</Text> */}
-        {/* <View style={[styles.section, styles.elevation]}>
-          <Image source={require("../assets/DevTeam/Sambit.jpg")} style={styles.image} />
-          <View style={{ alignItems: "center" }}>
-            <Text style={styles.member}>Aditya Upadhyay</Text>
-            <Text style={styles.subText}>General Secretary</Text>
-            <Text style={styles.subText}>STC, Students' Gymkhana</Text>
+
+        {leadBy.map((member) => (
+          <View key={member.name} style={styles.card}>
+            {member.image ? (
+              <Image source={member.image} style={styles.avatar} />
+            ) : (
+              <View style={styles.avatarPlaceholder}>
+                <Text style={styles.avatarText}>
+                  {getInitials(member.name)}
+                </Text>
+              </View>
+            )}
+            <View style={styles.cardText}>
+              <Text style={styles.cardTitle}>{member.name}</Text>
+              <Text style={styles.cardSubtitle}>Lead</Text>
+            </View>
           </View>
-        </View> */}
-        {/* <View style={[styles.section, styles.elevation, { marginBottom: 30 }]}>
-          <Image
-            source={require("../assets/DevTeam/upadhyay.jpeg")}
-            style={styles.image}
-          />
-          <View style={{ alignItems: "center" }}>
-            <Text style={[styles.member, { fontSize: 20, marginBottom: 5 }]}>
-              Aditya Upadhyay
-            </Text>
-            <Text style={styles.subText}>General Secretary</Text>
-            <Text style={styles.subText}>STC, Students' Gymkhana</Text>
+        ))}
+
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Developed By</Text>
+          <View style={styles.sectionRule} />
+        </View>
+
+        {developedBy.map((member) => (
+          <View key={member.name} style={styles.card}>
+            {member.image ? (
+              <Image source={member.image} style={styles.avatar} />
+            ) : (
+              <View style={styles.avatarPlaceholder}>
+                <Text style={styles.avatarText}>
+                  {getInitials(member.name)}
+                </Text>
+              </View>
+            )}
+            <View style={styles.cardText}>
+              <Text style={styles.cardTitle}>{member.name}</Text>
+              <Text style={styles.cardSubtitle}>Developer</Text>
+            </View>
           </View>
-        </View> */}
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
@@ -126,59 +111,92 @@ export default function CreditsPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#DDD0C8",
-    padding: 20,
+    backgroundColor: "#0F1419",
+  },
+  hero: {
+    paddingHorizontal: 20,
+    paddingTop: 10,
+    paddingBottom: 12,
   },
   contentContainer: {
+    paddingHorizontal: 20,
     paddingBottom: 60,
   },
   title: {
-    color: "#323232",
-    fontSize: 30,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginVertical: 20,
+    color: "#D41D77",
+    fontSize: 34,
+    fontWeight: "700",
+    letterSpacing: 0.5,
+  },
+  subtitle: {
+    color: "#9AA3AF",
+    fontSize: 14,
+    marginTop: 6,
+  },
+  sectionHeader: {
+    marginTop: 18,
+    marginBottom: 8,
   },
   sectionTitle: {
-    fontSize: 20,
-    fontWeight: "bold",
-    color: "#323232",
-    marginTop: 20,
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#E5E7EB",
+    letterSpacing: 0.4,
+    textTransform: "uppercase",
   },
-  section: {
+  sectionRule: {
+    height: 2,
+    width: 48,
+    backgroundColor: "#D41D77",
+    marginTop: 6,
+    borderRadius: 2,
+  },
+  card: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#323232",
-    padding: 10,
-    borderRadius: 30,
-    marginVertical: 5,
-  },
-  elevation: {
+    backgroundColor: "#1A1F26",
+    borderWidth: 1,
+    borderColor: "#2A3038",
+    padding: 12,
+    borderRadius: 16,
+    marginBottom: 10,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 4,
   },
-  image: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    marginRight: 15,
+  avatar: {
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    marginRight: 12,
   },
   avatarPlaceholder: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    marginRight: 15,
-    backgroundColor: "#555",
+    width: 54,
+    height: 54,
+    borderRadius: 27,
+    marginRight: 12,
+    backgroundColor: "#2A3038",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  member: {
-    fontSize: 20,
-    color: "white",
+  avatarText: {
+    color: "#FFB6A6",
+    fontSize: 16,
+    fontWeight: "700",
   },
-  subText: {
+  cardText: {
+    flex: 1,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#F9FAFB",
+  },
+  cardSubtitle: {
     fontSize: 12,
-    color: "lightgray",
+    color: "#9AA3AF",
+    marginTop: 2,
   },
 });

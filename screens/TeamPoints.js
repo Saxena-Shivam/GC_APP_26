@@ -117,20 +117,39 @@ export default function TeamPoints({ route }) {
   };
   return (
     <View style={styles.container}>
-      {loading && <ActivityIndicator size="large" color="#fff" />}
+      {loading && <ActivityIndicator size="large" color="#FF6B6B" />}
       {!loading && (
         <>
-          <View style={styles.containertop}>
+          <View style={styles.hero}>
+            <Text style={styles.heroTitle}>Team Points</Text>
+            <Text style={styles.heroSubtitle}>Branch performance</Text>
+          </View>
+
+          <View style={styles.summaryCard}>
             <LinearGradient
               start={{ x: 0.0, y: 1.0 }}
-              end={{ x: 0.0, y: 0.0 }}
-              locations={[0.6, 1]}
+              end={{ x: 1.0, y: 0.0 }}
+              locations={[0.2, 1]}
               colors={[teamColors[team].topColor, teamColors[team].bottomColor]}
-              style={styles.containertop}
+              style={styles.summaryGradient}
             >
-              <Image style={styles.branchLogoImage} source={logoPaths[team]} />
-              <Text style={styles.branchTotalPoints}>{totalPoints()} PTS</Text>
+              <View style={styles.summaryLeft}>
+                <Image
+                  style={styles.branchLogoImage}
+                  source={logoPaths[team]}
+                />
+              </View>
+              <View style={styles.summaryRight}>
+                <Text style={styles.branchName}>{team}</Text>
+                <Text style={styles.branchTotalPoints}>{totalPoints()}</Text>
+                <Text style={styles.branchPointsLabel}>Total Points</Text>
+              </View>
             </LinearGradient>
+          </View>
+
+          <View style={styles.listHeader}>
+            <Text style={styles.listTitle}>Events</Text>
+            <Text style={styles.listMeta}>Updated: {lastUpdated}</Text>
           </View>
 
           <View style={styles.container2}>
@@ -139,7 +158,7 @@ export default function TeamPoints({ route }) {
               renderItem={({ item }) => {
                 const { key, ...rest } = item; // Remove `key`
                 return (
-                  <View style={{ padding: 5 }}>
+                  <View style={styles.listItemWrap}>
                     <TeamPointsComponent
                       branchData={rest}
                       logoPaths={logoPaths}
@@ -149,13 +168,9 @@ export default function TeamPoints({ route }) {
               }}
               keyExtractor={(item) => String(item[0])} // Ensure unique key
               alwaysBounceVertical={false}
+              showsVerticalScrollIndicator={false}
             />
           </View>
-          <View style={styles.bottomcont}>
-            <Text style={styles.text01}>Last Updated on: </Text>
-            <Text style={styles.text02}>{lastUpdated}</Text>
-          </View>
-          <View style={styles.bottomnav}></View>
         </>
       )}
     </View>
@@ -163,162 +178,100 @@ export default function TeamPoints({ route }) {
 }
 
 const styles = StyleSheet.create({
-  branchLogoImage: {
-    height: 100,
-    width: 100,
-    marginTop: 30,
-  },
-  branchTotalPoints: {
-    color: "white",
-    padding: 30,
-    paddingTop: 20,
-    fontSize: 38,
-    fontWeight: "bold",
-  },
   container: {
     flex: 1,
     width: "100%",
     height: "100%",
-    backgroundColor: "#000000",
+    backgroundColor: "#0F1419",
     color: "white",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-    paddingTop: 25,
+    paddingTop: 24,
   },
-  containertop: {
-    flex: 1.2,
-    backgroundColor: "#CC9E32",
-    color: "white",
-    height: "120%",
-    marginTop: -60,
-    paddingTop: 60,
-    flexDirection: "column",
-    width: "120%",
-    alignItems: "center",
-    justifyContent: "center",
-    borderTopLeftRadius: 50,
-    borderTopRightRadius: 50,
+  hero: {
+    paddingHorizontal: 20,
+    paddingBottom: 10,
   },
-  containertop1: {
+  heroTitle: {
+    fontSize: 30,
+    fontWeight: "700",
+    color: "#D41D77",
+    letterSpacing: 0.3,
+  },
+  heroSubtitle: {
+    fontSize: 13,
+    color: "#9AA3AF",
+    marginTop: 6,
+  },
+  summaryCard: {
+    marginHorizontal: 16,
+    marginTop: 8,
+    borderRadius: 20,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "#2A3038",
+    backgroundColor: "#1A1F26",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    elevation: 4,
+  },
+  summaryGradient: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 16,
+  },
+  summaryLeft: {
+    paddingRight: 14,
+  },
+  summaryRight: {
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "flex-end",
   },
-  containertop2: {
-    flex: 1.25,
-    flexDirection: "column",
-    justifyContent: "flex-end",
+  branchLogoImage: {
+    height: 72,
+    width: 72,
   },
-  containertop3: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "flex-end",
+  branchName: {
+    color: "#F9FAFB",
+    fontSize: 16,
+    fontWeight: "600",
   },
-  number1top: {
-    flex: 1,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    padding: 10,
+  branchTotalPoints: {
+    color: "#F9FAFB",
+    fontSize: 28,
+    fontWeight: "700",
+    marginTop: 6,
   },
-  number1bottom: {
-    flex: 0.75,
-    backgroundColor: "#746030",
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
+  branchPointsLabel: {
+    color: "#E5E7EB",
+    fontSize: 12,
+    marginTop: 4,
   },
-  number2top: {
-    flex: 1.5,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    padding: 10,
-  },
-  number2bottom: {
-    flex: 0.75,
-    backgroundColor: "#52514F",
-    borderTopLeftRadius: 12,
-    borderBottomLeftRadius: 12,
-    justifyContent: "center",
+  listHeader: {
+    marginTop: 14,
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
   },
-  number3top: {
-    flex: 2,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    padding: 10,
+  listTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#E5E7EB",
+    textTransform: "uppercase",
+    letterSpacing: 0.4,
   },
-  number3bottom: {
-    flex: 0.75,
-    backgroundColor: "#795038",
-    borderTopRightRadius: 12,
-    borderBottomRightRadius: 12,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  iconCont: {
-    padding: 5,
+  listMeta: {
+    fontSize: 12,
+    color: "#9AA3AF",
   },
   container2: {
-    flex: 2,
-    backgroundColor: "#000000",
-    color: "white",
-    flexDirection: "row",
-    paddingTop: 10,
-  },
-  leadHeading: {
-    fontSize: 15,
-    color: "white",
-
-    fontWeight: "bold",
-  },
-  leadScore: {
-    fontSize: 20,
-    color: "white",
-
-    fontWeight: "bold",
-  },
-
-  text: {
-    color: "white",
-  },
-  LeaderBoardList: {
     flex: 1,
-    backgroundColor: "#000000",
-    gap: 10,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 100,
+    paddingHorizontal: 16,
+    paddingTop: 8,
   },
-  bottomcont: {
-    flex: 0.3,
-    flexDirection: "row",
-    backgroundColor: "#000000",
-    color: "white",
-    alignItems: "center",
-    justifyContent: "center",
-    bottomMargin: 0,
-  },
-  text01: {
-    color: "#D41D77",
-    alignItems: "center",
-
-    paddingBottom: 0,
-  },
-  text02: {
-    color: "white",
-    fontWeight: "bold",
-    alignContent: "center",
-
-    paddingBottom: 0,
-  },
-  bottomnav: {
-    flex: 0.25,
-    backgroundColor: "#000000",
-    color: "white",
-    alignItems: "center",
-    justifyContent: "center",
-    height: 50,
+  listItemWrap: {
+    paddingHorizontal: 4,
+    marginBottom: 6,
   },
 });

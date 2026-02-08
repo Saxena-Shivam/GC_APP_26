@@ -129,7 +129,7 @@ const RegisterTeam = ({ navigation }) => {
   const getCategoryColor = (category) => {
     switch (category?.toLowerCase()) {
       case "sports":
-        return "#FF6B6B";
+        return "#118d49";
       case "tech":
         return "#4ECDC4";
       case "culture":
@@ -349,7 +349,7 @@ const RegisterTeam = ({ navigation }) => {
       {/* Events List */}
       {loading ? (
         <View style={styles.centerContainer}>
-          <ActivityIndicator size="large" color="#FF6B6B" />
+          <ActivityIndicator size="large" color="#D41D77" />
           <Text style={styles.loadingText}>Loading events...</Text>
         </View>
       ) : filteredEvents.length === 0 ? (
@@ -370,7 +370,7 @@ const RegisterTeam = ({ navigation }) => {
             <RefreshControl
               refreshing={refreshing}
               onRefresh={onRefresh}
-              tintColor="#FF6B6B"
+              tintColor="#D41D77"
             />
           }
           showsVerticalScrollIndicator={false}
@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 28,
     fontWeight: "700",
-    color: "#FF6B6B",
+    color: "#D41D77",
     marginBottom: 4,
   },
   headerSubtitle: {
@@ -441,8 +441,8 @@ const styles = StyleSheet.create({
     borderColor: "#333",
   },
   filterChipActive: {
-    backgroundColor: "#FF6B6B",
-    borderColor: "#FF6B6B",
+    backgroundColor: "#D41D77",
+    borderColor: "#D41D77",
   },
   filterText: {
     fontSize: 13,
@@ -534,7 +534,7 @@ const styles = StyleSheet.create({
     gap: 6,
     paddingHorizontal: 14,
     paddingVertical: 8,
-    backgroundColor: "#FF6B6B",
+    backgroundColor: "#D41D77",
     borderRadius: 6,
   },
   registerBtnText: {
@@ -573,7 +573,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingHorizontal: 16,
     paddingVertical: 8,
-    backgroundColor: "#FF6B6B",
+    backgroundColor: "#D41D77",
     borderRadius: 6,
   },
   retryText: {
