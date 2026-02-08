@@ -1,15 +1,31 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { View, TextInput, TouchableOpacity, Text, ScrollView, StyleSheet} from "react-native";
+import {
+  View,
+  TextInput,
+  TouchableOpacity,
+  Text,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
 import { Alert } from "react-native";
 
 // import firestore from "@react-native-firebase/firestore";
 
-import {backend_link} from "../../utils/constants";
+import { backend_link } from "../../utils/constants";
 
-const PlayerList = ({ title, initialPlayers, eventName, eventId, category, event_category}) => {
-  console.log(eventName, eventId, "testing")
-  const [players, setPlayers] = useState(initialPlayers.length > 0 ? initialPlayers : [""]); // Set initial players
+const PlayerList = ({
+  title,
+  initialPlayers,
+  eventName,
+  eventId,
+  category,
+  event_category,
+}) => {
+  console.log(eventName, eventId, "testing");
+  const [players, setPlayers] = useState(
+    initialPlayers.length > 0 ? initialPlayers : [""],
+  ); // Set initial players
 
   const addPlayer = () => {
     if (players.length >= 20) {
@@ -31,15 +47,21 @@ const PlayerList = ({ title, initialPlayers, eventName, eventId, category, event
     setPlayers(newPlayers);
   };
 
-  const savePlayersToFirebase = async ({team}) => {
+  const savePlayersToFirebase = async ({ team }) => {
     console.log(`Saving players for ${team} to Firebase:`, players);
     if (event_category === "live_events") {
-      console.log('sending to live events');
-      const response = await axios.post(`${backend_link}api/event/saveTeamLive`, {team, players, eventName, eventId});
+      console.log("sending to live events");
+      const response = await axios.post(
+        `${backend_link}api/event/saveTeamLive`,
+        { team, players, eventName, eventId },
+      );
       console.log(response.message);
     } else {
-      console.log('seding to all events')
-      const response = await axios.post(`${backend_link}api/event/saveTeamAll`, {team, players, eventId, category});
+      console.log("seding to all events");
+      const response = await axios.post(
+        `${backend_link}api/event/saveTeamAll`,
+        { team, players, eventId, category },
+      );
       console.log(response.message);
     }
     Alert.alert("Team saved");
@@ -50,24 +72,29 @@ const PlayerList = ({ title, initialPlayers, eventName, eventId, category, event
   return (
     <View style={styles.listWrapper}>
       <View style={styles.listContainer}>
-        <Text style={styles.title}>{title==="ECE_META" ? "ECE_META_EP" : title}</Text>
-          {players.map((player, index) => (
-            <TextInput
-              key={index}
-              style={styles.input}
-              placeholder={`Player ${index + 1}`}
-              placeholderTextColor="#ccc"
-              value={player}
-              onChangeText={(text) => updatePlayerName(index, text)}
-            />
-          ))}
+        <Text style={styles.title}>
+          {title === "ECE_META" ? "ECE_META_EP" : title}
+        </Text>
+        {players.map((player, index) => (
+          <TextInput
+            key={index}
+            style={styles.input}
+            placeholder={`Player ${index + 1}`}
+            placeholderTextColor="#ccc"
+            value={player}
+            onChangeText={(text) => updatePlayerName(index, text)}
+          />
+        ))}
         <TouchableOpacity style={styles.button} onPress={addPlayer}>
           <Text style={styles.buttonText}>Add Player</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button} onPress={deletePlayer}>
           <Text style={styles.buttonText}>Delete Player</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={() => savePlayersToFirebase({team: title})}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => savePlayersToFirebase({ team: title })}
+        >
           <Text style={styles.buttonText}>Save Team</Text>
         </TouchableOpacity>
       </View>
@@ -75,13 +102,13 @@ const PlayerList = ({ title, initialPlayers, eventName, eventId, category, event
   );
 };
 
-const TeamRegistration = ({route}) => {
+const TeamRegistration = ({ route }) => {
   // Get team players from route.params or set to an empty array
-  const {user, event_category, branch} = route.params;
+  const { user, event_category, branch } = route.params;
   console.log(route.params);
   let data = {};
 
-  const Branch = (branch === ("ECE" || "MM") ? "ECE_META" : branch);
+  const Branch = branch === ("ECE" || "MM") ? "ECE_META" : branch;
 
   let initialPlayers = [];
   console.log("event is a part of ", event_category);
@@ -99,20 +126,37 @@ const TeamRegistration = ({route}) => {
     }
   } else {
     data = route.params.data.data.item.data;
-    console.log("this is my data from TeamRegistration", data.pointsTable[Branch].players) ;
+    console.log(
+      "this is my data from TeamRegistration",
+      data.pointsTable[Branch].players,
+    );
     initialPlayers = data.pointsTable[Branch].players || [];
     console.log("initial players: ", initialPlayers);
   }
 
   console.log("initial players: ", initialPlayers);
 
-  console.log("team register: ",data, user, data.category, event_category, Branch);
+  console.log(
+    "team register: ",
+    data,
+    user,
+    data.category,
+    event_category,
+    Branch,
+  );
   // console.log("Branch table: ", data.pointsTable[branch]);
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.row}>
-        <PlayerList title={Branch} initialPlayers={initialPlayers} eventName = {data.gameName || ""} eventId = {data.id || data.eventId || ""} category = {data.category} event_category = {event_category || ""}/>
+        <PlayerList
+          title={Branch}
+          initialPlayers={initialPlayers}
+          eventName={data.gameName || ""}
+          eventId={data.id || data.eventId || ""}
+          category={data.category}
+          event_category={event_category || ""}
+        />
       </View>
     </ScrollView>
   );
@@ -176,4 +220,3 @@ const styles = StyleSheet.create({
 });
 
 export default TeamRegistration;
-

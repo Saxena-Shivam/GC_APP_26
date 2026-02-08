@@ -62,8 +62,10 @@ export default function PlayerScreen({ route }) {
     MSc_ITEP: false,
   });
 
-  const openModal = (key) => setModalVisible((prev) => ({ ...prev, [key]: true }));
-  const closeModal = (key) => setModalVisible((prev) => ({ ...prev, [key]: false }));
+  const openModal = (key) =>
+    setModalVisible((prev) => ({ ...prev, [key]: true }));
+  const closeModal = (key) =>
+    setModalVisible((prev) => ({ ...prev, [key]: false }));
 
   // Prepare team data mapping
   const teamData = {
@@ -87,20 +89,33 @@ export default function PlayerScreen({ route }) {
             onPress={() => openModal(key)}
             style={styles.voteButton}
           >
-            <Text style={styles.voteButtonText}>{key === "ECE_META" ? "ECE_META_EP" : key}</Text>
+            <Text style={styles.voteButtonText}>
+              {key === "ECE_META" ? "ECE_META_EP" : key}
+            </Text>
           </TouchableOpacity>
         ))}
       </View>
       <Text style={styles.subTitle}>Click a team to see participants !</Text>
 
       {Object.entries(teamData).map(([key, data]) => (
-        <Modal key={key} visible={modalVisible[key]} transparent animationType="slide">
+        <Modal
+          key={key}
+          visible={modalVisible[key]}
+          transparent
+          animationType="slide"
+        >
           <View style={modalStyles.modalContainer}>
             <View style={modalStyles.modalContent}>
-              <Text style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }}>{key}</Text>
+              <Text
+                style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }}
+              >
+                {key}
+              </Text>
               <ScrollView>
                 {data.map((item, index) => (
-                  <Text key={index} style={modalStyles.modalButtonText}>{item}</Text>
+                  <Text key={index} style={modalStyles.modalButtonText}>
+                    {item}
+                  </Text>
                 ))}
               </ScrollView>
               <TouchableOpacity
@@ -158,5 +173,3 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
 });
-
-
