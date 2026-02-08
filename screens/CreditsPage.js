@@ -61,21 +61,21 @@ export default function CreditsPage({ navigation }) {
           <Text style={styles.member}>Siddarth.K</Text>
         </View>
         <Text style={styles.sectionTitle}>Developed by </Text>
-        <View style={[styles.section, styles.elevation]}>
+        {/* <View style={[styles.section, styles.elevation]}>
           <Image
             // source={require("../assets/DevTeam/adarsh.jpg")}
             style={styles.avatarPlaceholder}
           />
           <Text style={styles.member}>Shivam Saxena</Text>
-        </View>
-        {/* <View style={[styles.section, styles.elevation]}>
+        </View> */}
+        <View style={[styles.section, styles.elevation]}>
           <Image
             source={require("../assets/DevTeam/adarsh.jpg")}
             style={styles.image}
           />
           <Text style={styles.member}>Adarsh Chandra</Text>
-        </View> */}
-        {/* <View style={[styles.section, styles.elevation]}>
+        </View>
+        <View style={[styles.section, styles.elevation]}>
           <Image
             source={require("../assets/DevTeam/avirat.jpeg")}
             style={styles.image}
@@ -95,7 +95,7 @@ export default function CreditsPage({ navigation }) {
             style={styles.image}
           />
           <Text style={styles.member}>Prince Kumar</Text>
-        </View> */}
+        </View>
         {/* <Text style={styles.sectionTitle}>Special Thanks</Text> */}
         {/* <View style={[styles.section, styles.elevation]}>
           <Image source={require("../assets/DevTeam/Sambit.jpg")} style={styles.image} />
