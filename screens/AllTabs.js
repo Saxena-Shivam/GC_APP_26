@@ -35,6 +35,8 @@ import SportPoints from "./Admin/SportPoints";
 import PlayerScreen from "./Events/PlayerScreen";
 import AddContention from "./Admin/AddContention";
 import ViewContentions from "./Admin/ViewContentions";
+import RegisterTeam from "./Admin/RegisterTeam";
+import TeamRegistrationForm from "./Admin/TeamRegistrationForm";
 
 import setProperTeamName from "../utils/setProperTeamName";
 import CreditsPage from "./CreditsPage";
@@ -353,6 +355,24 @@ function AdminDashboardStackNavigator() {
         component={ViewContentions}
         options={{
           headerShown: false,
+        }}
+      />
+      <AdminDashboardStack.Screen
+        name="RegisterTeam"
+        component={RegisterTeam}
+        options={{
+          headerTitle: () => <Header />,
+          headerTintColor: "white",
+          headerStyle: { backgroundColor: "#111319", height: 100 },
+        }}
+      />
+      <AdminDashboardStack.Screen
+        name="TeamRegistrationForm"
+        component={TeamRegistrationForm}
+        options={{
+          headerTitle: () => <Header />,
+          headerTintColor: "white",
+          headerStyle: { backgroundColor: "#111319", height: 100 },
         }}
       />
     </AdminDashboardStack.Navigator>

@@ -219,7 +219,7 @@ const AdminDashboard = ({ navigation }) => {
                 styles.registerCard,
                 pressed && styles.cardPressed,
               ]}
-              // onPress={() => navigation.navigate("/")}
+              onPress={() => navigation.navigate("RegisterTeam")}
             >
               <View style={styles.cardIconContainer}>
                 <MaterialCommunityIcons
