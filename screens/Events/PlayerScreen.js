@@ -13,12 +13,13 @@ import {
   FlatList,
   ScrollView,
   Modal,
+  ActivityIndicator,
 } from "react-native";
 import logoPaths from "../../utils/logoPaths";
 import setProperTeamName from "../../utils/setProperTeamName";
 import { backend_link } from "../../utils/constants";
 import { LoginContext } from "../../store/LoginContext";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 
 const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Dimensions.get("window").height;
@@ -35,20 +36,37 @@ const modalStyles = StyleSheet.create({
     backgroundColor: "white",
     padding: 20,
     borderRadius: 10,
+    maxHeight: "70%",
   },
   modalButtonText: {
     fontSize: 16,
     marginVertical: 5,
   },
+  participantItem: {
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e0e0e0",
+  },
+  participantName: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#000",
+  },
+  participantDetails: {
+    fontSize: 13,
+    color: "#666",
+    marginTop: 2,
+  },
 });
 
 export default function PlayerScreen({ route }) {
   const props = route.params.data;
-  console.log(props.data.item.data);
-  const eventName = props.data.item.data.details.title;
-  const pointsTable = props.data.item.data.pointsTable;
-  console.log(pointsTable);
-  const { CIVIL, CSE, ECE_META, EE, MECH, MTech, PHD, MSc_ITEP } = pointsTable;
+  const eventData = props.data.item.data;
+  const eventId = props.data.item.id || props.data.item.data.eventId;
+  const eventName = eventData.details.title;
+
+  const [registrations, setRegistrations] = useState({});
+  const [loading, setLoading] = useState(true);
 
   // State for modal visibility for each team
   const [modalVisible, setModalVisible] = useState({
@@ -57,7 +75,7 @@ export default function PlayerScreen({ route }) {
     ECE_META: false,
     EE: false,
     MECH: false,
-    MTECH: false,
+    MTech: false,
     PHD: false,
     MSc_ITEP: false,
   });
@@ -67,35 +85,93 @@ export default function PlayerScreen({ route }) {
   const closeModal = (key) =>
     setModalVisible((prev) => ({ ...prev, [key]: false }));
 
-  // Prepare team data mapping
+  useEffect(() => {
+    fetchRegistrations();
+  }, [eventId]);
+
+  const fetchRegistrations = async () => {
+    try {
+      setLoading(true);
+      const branches = [
+        "CIVIL",
+        "CSE",
+        "ECE_META",
+        "EE",
+        "MECH",
+        "MTech",
+        "PHD",
+        "MSc_ITEP",
+      ];
+      const regData = {};
+
+      for (const branch of branches) {
+        try {
+          const response = await axios.get(
+            `${backend_link}api/registration/team/${eventId}/${branch}`,
+          );
+          if (response.data?.registration) {
+            regData[branch] = response.data.registration.participants || [];
+          }
+        } catch (error) {
+          // 404 means no registration for this branch, which is OK
+          if (error.response?.status !== 404) {
+            console.error(`Error fetching ${branch} registration:`, error);
+          }
+        }
+      }
+
+      setRegistrations(regData);
+    } catch (error) {
+      console.error("Error fetching registrations:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Prepare team data mapping from registrations
   const teamData = {
-    CIVIL: CIVIL.players || [],
-    CSE: CSE.players || [],
-    ECE_META: ECE_META.players || [],
-    EE: EE.players || [],
-    MECH: MECH.players || [],
-    MTECH: MTech.players || [],
-    PHD: PHD.players || [],
-    MSc_ITEP: MSc_ITEP.players || [],
+    CIVIL: registrations.CIVIL || [],
+    CSE: registrations.CSE || [],
+    ECE_META: registrations.ECE_META || [],
+    EE: registrations.EE || [],
+    MECH: registrations.MECH || [],
+    MTech: registrations.MTech || [],
+    PHD: registrations.PHD || [],
+    MSc_ITEP: registrations.MSc_ITEP || [],
   };
 
   return (
     <View style={styles.cardContainer}>
       <Text style={styles.title}>{eventName}</Text>
-      <View style={styles.buttonview}>
-        {Object.entries(teamData).map(([key, data]) => (
-          <TouchableOpacity
-            key={key}
-            onPress={() => openModal(key)}
-            style={styles.voteButton}
-          >
-            <Text style={styles.voteButtonText}>
-              {key === "ECE_META" ? "ECE_META_EP" : key}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-      <Text style={styles.subTitle}>Click a team to see participants !</Text>
+
+      {loading ? (
+        <View style={{ marginTop: 40 }}>
+          <ActivityIndicator size="large" color="#d42070" />
+          <Text style={{ color: "white", marginTop: 10, textAlign: "center" }}>
+            Loading registrations...
+          </Text>
+        </View>
+      ) : (
+        <>
+          <View style={styles.buttonview}>
+            {Object.entries(teamData).map(([key, data]) => (
+              <TouchableOpacity
+                key={key}
+                onPress={() => openModal(key)}
+                style={styles.voteButton}
+              >
+                <Text style={styles.voteButtonText}>
+                  {key === "ECE_META" ? "ECE_META_EP" : key}
+                </Text>
+                <Text style={[styles.voteButtonText, { fontSize: 10 }]}>
+                  ({data.length})
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Text style={styles.subTitle}>Click a team to see participants!</Text>
+        </>
+      )}
 
       {Object.entries(teamData).map(([key, data]) => (
         <Modal
@@ -109,18 +185,41 @@ export default function PlayerScreen({ route }) {
               <Text
                 style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }}
               >
-                {key}
+                {key} - {data.length} Participant(s)
               </Text>
-              <ScrollView>
-                {data.map((item, index) => (
-                  <Text key={index} style={modalStyles.modalButtonText}>
-                    {item}
+              <ScrollView style={{ maxHeight: 400 }}>
+                {data.length === 0 ? (
+                  <Text
+                    style={{ color: "#666", textAlign: "center", padding: 20 }}
+                  >
+                    No participants registered yet
                   </Text>
-                ))}
+                ) : (
+                  data.map((participant, index) => (
+                    <View key={index} style={modalStyles.participantItem}>
+                      <Text style={modalStyles.participantName}>
+                        {index + 1}. {participant.name || "Unknown"}
+                      </Text>
+                      {participant.rollNumber && (
+                        <Text style={modalStyles.participantDetails}>
+                          Roll: {participant.rollNumber}
+                        </Text>
+                      )}
+                      {participant.email && (
+                        <Text style={modalStyles.participantDetails}>
+                          Email: {participant.email}
+                        </Text>
+                      )}
+                    </View>
+                  ))
+                )}
               </ScrollView>
               <TouchableOpacity
                 onPress={() => closeModal(key)}
-                style={[styles.voteButton, { marginTop: 10 }]}
+                style={[
+                  styles.voteButton,
+                  { marginTop: 10, alignSelf: "flex-end", width: 100 },
+                ]}
               >
                 <Text style={styles.voteButtonText}>Close</Text>
               </TouchableOpacity>

@@ -165,7 +165,7 @@ const AddContention = ({ navigation }) => {
           name="alert-circle"
           type="material-community"
           size={80}
-          color="#FF6B6B"
+          color="#D41D77"
         />
         <Text style={styles.accessDeniedTitle}>Access Denied</Text>
         <Text style={styles.accessDeniedText}>
@@ -194,7 +194,7 @@ const AddContention = ({ navigation }) => {
             name="alert-octagon"
             type="material-community"
             size={40}
-            color="#FF6B6B"
+            color="#D41D77"
           />
           <Text style={styles.headerTitle}>Submit Complaint</Text>
         </View>
@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   headerTitle: {
-    color: "#FF6B6B",
+    color: "#D41D77",
     fontSize: 26,
     fontWeight: "bold",
     marginTop: 12,
@@ -415,7 +415,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   required: {
-    color: "#FF6B6B",
+    color: "#D41D77",
     fontSize: 18,
   },
   fieldHelper: {
@@ -481,7 +481,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   accessDeniedTitle: {
-    color: "#FF6B6B",
+    color: "#D41D77",
     fontSize: 24,
     fontWeight: "bold",
     marginTop: 20,
@@ -507,7 +507,7 @@ const styles = StyleSheet.create({
   },
   submitButton: {
     flexDirection: "row",
-    backgroundColor: "#FF6B6B",
+    backgroundColor: "#D41D77",
     paddingVertical: 16,
     paddingHorizontal: 20,
     borderRadius: 12,

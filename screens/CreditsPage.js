@@ -4,24 +4,24 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CreditsPage({ navigation }) {
   const organisingMembers = [
-    { title: "President", name: "Aarav Patel" },
-    { title: "Vice President", name: "Meera Singh" },
-    { title: "General Secretary", name: "Rohan Kapoor" },
+    { title: "Aarav Patel", role: "President" },
+    { title: "Meera Singh", role: "Vice President" },
+    { title: "Rohan Kapoor", role: "General Secretary" },
   ];
 
   const leadBy = [
-    { name: "Suvansh Sharma" },
-    { name: "Siddarth.K", image: require("../assets/DevTeam/siddarth.jpeg") },
+    { title: "Suvansh Sharma" },
+    { title: "Siddarth.K", image: require("../assets/DevTeam/siddarth.jpeg") },
   ];
 
   const developedBy = [
-    { name: "Adarsh Chandra", image: require("../assets/DevTeam/adarsh.jpg") },
-    { name: "Avirat Joshi", image: require("../assets/DevTeam/avirat.jpeg") },
+    { title: "Adarsh Chandra", image: require("../assets/DevTeam/adarsh.jpg") },
+    { title: "Avirat Joshi", image: require("../assets/DevTeam/avirat.jpeg") },
     {
-      name: "Jeeban Jyoti Patra",
+      title: "Jeeban Jyoti Patra",
       image: require("../assets/DevTeam/jeeban.jpeg"),
     },
-    { name: "Prince Kumar", image: require("../assets/DevTeam/prince.jpeg") },
+    { title: "Prince Kumar", image: require("../assets/DevTeam/prince.jpeg") },
   ];
 
   const getInitials = (name) => {
@@ -49,11 +49,11 @@ export default function CreditsPage({ navigation }) {
         {organisingMembers.map((member) => (
           <View key={member.title} style={styles.card}>
             <View style={styles.avatarPlaceholder}>
-              <Text style={styles.avatarText}>{getInitials(member.name)}</Text>
+              <Text style={styles.avatarText}>{getInitials(member.role)}</Text>
             </View>
             <View style={styles.cardText}>
               <Text style={styles.cardTitle}>{member.title}</Text>
-              <Text style={styles.cardSubtitle}>{member.name}</Text>
+              <Text style={styles.cardSubtitle}>{member.role}</Text>
             </View>
           </View>
         ))}
@@ -64,18 +64,18 @@ export default function CreditsPage({ navigation }) {
         </View>
 
         {leadBy.map((member) => (
-          <View key={member.name} style={styles.card}>
+          <View key={member.title} style={styles.card}>
             {member.image ? (
               <Image source={member.image} style={styles.avatar} />
             ) : (
               <View style={styles.avatarPlaceholder}>
                 <Text style={styles.avatarText}>
-                  {getInitials(member.name)}
+                  {getInitials(member.title)}
                 </Text>
               </View>
             )}
             <View style={styles.cardText}>
-              <Text style={styles.cardTitle}>{member.name}</Text>
+              <Text style={styles.cardTitle}>{member.title}</Text>
               <Text style={styles.cardSubtitle}>Lead</Text>
             </View>
           </View>
@@ -87,18 +87,18 @@ export default function CreditsPage({ navigation }) {
         </View>
 
         {developedBy.map((member) => (
-          <View key={member.name} style={styles.card}>
+          <View key={member.title} style={styles.card}>
             {member.image ? (
               <Image source={member.image} style={styles.avatar} />
             ) : (
               <View style={styles.avatarPlaceholder}>
                 <Text style={styles.avatarText}>
-                  {getInitials(member.name)}
+                  {getInitials(member.title)}
                 </Text>
               </View>
             )}
             <View style={styles.cardText}>
-              <Text style={styles.cardTitle}>{member.name}</Text>
+              <Text style={styles.cardTitle}>{member.title}</Text>
               <Text style={styles.cardSubtitle}>Developer</Text>
             </View>
           </View>

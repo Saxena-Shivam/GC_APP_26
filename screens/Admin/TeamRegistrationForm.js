@@ -239,10 +239,9 @@ const TeamRegistrationForm = ({ route, navigation }) => {
         {prefillLoading && (
           <View style={styles.loadingBox}>
             <ActivityIndicator size="small" color="#888" />
-            <Text style={styles.loadingText}>Loading registration...</Text>
+            <Text style={styles.loadingText}>Loading Teams...</Text>
           </View>
         )}
-
         {existingStatus && !prefillLoading && (
           <View style={styles.existingBox}>
             <MaterialCommunityIcons
@@ -616,6 +615,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderTopColor: "#2A3038",
     backgroundColor: "#0F1419",
+    marginBottom: 70,
   },
   footerBtn: {
     flex: 1,
