@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "622420835073",
+    "project_id": "gc-app-2024-4e2f9",
+    "storage_bucket": "gc-app-2024-4e2f9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:622420835073:android:8a21de4951013662273900",
+        "android_client_info": {
+          "package_name": "com.iitbbs.gcapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "622420835073-kb0osuuqu1rp2ka9atdh6v45kgrup2fv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDFUB3esxYR388HVe1PTnz4Bytjj7lmHdo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "622420835073-kb0osuuqu1rp2ka9atdh6v45kgrup2fv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
