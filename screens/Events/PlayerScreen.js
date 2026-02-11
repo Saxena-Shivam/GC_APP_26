@@ -148,7 +148,7 @@ export default function PlayerScreen({ route }) {
         <View style={{ marginTop: 40 }}>
           <ActivityIndicator size="large" color="#d42070" />
           <Text style={{ color: "white", marginTop: 10, textAlign: "center" }}>
-            Loading registrations...
+            Loading Players...
           </Text>
         </View>
       ) : (

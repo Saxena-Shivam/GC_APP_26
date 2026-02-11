@@ -15,13 +15,13 @@ export default function CreditsPage({ navigation }) {
   ];
 
   const developedBy = [
-    { title: "Adarsh Chandra", image: require("../assets/DevTeam/adarsh.jpg") },
-    { title: "Avirat Joshi", image: require("../assets/DevTeam/avirat.jpeg") },
-    {
-      title: "Jeeban Jyoti Patra",
-      image: require("../assets/DevTeam/jeeban.jpeg"),
-    },
-    { title: "Prince Kumar", image: require("../assets/DevTeam/prince.jpeg") },
+    // { title: "Adarsh Chandra", image: require("../assets/DevTeam/adarsh.jpg") },
+    // { title: "Avirat Joshi", image: require("../assets/DevTeam/avirat.jpeg") },
+    // {
+    //   title: "Jeeban Jyoti Patra",
+    //   image: require("../assets/DevTeam/jeeban.jpeg"),
+    // },
+    { title: "Shivam Saxena", image: require("../assets/DevTeam/shivam1.jpg") },
   ];
 
   const getInitials = (name) => {

@@ -33,35 +33,21 @@ const RegisterTeam = ({ navigation }) => {
   }, [userBranch]);
 
   useEffect(() => {
-    applyFilters();
-  }, [events, selectedCategory, searchQuery]);
+    if (!loading) {
+      applyFilters();
+    }
+  }, [events, selectedCategory, searchQuery, loading]);
 
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      console.log(`🔍 Fetching events for branch: ${userBranch}`);
-
       const response = await axios.get(
         `${backend_link}api/registration/events?branch=${userBranch}`,
       );
 
-      console.log("✅ Events fetched:", response.data.events?.length);
-
-      if (response.data.events && response.data.events.length > 0) {
-        console.log("📋 ===== EVENT DETAILS =====");
-        response.data.events.forEach((evt, idx) => {
-          const isUpcoming = evt.timestamp >= Date.now();
-          const dateStr = new Date(evt.timestamp).toLocaleString();
-          console.log(
-            `${idx + 1}. ${evt.eventName} | Category: ${evt.category} | Timestamp: ${evt.timestamp} | Date: ${dateStr} | Upcoming: ${isUpcoming}`,
-          );
-        });
-        console.log("===== END EVENT DETAILS =====");
-      }
-
       setEvents(response.data.events || []);
     } catch (error) {
-      console.error("❌ Error fetching events:", error);
+      console.error("Error fetching events:", error);
       Alert.alert(
         "Error",
         "Failed to load events. Please check your connection.",
@@ -75,14 +61,11 @@ const RegisterTeam = ({ navigation }) => {
   const applyFilters = () => {
     let filtered = [...events];
 
-    console.log(`🔄 applyFilters called: ${filtered.length} total events`);
-
     // Search filter
     if (searchQuery.trim()) {
       filtered = filtered.filter((evt) =>
         evt.eventName?.toLowerCase().includes(searchQuery.toLowerCase()),
       );
-      console.log(`🔍 After search filter: ${filtered.length} events`);
     }
 
     // Category filter
@@ -98,31 +81,17 @@ const RegisterTeam = ({ navigation }) => {
         }
         return category === selectedCategory;
       });
-      console.log(
-        `📂 After category filter (${selectedCategory}): ${filtered.length} events`,
-      );
     }
 
     // Sort: upcoming events first, then past events
     const now = Date.now();
-    const upcoming = filtered.filter((e) => {
-      const isUp = e.timestamp >= now;
-      console.log(
-        `   Event: ${e.eventName} | Timestamp: ${e.timestamp} | Date: ${new Date(e.timestamp).toLocaleString()} | Upcoming: ${isUp}`,
-      );
-      return isUp;
-    });
+    const upcoming = filtered.filter((e) => e.timestamp >= now);
     const past = filtered.filter((e) => e.timestamp < now);
-
-    console.log(
-      `⏰ Upcoming events: ${upcoming.length}, Past events: ${past.length}`,
-    );
 
     upcoming.sort((a, b) => a.timestamp - b.timestamp);
     past.sort((a, b) => b.timestamp - a.timestamp); // Recent past first
     filtered = [...upcoming, ...past];
 
-    console.log(`✅ Final filtered events: ${filtered.length}`);
     setFilteredEvents(filtered);
   };
 

@@ -117,7 +117,11 @@ export default function TeamPoints({ route }) {
   };
   return (
     <View style={styles.container}>
-      {loading && <ActivityIndicator size="large" color="#FF6B6B" />}
+      {loading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#D41D77" />
+        </View>
+      )}
       {!loading && (
         <>
           <View style={styles.hero}>
@@ -185,6 +189,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#0F1419",
     color: "white",
     paddingTop: 24,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   hero: {
     paddingHorizontal: 20,

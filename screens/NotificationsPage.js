@@ -136,7 +136,7 @@ export default function NotificationsPage() {
   const getTeamColor = (team) => {
     if (team === "All") return "#d41d77";
     const colors = {
-      CSE: "#FF6B6B",
+      CSE: "#D41D77",
       ECE_META: "#4ECDC4",
       EE: "#FFE66D",
       CIVIL: "#95E1D3",

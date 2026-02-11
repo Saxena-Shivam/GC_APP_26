@@ -154,10 +154,10 @@ const TeamRegistrationForm = ({ route, navigation }) => {
         submittedAt: new Date().toISOString(),
       };
 
-      console.log(
-        "📤 Submitting registration:",
-        JSON.stringify(payload, null, 2),
-      );
+      // console.log(
+      //   "📤 Submitting registration:",
+      //   JSON.stringify(payload, null, 2),
+      // );
 
       const endpoint = isDraft ? "/saveTeam" : "/submitTeam";
       const response = await axios.post(

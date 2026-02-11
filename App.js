@@ -66,7 +66,7 @@ async function registerForPushNotificationsAsync() {
     }
     if (finalStatus !== "granted") {
       handleRegistrationError(
-        "Permission not granted to get push token for push notification!"
+        "Permission not granted to get push token for push notification!",
       );
       return;
     }
@@ -85,7 +85,7 @@ async function registerForPushNotificationsAsync() {
       console.log(pushTokenString, "Push Token");
       console.log(pushTokenString.data, "Push Token");
       console.log(
-        "\n\n\n #################### Push Token #################### \n\n\n\n\n"
+        "\n\n\n #################### Push Token #################### \n\n\n\n\n",
       );
       console.log(pushTokenString);
       return pushTokenString.data;
@@ -104,9 +104,9 @@ const Stack = createStackNavigator();
 export default function LoginContextWrapper() {
   return (
     <EventsProvider>
-    <LoginProvider>
-      <App />
-    </LoginProvider>
+      <LoginProvider>
+        <App />
+      </LoginProvider>
     </EventsProvider>
   );
 }
@@ -141,7 +141,7 @@ const App = () => {
                 "api/expotoken/addexpotoken?email=" +
                 email +
                 "&token=" +
-                expoPushToken
+                expoPushToken,
             );
             console.log(response.data, "Push Token");
           } catch (e) {
@@ -173,7 +173,7 @@ const App = () => {
     return () => {
       notificationListener.current &&
         Notifications.removeNotificationSubscription(
-          notificationListener.current
+          notificationListener.current,
         );
       responseListener.current &&
         Notifications.removeNotificationSubscription(responseListener.current);
@@ -214,20 +214,20 @@ const App = () => {
   }, [response]);
 
   const getDept = (email) => {
-    if(email.length < 22) return "PhD";
-    if(email[5] == '1' || email[5] == '2'){
-        if(email.substring(2, 4) == 'cs') return "CSE";
-        if(email.substring(2, 4) == 'ce') return "CE";
-        if(email.substring(2, 4) == 'me') return "ME";
-        if(email.substring(2, 4) == 'ee') return "EE";
-        if(email.substring(2, 4) == 'mm') return "MM";
-        if(email.substring(2, 4) == 'ec') return "ECE";
-        if(email.substring(2, 4) == 'ep') return "EP";
+    if (email.length < 22) return "PhD";
+    if (email[5] == "1" || email[5] == "2") {
+      if (email.substring(2, 4) == "cs") return "CSE";
+      if (email.substring(2, 4) == "ce") return "CE";
+      if (email.substring(2, 4) == "me") return "ME";
+      if (email.substring(2, 4) == "ee") return "EE";
+      if (email.substring(2, 4) == "mm") return "MM";
+      if (email.substring(2, 4) == "ec") return "ECE";
+      if (email.substring(2, 4) == "ep") return "EP";
     }
-    if(email[5] == '3') return "ITEP";
-    if(email[5] == '6') return "MTech";
+    if (email[5] == "3") return "ITEP";
+    if (email[5] == "6") return "MTech";
     return "MSc";
-};
+  };
 
   useEffect(() => {
     // isUserLoggedIn();
@@ -236,14 +236,11 @@ const App = () => {
         AsyncStorage.setItem("userInfo", JSON.stringify(user));
         LoginCtx.setUser(user);
         LoginCtx.setIsLogin(true);
-        const resp = await axios.post(
-          backend_link + "api/user/add  User",
-          {
-            email: user.email,
-            name: user.displayName,
-            dept: getDept(user.email),
-          }
-        );
+        const resp = await axios.post(backend_link + "api/user/add  User", {
+          email: user.email,
+          name: user.displayName,
+          dept: getDept(user.email),
+        });
       } else {
         LoginCtx.setUser(null);
         LoginCtx.setIsLogin(false);
@@ -268,7 +265,7 @@ const App = () => {
         if (user?.email !== null) {
           try {
             const response = await axios.get(
-              backend_link + "api/admin/isAdmin/" + user?.email
+              backend_link + "api/admin/isAdmin/" + user?.email,
             );
             console.log(response.data, "Admin or not");
             LoginCtx.setIsAdmin(response.data.isAdmin);
