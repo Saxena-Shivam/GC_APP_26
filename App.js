@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Modal, ActivityIndicator } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Modal,
+  ActivityIndicator,
+  Platform,
+} from "react-native";
 import { Button, Provider as PaperProvider } from "react-native-paper";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
