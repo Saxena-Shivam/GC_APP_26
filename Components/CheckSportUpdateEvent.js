@@ -19,38 +19,44 @@ const CheckUpdateEvent = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(true);
 
   const handleProceed = async () => {
-    if (title.trim().length === "") {
+    if (!title.trim()) {
       alert("Please enter a valid title/eventid");
       return;
     }
-    console.log(title);
+
     try {
       const eventid = title
         .trim()
         .split(" ")
+        .filter(Boolean)
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join("+");
-      console.log(eventid);
+
       const response = await axios.get(
-        backend_link + "api/event/getAllEventById?eventId=" + eventid
+        backend_link + "api/event/getAllEventById?eventId=" + eventid,
       );
-      console.log(response.data);
-      if (response.data.length !== 0) {
-        console.log("ji", response.data.event);
-        if (response.data?.event?.data?.category === "sports") {
-          navigation.navigate("UpdateSportEventResult", {
-            data: response.data.event,
-            eventId: eventid,
-          });
-        } else {
-          alert("Sport Event not found");
-        }
-      } else {
+
+      const eventData = response?.data?.event;
+      if (!eventData) {
         alert("Event not found");
+        return;
       }
+
+      if ((eventData?.data?.category || "").toLowerCase() !== "sports") {
+        alert("Sport Event not found");
+        return;
+      }
+
+      navigation.navigate("UpdateSportEventResult", {
+        data: eventData,
+        eventId: eventid,
+      });
     } catch (error) {
       console.log(error);
-      alert("Event Id /Title doesn't exist Check for spaces");
+      alert(
+        error?.response?.data?.message ||
+          "Event Id /Title doesn't exist. Check spaces and spelling.",
+      );
     }
   };
   const onClose = () => {
@@ -67,7 +73,7 @@ const CheckUpdateEvent = ({ navigation }) => {
       <View style={styles.modalContainer}>
         <View style={styles.modalContent}>
           <Text style={styles.modalText}>
-            Enter a valid Event ID / Title to be updated
+            Enter Sports Points Table Event ID / Title to update
           </Text>
           <TextInput
             style={styles.input}

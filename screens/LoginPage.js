@@ -46,7 +46,10 @@ const Login = ({
       </View>
 
       <View style={styles.logoContainer}>
-        <Image source={require("../assets/logo.png")} style={styles.logoBig} />
+        <Image
+          source={require("../assets/logo_26.png")}
+          style={styles.logoBig}
+        />
       </View>
       <View style={styles.poweredBy}>
         <Text style={styles.poweredByTextBig}>Powered By</Text>

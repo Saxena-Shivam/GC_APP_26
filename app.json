@@ -1,19 +1,17 @@
 {
   "expo": {
-    "name": "GC '25",
+    "name": "GC '26",
     "slug": "GC_App_2024",
     "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/appiconwhite.png",
     "userInterfaceStyle": "dark",
     "splash": {
-      "image": "./assets/logo.png",
+      "image": "./assets/logo_26.png",
       "resizeMode": "contain",
       "backgroundColor": "#000000"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.iitbbs.gcapp"
@@ -39,5 +37,3 @@
     "owner": "ayush1108g"
   }
 }
-
-

@@ -33,8 +33,8 @@ function AdminSportEventCard(props) {
   // console.log("siddart is now testing: ", props);
 
   const [update, setUpdate] = useState(false);
-  const [scoreTeamA, setScoreTeamA] = useState(props.scoreA);
-  const [scoreTeamB, setScoreTeamB] = useState(props.scoreB);
+  const [scoreTeamA, setScoreTeamA] = useState(props.scoreA ?? 0);
+  const [scoreTeamB, setScoreTeamB] = useState(props.scoreB ?? 0);
 
   const date = new Date(props?.details?.timestamp);
   const formattedDate = date.toLocaleDateString(); // Date component
@@ -78,12 +78,15 @@ function AdminSportEventCard(props) {
       props.setIsEventUpdated((prev) => !prev);
       Alert.alert("Event Deleted");
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err?.response?.status === 401) {
         Alert.alert("Error", "You are not authorized to delete the event");
         return;
       }
       console.log("Event delete failed", err);
-      Alert.alert("Error", "Something went wrong");
+      Alert.alert(
+        "Error",
+        err?.response?.data?.message || "Unable to delete sport event",
+      );
     }
   };
 
@@ -147,12 +150,15 @@ function AdminSportEventCard(props) {
       setUpdate(false);
       Alert.alert("Score Updated");
     } catch (err) {
-      if (err.response.status === 401) {
+      if (err?.response?.status === 401) {
         Alert.alert("Error", "You are not authorized to update the score");
         return;
       }
       console.log("points update failed", err);
-      Alert.alert("Error", "Something went wrong");
+      Alert.alert(
+        "Error",
+        err?.response?.data?.message || "Unable to update sport score",
+      );
     }
   };
   return (
@@ -233,7 +239,7 @@ function AdminSportEventCard(props) {
                     style={{ height: 40 }}
                     placeholder={" Score of " + teamA}
                     onChangeText={(newText) => setScoreTeamA(newText)}
-                    value={scoreTeamA.toString()}
+                    value={String(scoreTeamA ?? "")}
                   />
                 </View>
                 <View style={{ width: 10 }}></View>
@@ -243,7 +249,7 @@ function AdminSportEventCard(props) {
                     style={{ height: 40 }}
                     placeholder={" Score of " + teamB}
                     onChangeText={(newText) => setScoreTeamB(newText)}
-                    value={scoreTeamB.toString()}
+                    value={String(scoreTeamB ?? "")}
                   />
                 </View>
               </View>

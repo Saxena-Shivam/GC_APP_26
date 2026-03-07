@@ -86,12 +86,29 @@ export default function TeamPoints({ route }) {
 
         console.log("respomnse", response.data);
 
-        const eventData = response.data.pointsTable;
-        const ids = Object.keys(response.data.pointsTable);
+        const eventData = response?.data?.pointsTable || {};
+
+        let allEventIds = [];
+        try {
+          const allEventsResponse = await axios.get(
+            backend_link + "api/event/getAllEvents",
+          );
+          allEventIds = (allEventsResponse?.data?.events || [])
+            .map((event) => event?.data?.eventId || event?.eventId)
+            .filter(Boolean);
+        } catch (allEventsError) {
+          console.log("Error fetching all events:", allEventsError);
+        }
+
+        const ids = Array.from(
+          new Set([...allEventIds, ...Object.keys(eventData)]),
+        );
         setIds(ids);
-        const pointsArray = ids.map((id) => [id, eventData[id].points]);
+        const pointsArray = ids.map((id) => [
+          id,
+          Number(eventData?.[id]?.points ?? 0),
+        ]);
         const newPointsArray = sortPointsTable(pointsArray);
-        // pointsArray.sort((a, b) => b[1] - a[1]); // sorting the array in descending order
         setEventPoints(newPointsArray);
         return pointsArray;
       } catch (err) {

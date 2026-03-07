@@ -14,7 +14,7 @@ const SportPoints = ({ navigation }) => {
     <View style={{ flex: 1 }}>
       <ScrollView>
         <View style={styles.container}>
-          <Text style={styles.title}>Add/Update Sport Live Events</Text>
+          <Text style={styles.title}>Sports Admin</Text>
           <Text style={styles.subtitle}></Text>
 
           <Image
@@ -23,8 +23,9 @@ const SportPoints = ({ navigation }) => {
           />
           <View style={{ flex: 1, paddingTop: 10 }}>
             <Text style={[styles.input, { color: "white" }]}>
-              NOTE: {"\n"}This page is for adding a new sport event that does
-              not exist previously and updating a sport points{" "}
+              NOTE: {"\n"}1) Use Live Match Scores for ongoing/upcoming sports
+              matches. {"\n"}
+              2) Use Sports Points Table for final event-wise branch points.
             </Text>
           </View>
           <View style={styles.buttonContainer}>
@@ -32,7 +33,7 @@ const SportPoints = ({ navigation }) => {
               style={[styles.buttonWrapper, { backgroundColor: "#240A34" }]}
             >
               <Button
-                title="Add Sport Event Result"
+                title="Add Sports Points Table"
                 onPress={() => navigation.navigate("AddSportEventResult")}
                 style={styles.button}
                 color="#240A34"
@@ -42,23 +43,22 @@ const SportPoints = ({ navigation }) => {
               style={[styles.buttonWrapper, { backgroundColor: "#240A34" }]}
             >
               <Button
-                title="Update Sport Event Result"
+                title="Update Sports Points Table"
                 onPress={() => navigation.navigate("CheckUpdateSportsEvent")}
                 style={styles.button}
                 color="#240A34"
               />
             </View>
-
-            {/* <View
+            <View
               style={[styles.buttonWrapper, { backgroundColor: "#240A34" }]}
             >
               <Button
-                title="Update Sport Event"
+                title="Update Live Match Scores"
                 onPress={() => navigation.navigate("AdminAddScoreStack")}
                 style={styles.button}
                 color="#240A34"
               />
-            </View> */}
+            </View>
           </View>
         </View>
       </ScrollView>

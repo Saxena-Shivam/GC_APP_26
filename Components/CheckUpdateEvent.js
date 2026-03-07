@@ -19,39 +19,46 @@ const CheckUpdateEvent = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(true);
 
   const handleProceed = async () => {
-    if (title.trim().length === "") {
+    if (!title.trim()) {
       alert("Please enter a valid title/eventid");
       return;
     }
-    console.log(title);
+
     try {
       const eventid = title
         .trim()
         .split(" ")
+        .filter(Boolean)
         .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
         .join("+");
-      console.log(eventid);
+
       const response = await axios.get(
-        backend_link + "api/event/getAllEventById?eventId=" + eventid
+        backend_link + "api/event/getAllEventById?eventId=" + eventid,
       );
-      console.log(response.data);
-      if (response.data.length !== 0) {
-        if (response.data?.event?.data?.category === "sports") {
-          Alert.alert(
-            "Sport route is Different ,Here only Tech/Cult events are allowed to be updated"
-          );
-        } else {
-          navigation.navigate("UpdateTechCultEvent", {
-            data: response.data.event,
-            eventId: eventid,
-          });
-        }
-      } else {
+
+      const eventData = response?.data?.event;
+      if (!eventData) {
         alert("Event not found");
+        return;
       }
+
+      if ((eventData?.data?.category || "").toLowerCase() === "sports") {
+        Alert.alert(
+          "Sport route is different. Here only Tech/Cult events are allowed to be updated",
+        );
+        return;
+      }
+
+      navigation.navigate("UpdateTechCultEvent", {
+        data: eventData,
+        eventId: eventid,
+      });
     } catch (error) {
       console.log(error);
-      alert("Event Id /Title doesn't exist Check for spaces");
+      alert(
+        error?.response?.data?.message ||
+          "Event Id /Title doesn't exist. Check spaces and spelling.",
+      );
     }
   };
   const onClose = () => {

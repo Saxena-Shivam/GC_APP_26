@@ -33,10 +33,10 @@ function UpdateSportScreen(props) {
       return;
     }
     const data = ongoingEvents.filter((item) => {
-      let teamA = item?.teamA.toLowerCase();
-      let teamB = item?.teamB.toLowerCase();
-      let gameName = item?.gameName.toLowerCase();
-      const id = item?.id.toLowerCase();
+      let teamA = (item?.teamA || "").toLowerCase();
+      let teamB = (item?.teamB || "").toLowerCase();
+      let gameName = (item?.gameName || "").toLowerCase();
+      const id = (item?.id || "").toLowerCase();
       return (
         teamA.includes(search.toLowerCase()) ||
         teamB.includes(search.toLowerCase()) ||
@@ -63,30 +63,32 @@ function UpdateSportScreen(props) {
           const newSubEvents = teams.map((item1) => {
             console.log("item11", item1);
             const subEventId = item1.subEventId;
-            const teamA = item1.data.points
-              ? item1.data.points?.teamA
-              : item1.data.pointsTable?.teamA;
-            const teamB = item1.data.points
-              ? item1.data.points?.teamB
-              : item1.data.pointsTable?.teamB;
+            const teamAObj = item1?.data?.points?.teamA;
+            const teamBObj = item1?.data?.points?.teamB;
 
-            console.log("sid testingsdsf: ", teamA.bets, teamB.bets); // sending data to console correctly
+            const fallbackTeamA = subEventId?.split(" vs ")?.[0] || "Team A";
+            const fallbackTeamB = subEventId?.split(" vs ")?.[1] || "Team B";
+
             return {
               subEventId: subEventId,
               details: item1.data.details,
               status: item1.data.status,
               gameName: gameName,
               id:
-                item1.data.details.title.split(" ").join("") +
+                (item1?.data?.details?.title || gameName)
+                  .split(" ")
+                  .join("") +
                 "++" +
-                item1.subEventId.split(" ").join(""),
+                (item1?.subEventId || "")
+                  .split(" ")
+                  .join(""),
 
-              teamA: teamA?.name || item1.subEventId.split(" vs ")[0],
-              teamB: teamB?.name || item1.subEventId.split(" vs ")[1],
-              scoreA: teamA?.points,
-              scoreB: teamB?.points,
-              betsA: teamA?.bets,
-              betsB: teamB?.bets,
+              teamA: teamAObj?.name || fallbackTeamA,
+              teamB: teamBObj?.name || fallbackTeamB,
+              scoreA: Number(teamAObj?.points || 0),
+              scoreB: Number(teamBObj?.points || 0),
+              betsA: teamAObj?.bets || [],
+              betsB: teamBObj?.bets || [],
             };
           });
           return newSubEvents;

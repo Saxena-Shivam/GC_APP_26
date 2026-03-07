@@ -41,7 +41,7 @@ export default function Header({ events, showmodal, navigation }) {
         }}
       >
         <Image
-          source={require("../assets/logo.png")}
+          source={require("../assets/logo_26.png")}
           style={{ width: 60, height: 60, resizeMode: "center" }} // Set explicit dimensions
         />
         <Text style={{ color: "white", fontSize: 23, fontWeight: "bold" }}>

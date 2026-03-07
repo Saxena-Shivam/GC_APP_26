@@ -1,11 +1,4 @@
-import {
-  Text,
-  View,
-  StyleSheet,
-  Dimensions,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { Text, View, StyleSheet, Dimensions, Image } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
 import logoPaths from "../utils/logoPaths";
@@ -16,19 +9,28 @@ const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Dimensions.get("window").height;
 
 function OngoingEventCard(props) {
-  // console.log(props);
-  const teamA = setProperTeamName(props.teamA);
-  const teamB = setProperTeamName(props.teamB);
+  const teamA = setProperTeamName(props.teamA || "");
+  const teamB = setProperTeamName(props.teamB || "");
+
+  const teamAName = props.teamA === "ECE_META" ? "ECE_META_EP" : props.teamA;
+  const teamBName = props.teamB === "ECE_META" ? "ECE_META_EP" : props.teamB;
+  const scoreA = Number.isFinite(Number(props.scoreA))
+    ? Number(props.scoreA)
+    : 0;
+  const scoreB = Number.isFinite(Number(props.scoreB))
+    ? Number(props.scoreB)
+    : 0;
 
   const timestamp = props.details?.timestamp;
   const date = new Date(timestamp);
-  const formattedDate = date.toLocaleDateString(); // Date component
-  let hour = date.getHours();
-  const minute = date.getMinutes();
-  const ampm = hour >= 12 ? "PM" : "AM";
-  hour = hour % 12;
-  hour = hour ? hour : 12;
-  const formattedTime = `${hour}:${minute < 10 ? "0" : ""}${minute} ${ampm}`;
+  const isValidDate = !Number.isNaN(date.getTime());
+  const formattedDate = isValidDate ? date.toLocaleDateString() : "TBA";
+  const formattedTime = isValidDate
+    ? date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })
+    : "TBA";
+
+  const logoA = logoPaths[teamA];
+  const logoB = logoPaths[teamB];
 
   return (
     <View>
@@ -39,37 +41,39 @@ function OngoingEventCard(props) {
         colors={["#B0B0B0", "#E0E0E0"]}
         style={styles.cardTop}
       >
-        <View
-          style={{
-            height: 0.13 * deviceHeight,
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "space-between",
-            padding: 10,
-            // backgroundColor: "black",
-          }}
-        >
-          <Text style={{ fontWeight: "600", fontSize: 20, marginTop: -12 }}>
-            {props.teamA === "ECE_META" ? "ECE_META_EP" : props.teamA} v/s{" "}
-            {props.teamB === "ECE_META" ? "ECE_META_EP" : props.teamB}
-          </Text>
+        <View style={styles.topContent}>
           <Text
-            style={{
-              fontWeight: "700",
-
-              // position: "relative",
-              // left: deviceWidth * 0.04,
-            }}
+            style={styles.teamsTitle}
+            numberOfLines={1}
+            adjustsFontSizeToFit
           >
-            {props.id}
+            {teamAName || "Team A"} v/s {teamBName || "Team B"}
           </Text>
+
+          <View style={styles.scoreRow}>
+            <View style={styles.teamSlot}>
+              {logoA ? (
+                <Image style={styles.teamLogo} source={logoA} />
+              ) : (
+                <View style={styles.logoFallback} />
+              )}
+              <Text style={styles.scoreText}>{scoreA}</Text>
+            </View>
+
+            <Text style={styles.matchIdText} numberOfLines={1}>
+              {props.id || "-"}
+            </Text>
+
+            <View style={styles.teamSlot}>
+              <Text style={styles.scoreText}>{scoreB}</Text>
+              {logoB ? (
+                <Image style={styles.teamLogo} source={logoB} />
+              ) : (
+                <View style={styles.logoFallback} />
+              )}
+            </View>
+          </View>
         </View>
-        <Image style={styles.LeftImageContainer} source={logoPaths[teamA]} />
-        <Image />
-        <Text style={styles.LEFTscoreText}>{props.scoreA}</Text>
-        <Text style={styles.RIGHTscoreText}>{props.scoreB}</Text>
-        <Image style={styles.RightImageContainer} source={logoPaths[teamB]} />
-        <Image />
       </LinearGradient>
 
       <View style={styles.cardBottom}>
@@ -102,11 +106,11 @@ export default OngoingEventCard;
 
 const styles = StyleSheet.create({
   cardTop: {
-    flexDirection: "row",
-    height: 0.15 * deviceHeight,
+    minHeight: 0.15 * deviceHeight,
     marginTop: 12,
     marginHorizontal: 0.04 * deviceWidth,
-    padding: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
     backgroundColor: "black",
     borderTopRightRadius: 16,
     borderTopLeftRadius: 16,
@@ -118,6 +122,57 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
+  },
+  topContent: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 10,
+  },
+  teamsTitle: {
+    fontWeight: "700",
+    fontSize: 24,
+    maxWidth: "95%",
+    textAlign: "center",
+  },
+  scoreRow: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 4,
+  },
+  teamSlot: {
+    width: "35%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+  },
+  teamLogo: {
+    width: 40,
+    height: 40,
+    resizeMode: "contain",
+  },
+  logoFallback: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#BEBEBE",
+  },
+  scoreText: {
+    fontSize: 36,
+    color: "#322d2d",
+    fontWeight: "800",
+    minWidth: 24,
+    textAlign: "center",
+  },
+  matchIdText: {
+    width: "30%",
+    textAlign: "center",
+    fontWeight: "700",
+    fontSize: 18,
+    color: "#111",
   },
   cardBottom: {
     marginBottom: 0.01 * deviceHeight,
@@ -146,51 +201,5 @@ const styles = StyleSheet.create({
   },
   BottomTextTime: {
     color: "gray",
-  },
-  LeftImageContainer: {
-    // width: deviceWidth < 380 ? 30 : 52,
-    // height: deviceWidth < 380 ? 30 : 52,
-    // borderRadius: deviceWidth < 380 ? 15 : 26,
-    width: 40,
-    height: 40,
-    // borderRadius: 20,
-    // borderWidth: 3,
-    overflow: "hidden",
-    margin: 9,
-    marginTop: 36,
-    position: "absolute",
-    left: 9,
-  },
-  RightImageContainer: {
-    // width: deviceWidth < 380 ? 26 : 52,
-    // height: deviceWidth < 380 ? 26 : 52,
-    // borderRadius: deviceWidth < 380 ? 15 : 26,
-    width: 40,
-    height: 40,
-    // borderRadius: 20,
-    // borderWidth: 3,
-    overflow: "hidden",
-    margin: 9,
-    marginTop: 36,
-    position: "absolute",
-    right: 9,
-  },
-  LEFTscoreText: {
-    fontSize: 20,
-    color: "#322d2d",
-    position: "absolute",
-    fontWeight: "bold",
-    left: 64,
-    margin: 9,
-    marginTop: 38,
-  },
-  RIGHTscoreText: {
-    color: "#322d2d",
-    fontSize: 20,
-    position: "absolute",
-    fontWeight: "bold",
-    right: 64,
-    margin: 9,
-    marginTop: 38,
   },
 });

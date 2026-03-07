@@ -26,9 +26,28 @@ import { useNavigation } from "@react-navigation/native";
 import { defaultPoint } from "../../utils/initialScoreData";
 import { getCorrectTimeStamp } from "../../utils/helperFunctions";
 
+const getValidDate = (value) => {
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+};
+
+const normalizePointsTable = (pointsTable = {}) => {
+  const merged = { ...defaultPoint, ...pointsTable };
+  const normalized = {};
+
+  Object.keys(merged).forEach((teamKey) => {
+    const entry = merged[teamKey] || {};
+    normalized[teamKey] = {
+      points: entry.points ?? 0,
+      position: entry.position ?? 0,
+    };
+  });
+
+  return normalized;
+};
+
 const UpdateEvent = ({ route, navigation }) => {
-  let data = route.params?.data;
-  data = data?.data;
+  const data = route?.params?.data?.data || {};
   const LoginCtx = useContext(LoginContext);
 
   const name = data?.details?.title || "";
@@ -42,7 +61,7 @@ const UpdateEvent = ({ route, navigation }) => {
     };
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
-      backAction
+      backAction,
     );
     return () => backHandler.remove();
   }, []);
@@ -59,16 +78,19 @@ const UpdateEvent = ({ route, navigation }) => {
   // });
   // const [formattedDate, formattedTime] = formattedDateTime.split(", ");
 
-  const [date, setDate] = useState(
-    new Date(data?.details?.timestamp) || new Date()
-  );
-  const [time, setTime] = useState(
-    new Date(data?.details?.timestamp) || new Date()
-  );
+  const [date, setDate] = useState(getValidDate(data?.details?.timestamp));
+  const [time, setTime] = useState(getValidDate(data?.details?.timestamp));
   console.log("pointsTable", data?.pointsTable);
   const [venue, setVenue] = useState(data?.details?.location || "");
   const [selectedType, setSelectedType] = useState(data?.category || "");
-  const [teamPoint, setTeamPoint] = useState(data?.pointsTable || defaultPoint);
+  const [teamPoint, setTeamPoint] = useState(
+    normalizePointsTable(data?.pointsTable || {}),
+  );
+
+  const getInputValue = (teamKey, fieldKey) => {
+    const value = teamPoint?.[teamKey]?.[fieldKey];
+    return value === null || value === undefined ? "" : String(value);
+  };
 
   const handlePointChange = (team, points) => {
     setTeamPoint({
@@ -171,7 +193,7 @@ const UpdateEvent = ({ route, navigation }) => {
     try {
       const response = await axios.post(
         backend_link + "api/event/updateEvent",
-        body
+        body,
       );
       console.log(response.data);
       Alert.alert("Success", response.data.message);
@@ -199,7 +221,7 @@ const UpdateEvent = ({ route, navigation }) => {
         },
         { text: "Yes", onPress: submitHandler },
       ],
-      { cancelable: false }
+      { cancelable: false },
     );
   };
 
@@ -207,7 +229,7 @@ const UpdateEvent = ({ route, navigation }) => {
   console.log(
     "data",
     teamPoint.ECE_META.points,
-    teamPoint["ECE_META"].position
+    teamPoint["ECE_META"].position,
   );
   console.log(teamPoint, description, name, date, time, venue, selectedType);
 
@@ -351,7 +373,7 @@ const UpdateEvent = ({ route, navigation }) => {
                 <TextInput
                   keyboardType="numeric"
                   style={[styles.input, { color: "white" }]}
-                  value={teamPoint["MTech"]?.points.toString()}
+                  value={getInputValue("MTech", "points")}
                   placeholder="Points"
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePointChange("MTech", text)}
@@ -362,7 +384,7 @@ const UpdateEvent = ({ route, navigation }) => {
                   keyboardType="numeric"
                   style={[styles.input, { color: "white" }]}
                   placeholder="Position"
-                  value={teamPoint["MTech"]?.position.toString()}
+                  value={getInputValue("MTech", "position")}
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePosChange("MTech", text)}
                 />
@@ -384,7 +406,7 @@ const UpdateEvent = ({ route, navigation }) => {
                   style={[styles.input, { color: "white" }]}
                   keyboardType="numeric"
                   placeholder="Points"
-                  value={teamPoint["ECE_META"]?.points.toString()}
+                  value={getInputValue("ECE_META", "points")}
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePointChange("ECE_META", text)}
                 />
@@ -394,7 +416,7 @@ const UpdateEvent = ({ route, navigation }) => {
                   keyboardType="numeric"
                   style={[styles.input, { color: "white" }]}
                   placeholder="Position"
-                  value={teamPoint["ECE_META"]?.position.toString()}
+                  value={getInputValue("ECE_META", "position")}
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePosChange("ECE_META", text)}
                 />
@@ -417,7 +439,7 @@ const UpdateEvent = ({ route, navigation }) => {
                   style={[styles.input, { color: "white" }]}
                   keyboardType="numeric"
                   placeholder="Points"
-                  value={teamPoint["CSE"]?.points.toString()}
+                  value={getInputValue("CSE", "points")}
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePointChange("CSE", text)}
                 />
@@ -427,7 +449,7 @@ const UpdateEvent = ({ route, navigation }) => {
                   keyboardType="numeric"
                   style={[styles.input, { color: "white" }]}
                   placeholder="Position"
-                  value={teamPoint["CSE"]?.position.toString()}
+                  value={getInputValue("CSE", "position")}
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePosChange("CSE", text)}
                 />
@@ -448,7 +470,7 @@ const UpdateEvent = ({ route, navigation }) => {
                 <TextInput
                   style={[styles.input, { color: "white" }]}
                   placeholder="Points"
-                  value={teamPoint["CIVIL"]?.points.toString()}
+                  value={getInputValue("CIVIL", "points")}
                   keyboardType="numeric"
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePointChange("CIVIL", text)}
@@ -459,7 +481,7 @@ const UpdateEvent = ({ route, navigation }) => {
                   keyboardType="numeric"
                   style={[styles.input, { color: "white" }]}
                   placeholder="Position"
-                  value={teamPoint["CIVIL"]?.position.toString()}
+                  value={getInputValue("CIVIL", "position")}
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePosChange("CIVIL", text)}
                 />
@@ -483,7 +505,7 @@ const UpdateEvent = ({ route, navigation }) => {
                   keyboardType="numeric"
                   style={[styles.input, { color: "white" }]}
                   placeholder="Points"
-                  value={teamPoint["EE"]?.points.toString()}
+                  value={getInputValue("EE", "points")}
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePointChange("EE", text)}
                 />
@@ -493,7 +515,7 @@ const UpdateEvent = ({ route, navigation }) => {
                   keyboardType="numeric"
                   style={[styles.input, { color: "white" }]}
                   placeholder="Position"
-                  value={teamPoint["EE"]?.position.toString()}
+                  value={getInputValue("EE", "position")}
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePosChange("EE", text)}
                 />
@@ -515,7 +537,7 @@ const UpdateEvent = ({ route, navigation }) => {
                   style={[styles.input, { color: "white" }]}
                   keyboardType="numeric"
                   placeholder="Points"
-                  value={teamPoint["PHD"]?.points.toString()}
+                  value={getInputValue("PHD", "points")}
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePointChange("PHD", text)}
                 />
@@ -525,7 +547,7 @@ const UpdateEvent = ({ route, navigation }) => {
                   keyboardType="numeric"
                   style={[styles.input, { color: "white" }]}
                   placeholder="Position"
-                  value={teamPoint["PHD"]?.position.toString()}
+                  value={getInputValue("PHD", "position")}
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePosChange("PHD", text)}
                 />
@@ -548,7 +570,7 @@ const UpdateEvent = ({ route, navigation }) => {
                   style={[styles.input, { color: "white" }]}
                   keyboardType="numeric"
                   placeholder="Points"
-                  value={teamPoint["MECH"]?.points.toString()}
+                  value={getInputValue("MECH", "points")}
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePointChange("MECH", text)}
                 />
@@ -558,7 +580,7 @@ const UpdateEvent = ({ route, navigation }) => {
                   keyboardType="numeric"
                   style={[styles.input, { color: "white" }]}
                   placeholder="Position"
-                  value={teamPoint["MECH"]?.position.toString()}
+                  value={getInputValue("MECH", "position")}
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePosChange("MECH", text)}
                 />
@@ -579,7 +601,7 @@ const UpdateEvent = ({ route, navigation }) => {
                 <TextInput
                   style={[styles.input, { color: "white" }]}
                   placeholder="Points"
-                  value={teamPoint["MSc_ITEP"]?.points.toString()}
+                  value={getInputValue("MSc_ITEP", "points")}
                   keyboardType="numeric"
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePointChange("MSc_ITEP", text)}
@@ -590,7 +612,7 @@ const UpdateEvent = ({ route, navigation }) => {
                   keyboardType="numeric"
                   style={[styles.input, { color: "white" }]}
                   placeholder="Position"
-                  value={teamPoint["MSc_ITEP"]?.position.toString()}
+                  value={getInputValue("MSc_ITEP", "position")}
                   placeholderTextColor="#5C6168"
                   onChangeText={(text) => handlePosChange("MSc_ITEP", text)}
                 />
