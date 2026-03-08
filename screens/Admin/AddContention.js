@@ -37,6 +37,14 @@ const AddContention = ({ navigation }) => {
       try {
         const email = LoginCtx?.user?.email;
         if (!email) {
+          setIsCoordinator(false);
+          setCheckingAuth(false);
+          return;
+        }
+
+        // Admins should not submit contentions.
+        if (LoginCtx?.isAdmin) {
+          setIsCoordinator(false);
           setCheckingAuth(false);
           return;
         }
@@ -44,15 +52,38 @@ const AddContention = ({ navigation }) => {
         const response = await axios.get(
           `${backend_link}api/event/getBranchCoord`,
         );
-        const coordData = response.data;
+        const coordData = response?.data?.branch_coordinators || {};
+        const normalizedEmail = email.toLowerCase();
 
         // Check if user email matches any coordinator
         let foundBranch = "";
         Object.keys(coordData).forEach((branch) => {
           const coords = coordData[branch];
+
+          if (typeof coords === "string") {
+            if (coords.toLowerCase() === normalizedEmail) {
+              foundBranch = branch;
+            }
+            return;
+          }
+
+          if (Array.isArray(coords)) {
+            const matched = coords.some((coord) => {
+              if (typeof coord === "string") {
+                return coord.toLowerCase() === normalizedEmail;
+              }
+              return coord?.email?.toLowerCase?.() === normalizedEmail;
+            });
+            if (matched) {
+              foundBranch = branch;
+            }
+            return;
+          }
+
           if (
-            Array.isArray(coords) &&
-            coords.some((coord) => coord.email === email)
+            coords &&
+            typeof coords === "object" &&
+            coords?.email?.toLowerCase?.() === normalizedEmail
           ) {
             foundBranch = branch;
           }
@@ -62,14 +93,12 @@ const AddContention = ({ navigation }) => {
           setIsCoordinator(true);
           setCoordinatorBranch(foundBranch);
         } else {
-          // Allow to proceed but mark as general user
-          setIsCoordinator(true);
-          setCoordinatorBranch("Coordinator");
+          setIsCoordinator(false);
+          setCoordinatorBranch("Your Branch");
         }
       } catch (error) {
         console.error("Error checking coordinator status:", error);
-        // Allow to proceed anyway since they're in admin area
-        setIsCoordinator(true);
+        setIsCoordinator(false);
       } finally {
         setCheckingAuth(false);
       }
@@ -169,7 +198,8 @@ const AddContention = ({ navigation }) => {
         />
         <Text style={styles.accessDeniedTitle}>Access Denied</Text>
         <Text style={styles.accessDeniedText}>
-          Only branch coordinators can submit contentions.
+          Only branch coordinators can submit contentions. Admin accounts are
+          not allowed to report cheating.
         </Text>
         <TouchableOpacity
           style={styles.backButton}

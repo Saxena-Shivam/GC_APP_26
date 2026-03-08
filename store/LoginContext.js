@@ -10,6 +10,8 @@ const LoginContext = createContext({
   setIsLogin: () => {},
   isAdmin: false,
   setIsAdmin: () => {},
+  isCoordinator: false,
+  setIsCoordinator: () => {},
   user: null,
   setUser: () => {},
   logout: () => {},
@@ -19,6 +21,7 @@ const LoginContext = createContext({
 const LoginProvider = ({ children }) => {
   const [isLogin, setIsLogin] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isCoordinator, setIsCoordinator] = useState(false);
   const [user, setUser] = useState(null);
   const [detail, setDetail] = useState(null);
 
@@ -28,7 +31,7 @@ const LoginProvider = ({ children }) => {
         try {
           const email = user.email;
           const resp = await axios.get(
-            backend_link + "api/user/getDetails?email=" + email
+            backend_link + "api/user/getDetails?email=" + email,
           );
           console.log(resp.data?.userDetails);
           setDetail(resp.data?.userDetails);
@@ -47,6 +50,7 @@ const LoginProvider = ({ children }) => {
     setDetail(null);
     setIsLogin(false);
     setIsAdmin(false);
+    setIsCoordinator(false);
     setUser(null);
     console.log("Logged out");
   };
@@ -55,6 +59,8 @@ const LoginProvider = ({ children }) => {
     setIsLogin,
     isAdmin,
     setIsAdmin,
+    isCoordinator,
+    setIsCoordinator,
     user,
     setUser,
     logout,

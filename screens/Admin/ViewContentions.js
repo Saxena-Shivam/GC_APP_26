@@ -28,6 +28,16 @@ const ViewContentions = ({ navigation }) => {
   const [filterStatus, setFilterStatus] = useState("all"); // all, pending, reviewed, resolved
 
   useEffect(() => {
+    if (!LoginCtx?.isAdmin) {
+      Alert.alert("Unauthorized", "Only admins can access View Contentions.", [
+        {
+          text: "OK",
+          onPress: () => navigation.goBack(),
+        },
+      ]);
+      setLoading(false);
+      return;
+    }
     fetchContentions();
   }, []);
 

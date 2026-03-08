@@ -64,7 +64,7 @@ export default function CreditsPage({ navigation }) {
     },
     {
       name: "Siddarth.K",
-      position: "App Developer, Neuromancers",
+      position: "App Lead",
       email: "23cs01027@iitbbs.ac.in",
       image: require("../assets/DevTeam/siddarth.jpeg"),
     },
@@ -79,7 +79,7 @@ export default function CreditsPage({ navigation }) {
     // },
     {
       name: "Shivam Saxena",
-      position: "Member, Neuromancers",
+      position: "Developer",
       email: "24ee01074@iitbbs.ac.in",
       image: require("../assets/DevTeam/shivam_profile.jpg"),
     },

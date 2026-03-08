@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   Image,
   SafeAreaView,
@@ -19,6 +19,7 @@ import {
 } from "@expo/vector-icons";
 import axios from "axios";
 import { backend_link } from "../../utils/constants";
+import { LoginContext } from "../../store/LoginContext";
 
 const handleBetsUpdate = async () => {
   try {
@@ -43,6 +44,7 @@ const handleBetsUpdate = async () => {
 };
 
 const AdminDashboard = ({ navigation }) => {
+  const LoginCtx = useContext(LoginContext);
   const AddPoints = () => {
     return navigation.navigate("AdminAddScoreStack");
   };
@@ -168,50 +170,6 @@ const AdminDashboard = ({ navigation }) => {
               <Text style={styles.cardTitle}>Sports Result</Text>
               <Text style={styles.cardDescription}>Add Results</Text>
             </Pressable>
-
-            {/* Report Cheating */}
-            <Pressable
-              style={({ pressed }) => [
-                styles.card,
-                styles.contentionCard,
-                pressed && styles.cardPressed,
-              ]}
-              onPress={() => navigation.navigate("AddContention")}
-            >
-              <View style={styles.cardIconContainer}>
-                <MaterialCommunityIcons
-                  name="alert-octagon"
-                  size={28}
-                  color="#fff"
-                />
-              </View>
-              <Text style={styles.cardTitle}>Report Cheating</Text>
-              <Text style={styles.cardDescription}>File Complaint</Text>
-            </Pressable>
-          </View>
-
-          {/* Row 4 */}
-          <View style={styles.row}>
-            {/* View Contentions */}
-            <Pressable
-              style={({ pressed }) => [
-                styles.card,
-                styles.viewCard,
-                pressed && styles.cardPressed,
-              ]}
-              onPress={() => navigation.navigate("ViewContentions")}
-            >
-              <View style={styles.cardIconContainer}>
-                <MaterialCommunityIcons
-                  name="clipboard-check"
-                  size={28}
-                  color="#fff"
-                />
-              </View>
-              <Text style={styles.cardTitle}>View Contentions</Text>
-              <Text style={styles.cardDescription}>Manage Complaints</Text>
-            </Pressable>
-
             {/* Register Team */}
             <Pressable
               style={({ pressed }) => [
@@ -231,6 +189,52 @@ const AdminDashboard = ({ navigation }) => {
               <Text style={styles.cardTitle}>Register Team</Text>
               <Text style={styles.cardDescription}>Add Participants</Text>
             </Pressable>
+          </View>
+
+          {/* Row 4 */}
+          <View style={styles.row}>
+            {/* View Contentions */}
+            {LoginCtx?.isAdmin && (
+              <Pressable
+                style={({ pressed }) => [
+                  styles.card,
+                  styles.viewCard,
+                  pressed && styles.cardPressed,
+                ]}
+                onPress={() => navigation.navigate("ViewContentions")}
+              >
+                <View style={styles.cardIconContainer}>
+                  <MaterialCommunityIcons
+                    name="clipboard-check"
+                    size={28}
+                    color="#fff"
+                  />
+                </View>
+                <Text style={styles.cardTitle}>View Contentions</Text>
+                <Text style={styles.cardDescription}>Manage Complaints</Text>
+              </Pressable>
+            )}
+            {/* Report Cheating - coordinators only */}
+            {!LoginCtx?.isAdmin && (
+              <Pressable
+                style={({ pressed }) => [
+                  styles.card,
+                  styles.contentionCard,
+                  pressed && styles.cardPressed,
+                ]}
+                onPress={() => navigation.navigate("AddContention")}
+              >
+                <View style={styles.cardIconContainer}>
+                  <MaterialCommunityIcons
+                    name="alert-octagon"
+                    size={28}
+                    color="#fff"
+                  />
+                </View>
+                <Text style={styles.cardTitle}>Report Cheating</Text>
+                <Text style={styles.cardDescription}>File Complaint</Text>
+              </Pressable>
+            )}
           </View>
         </View>
         <View style={{ height: 40 }} />

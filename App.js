@@ -260,31 +260,73 @@ const App = () => {
 
   useEffect(() => {
     if (LoginCtx.isLogin) {
-      //check if user is admin
-      console.log("Admin logging in");
-      const isAdminorNot = async () => {
+      console.log("Role logging in");
+      const checkRoles = async () => {
         const user = LoginCtx.user;
-        // const Testemail = {
-        //   admin: "22EC01057@iitbbs.ac.in",
-        //   user: "22EC01099@iitbbs.ac.in",
-        // };
-        if (user?.email !== null) {
-          try {
-            const response = await axios.get(
-              backend_link + "api/admin/isAdmin/" + user?.email,
-            );
-            console.log(response.data, "Admin or not");
-            LoginCtx.setIsAdmin(response.data.isAdmin);
-          } catch (e) {
-            console.log(e, "Error in checking admin or not");
-          } finally {
-            setLoading(false);
+        const userEmail = user?.email?.toLowerCase?.() || "";
+
+        if (!userEmail) {
+          setLoading(false);
+          return;
+        }
+
+        const isCoordinatorFromMap = (coordinatorMap, email) => {
+          if (!coordinatorMap || typeof coordinatorMap !== "object") {
+            return false;
           }
+
+          return Object.values(coordinatorMap).some((value) => {
+            if (typeof value === "string") {
+              return value.toLowerCase() === email;
+            }
+
+            if (Array.isArray(value)) {
+              return value.some((entry) => {
+                if (typeof entry === "string") {
+                  return entry.toLowerCase() === email;
+                }
+
+                if (entry && typeof entry?.email === "string") {
+                  return entry.email.toLowerCase() === email;
+                }
+
+                return false;
+              });
+            }
+
+            if (value && typeof value?.email === "string") {
+              return value.email.toLowerCase() === email;
+            }
+
+            return false;
+          });
+        };
+
+        try {
+          const [adminResponse, coordinatorResponse] = await Promise.all([
+            axios.get(backend_link + "api/admin/isAdmin/" + userEmail),
+            axios.get(backend_link + "api/event/getBranchCoord"),
+          ]);
+
+          const isAdmin = !!adminResponse?.data?.isAdmin;
+          const coordinatorMap =
+            coordinatorResponse?.data?.branch_coordinators || {};
+          const isCoordinator = isCoordinatorFromMap(coordinatorMap, userEmail);
+
+          LoginCtx.setIsAdmin(isAdmin);
+          LoginCtx.setIsCoordinator(isCoordinator);
+        } catch (e) {
+          console.log(e, "Error in checking roles");
+          LoginCtx.setIsAdmin(false);
+          LoginCtx.setIsCoordinator(false);
+        } finally {
+          setLoading(false);
         }
       };
-      isAdminorNot();
+
+      checkRoles();
     }
-  }, [LoginCtx.isLogin]);
+  }, [LoginCtx.isLogin, LoginCtx.user]);
 
   return (
     <PaperProvider>

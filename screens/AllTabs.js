@@ -477,7 +477,7 @@ export default function AllTabs() {
         })}
       />
       <Tab.Screen name="    " component={HomepageStackNavigator} />
-      {LoginCtx.isAdmin && (
+      {(LoginCtx.isAdmin || LoginCtx.isCoordinator) && (
         <Tab.Screen name="     " component={AdminDashboardStackNavigator} />
       )}
       <Tab.Screen name="      " component={NotificationsPage} />
