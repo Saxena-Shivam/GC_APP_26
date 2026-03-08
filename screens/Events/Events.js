@@ -7,6 +7,7 @@ import {
   RefreshControl,
   FlatList,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Icon } from "react-native-elements";
 import { useState, useContext, useEffect, useCallback } from "react";
 import { EventsContext } from "../../store/EventsContext";
@@ -20,6 +21,8 @@ import CultEventScreen from "./CultEventScreen";
 import PastScreen from "./PastScreen";
 import axios from "axios";
 import { backend_link } from "../../utils/constants";
+
+const EVENTS_SCREEN_CACHE_KEY = "@gc_events_screen_cache_v1";
 
 export default function Events({ route, navigation }) {
   const field = route?.params?.field || "ALL";
@@ -41,6 +44,37 @@ export default function Events({ route, navigation }) {
   const [techData, setTechData] = useState([]);
   const [cultData, setCultData] = useState([]);
   const [branchCoords, setBranchCoords] = useState({});
+
+  const persistEventsCache = async (payload) => {
+    try {
+      await AsyncStorage.setItem(
+        EVENTS_SCREEN_CACHE_KEY,
+        JSON.stringify(payload),
+      );
+    } catch (error) {
+      console.log("Failed to cache events screen data", error);
+    }
+  };
+
+  const hydrateEventsCache = async () => {
+    try {
+      const raw = await AsyncStorage.getItem(EVENTS_SCREEN_CACHE_KEY);
+      if (!raw) return;
+
+      const cached = JSON.parse(raw);
+      if (Array.isArray(cached?.techData)) {
+        setTechData(cached.techData);
+      }
+      if (Array.isArray(cached?.cultData)) {
+        setCultData(cached.cultData);
+      }
+      if (cached?.branchCoords && typeof cached.branchCoords === "object") {
+        setBranchCoords(cached.branchCoords);
+      }
+    } catch (error) {
+      console.log("Failed to hydrate events screen cache", error);
+    }
+  };
 
   const sortData = (data) => {
     console.log("data", data);
@@ -73,73 +107,49 @@ export default function Events({ route, navigation }) {
     return nextdata.concat(prevdata);
   };
 
-  const fetchTechData = async () => {
+  const fetchEventsMetadata = async () => {
     try {
-      const response = await axios.get(
-        backend_link + "api/event/getEventByCategory?category=tech",
+      const [techResponse, cultResponse, branchResponse] = await Promise.all([
+        axios.get(backend_link + "api/event/getEventByCategory?category=tech"),
+        axios.get(backend_link + "api/event/getEventByCategory?category=cult"),
+        axios.get(`${backend_link}api/event/getBranchCoord`),
+      ]);
+
+      const techEvents = sortData(
+        (techResponse?.data?.events || []).filter(Boolean),
       );
-      const data = response.data.events;
-      let techdata = [];
-      data.map((item) => {
-        item !== null && techdata.push(item);
+      const cultEvents = sortData(
+        (cultResponse?.data?.events || []).filter(Boolean),
+      );
+      const coords = branchResponse?.data?.branch_coordinators || {};
+
+      setTechData(techEvents);
+      setCultData(cultEvents);
+      setBranchCoords(coords);
+
+      await persistEventsCache({
+        techData: techEvents,
+        cultData: cultEvents,
+        branchCoords: coords,
       });
-      techdata = sortData(techdata);
-      /* setTechEvents(techdata);
-      setDataLoaded(true);
-      setFilteredData(techdata); */
-      setTechData(techdata);
     } catch (error) {
-      console.log(error);
-    } finally {
-      // setLoading(false);
+      console.log("error fetching events metadata", error);
     }
   };
 
-  const fetchCultData = async () => {
-    try {
-      const response = await axios.get(
-        backend_link + "api/event/getEventByCategory?category=cult",
-      );
-      const data = response.data.events;
-      let cultdata = [];
-      data.map((item) => {
-        item !== null && cultdata.push(item);
-      });
-      cultdata = sortData(cultdata);
-      setCultData(cultdata);
-      console.log("cult testing", cultData[0].data.pointsTable);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      // setLoading(false);
-    }
-  };
-
-  const fetchBranchCoords = async () => {
-    try {
-      const response = await axios.get(
-        `${backend_link}api/event/getBranchCoord`,
-      );
-      setBranchCoords(response.data.branch_coordinators);
-    } catch (error) {
-      console.log("error fetching branch coords", error);
-    }
+  const refreshAllData = async () => {
+    await Promise.all([fetchAllLiveEvents(), fetchEventsMetadata()]);
   };
 
   useEffect(() => {
-    fetchAllLiveEvents();
-    fetchTechData();
-    fetchCultData();
-    fetchBranchCoords();
+    hydrateEventsCache();
+    refreshAllData();
   }, []);
 
   // Pull-to-refresh
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await fetchAllLiveEvents();
-    await fetchTechData();
-    await fetchCultData();
-    await fetchBranchCoords();
+    await refreshAllData();
     setRefreshing(false);
   }, []);
 

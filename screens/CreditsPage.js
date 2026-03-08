@@ -21,7 +21,10 @@ export default function CreditsPage({ navigation }) {
     //   title: "Jeeban Jyoti Patra",
     //   image: require("../assets/DevTeam/jeeban.jpeg"),
     // },
-    { title: "Shivam Saxena", image: require("../assets/DevTeam/shivam1.jpg") },
+    {
+      title: "Shivam Saxena",
+      image: require("../assets/DevTeam/shivam_profile.jpg"),
+    },
   ];
 
   const getInitials = (name) => {

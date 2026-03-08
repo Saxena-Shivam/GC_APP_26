@@ -180,6 +180,10 @@ export default function Leaderboard() {
           renderItem={renderItem}
           keyExtractor={(item, index) => item.Name + "-" + index}
           showsVerticalScrollIndicator={false}
+          scrollEnabled
+          nestedScrollEnabled
+          contentContainerStyle={styles.listContentContainer}
+          ListFooterComponent={<View style={{ height: 90 }} />}
         />
       </View>
     </SafeAreaView>
@@ -287,6 +291,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
     paddingTop: 8,
+  },
+  listContentContainer: {
+    paddingBottom: 12,
   },
   listItemWrap: {
     paddingHorizontal: 4,

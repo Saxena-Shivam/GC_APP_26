@@ -1,6 +1,7 @@
 import { LoginContext } from "../store/LoginContext.js";
 import { EventsContext } from "../store/EventsContext.js";
 import { useState, useEffect, useContext, useRef } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { StatusBar } from "expo-status-bar";
 import {
   Pressable,
@@ -34,6 +35,18 @@ import { initialBranchesData } from "../utils/initialScoreData";
 import setProperTeamName from "../utils/setProperTeamName";
 
 var { width, height } = Dimensions.get("window");
+
+const HOMEPAGE_CACHE_KEY = "@gc_homepage_cache_v1";
+const TEAM_IDS = [
+  "MTech",
+  "ECE_META",
+  "CSE",
+  "EE",
+  "CIVIL",
+  "PHD",
+  "MECH",
+  "MSc_ITEP",
+];
 
 const banners = {
   CSE: require("../assets/TeamBanners/CSE.png"),
@@ -359,7 +372,7 @@ const formatDate = (datestr) => {
 //   }
 // };
 
-const fetchDataAndUpdateScore = async (teamName, setBranchesData) => {
+const fetchDataAndUpdateScore = async (teamName) => {
   try {
     const response = await axios.get(
       backend_link + "api/points/getTotalPointsByTeam",
@@ -367,21 +380,11 @@ const fetchDataAndUpdateScore = async (teamName, setBranchesData) => {
         params: { teamId: setProperTeamName(teamName) },
       },
     );
-    console.log("data", response.data);
-    const points = response.data.points * 1;
-
-    setBranchesData((prevState) => {
-      return prevState.map((branch) => {
-        if (setProperTeamName(branch.Name) === setProperTeamName(teamName)) {
-          return { ...branch, Score: points };
-        }
-        return branch;
-      });
-    });
-
-    console.log("BranchesData updated with new score:", teamName, points);
+    const points = Number(response?.data?.points ?? 0);
+    return { teamName, points };
   } catch (error) {
     console.error("Error fetching data:", error);
+    return { teamName, points: 0 };
   }
 };
 
@@ -392,8 +395,34 @@ export default function HomePage({ navigation }) {
   const userEmail = LoginCtx?.user?.email;
   const [user, setUser] = useState({});
   const [BranchesData, setBranchesData] = useState(initialBranchesData);
-  const [number, setNumber] = useState(0);
   const [branchCoords, setBranchCoords] = useState({});
+  const persistHomepageCache = async (payload) => {
+    try {
+      await AsyncStorage.setItem(HOMEPAGE_CACHE_KEY, JSON.stringify(payload));
+    } catch (error) {
+      console.log("Failed to cache homepage data", error);
+    }
+  };
+
+  const hydrateHomepageCache = async () => {
+    try {
+      const raw = await AsyncStorage.getItem(HOMEPAGE_CACHE_KEY);
+      if (!raw) return;
+
+      const cached = JSON.parse(raw);
+      if (Array.isArray(cached?.branchesData) && cached.branchesData.length) {
+        setBranchesData(cached.branchesData);
+      }
+      if (cached?.lastUpdated) {
+        setLastUpdated(cached.lastUpdated);
+      }
+      if (cached?.branchCoords && typeof cached.branchCoords === "object") {
+        setBranchCoords(cached.branchCoords);
+      }
+    } catch (error) {
+      console.log("Failed to hydrate homepage cache", error);
+    }
+  };
 
   // Swipe up detection for leaderboard
   const panResponderRef = useRef(null);
@@ -462,15 +491,83 @@ export default function HomePage({ navigation }) {
       const response = await axios.get(
         `${backend_link}api/event/getBranchCoord`,
       );
-      setBranchCoords(response.data.branch_coordinators);
+      const coords = response?.data?.branch_coordinators || {};
+      setBranchCoords(coords);
+      return coords;
     } catch (error) {
       console.log("error fetching branch coords", error);
+      return {};
+    }
+  };
+
+  const fetchLastUpdated = async () => {
+    try {
+      const response = await axios.get(backend_link + "api/event/lastUpdated");
+      const date = formatDate(response?.data?.lastUpdated);
+      setLastUpdated(date);
+      return date;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return "Unknown Date";
+    }
+  };
+
+  const refreshBranchScores = async () => {
+    try {
+      const teamResults = await Promise.all(
+        TEAM_IDS.map((teamName) => fetchDataAndUpdateScore(teamName)),
+      );
+
+      const scoreMap = teamResults.reduce((acc, item) => {
+        acc[setProperTeamName(item.teamName)] = Number(item.points ?? 0);
+        return acc;
+      }, {});
+
+      setBranchesData((prevState) => {
+        const nextState = prevState.map((branch) => {
+          const normalizedName = setProperTeamName(branch.Name);
+          const nextScore = scoreMap[normalizedName];
+          return typeof nextScore === "number"
+            ? { ...branch, Score: nextScore }
+            : branch;
+        });
+
+        persistHomepageCache({
+          branchesData: nextState,
+          lastUpdated,
+          branchCoords,
+        });
+        return nextState;
+      });
+    } catch (error) {
+      console.log("Failed to refresh branch scores", error);
+    }
+  };
+
+  const refreshHomepageMeta = async () => {
+    try {
+      const [coords, latestDate] = await Promise.all([
+        fetchBranchCoords(),
+        fetchLastUpdated(),
+      ]);
+
+      setBranchCoords(coords || {});
+      setLastUpdated(latestDate || "Unknown Date");
+      await persistHomepageCache({
+        branchesData: BranchesData,
+        lastUpdated: latestDate || "Unknown Date",
+        branchCoords: coords || {},
+      });
+    } catch (error) {
+      console.log("Failed to refresh homepage meta", error);
     }
   };
 
   useEffect(() => {
+    hydrateHomepageCache();
     fetchLeaderboardData();
-    fetchBranchCoords();
+    refreshHomepageMeta();
+    refreshBranchScores();
   }, []);
 
   // async function updateCoinsForWinners() {
@@ -600,40 +697,16 @@ export default function HomePage({ navigation }) {
   // }, []);
 
   useEffect(() => {
-    setInterval(
+    const interval = setInterval(
       () => {
-        setNumber(number + 1);
-        console.log("Number updated");
+        refreshBranchScores();
+        refreshHomepageMeta();
       },
       1000 * 60 * 2,
     );
-  }, []);
-  useEffect(() => {
-    fetchDataAndUpdateScore("MTech", setBranchesData);
-    fetchDataAndUpdateScore("ECE_META", setBranchesData);
-    fetchDataAndUpdateScore("CSE", setBranchesData);
-    fetchDataAndUpdateScore("EE", setBranchesData);
-    fetchDataAndUpdateScore("CIVIL", setBranchesData);
-    fetchDataAndUpdateScore("PHD", setBranchesData);
-    fetchDataAndUpdateScore("MECH", setBranchesData);
-    fetchDataAndUpdateScore("MSc_ITEP", setBranchesData);
-  }, [number]);
 
-  useEffect(() => {
-    const fetchlastUpdated = async () => {
-      try {
-        const response = await axios.get(
-          backend_link + "api/event/lastUpdated",
-        );
-        const lastUpdated = response.data.lastUpdated;
-        const date = formatDate(lastUpdated);
-        setLastUpdated(date);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchlastUpdated();
-  }, []);
+    return () => clearInterval(interval);
+  }, [lastUpdated, branchCoords]);
 
   BranchesData.sort((a, b) => b.Score - a.Score);
   const top3 = BranchesData.slice(0, 3);
