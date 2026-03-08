@@ -298,7 +298,9 @@ export default function NotificationsPage() {
             `${item.id || index}-${item.timestamp}`
           }
           contentContainerStyle={
-            notifications.length === 0 && styles.emptyListContainer
+            notifications.length === 0
+              ? styles.emptyListContainer
+              : { paddingBottom: 100 }
           }
           ListEmptyComponent={<EmptyState />}
           refreshControl={

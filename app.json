@@ -18,14 +18,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/appiconwhite.png",
+        "foregroundImage": "./assets/gc26.jpeg",
         "backgroundColor": "#ffffff"
       },
       "package": "com.iitbbs.gcapp",
       "googleServicesFile": "./google-services.json"
     },
     "web": {
-      "favicon": "./assets/appiconwhite.png"
+      "favicon": "./assets/gc26.jpeg"
     },
     "scheme": "gcapp2024",
     "extra": {

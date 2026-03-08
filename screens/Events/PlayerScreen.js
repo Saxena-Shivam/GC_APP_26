@@ -60,10 +60,15 @@ const modalStyles = StyleSheet.create({
 });
 
 export default function PlayerScreen({ route }) {
-  const props = route.params.data;
-  const eventData = props.data.item.data;
-  const eventId = props.data.item.id || props.data.item.data.eventId;
-  const eventName = eventData.details.title;
+  const eventParam =
+    route?.params?.event ||
+    route?.params?.data?.item ||
+    route?.params?.data?.data?.item ||
+    route?.params?.data;
+
+  const eventData = eventParam?.data || {};
+  const eventId = eventParam?.id || eventData?.eventId;
+  const eventName = eventData?.details?.title || "Participants";
 
   const [registrations, setRegistrations] = useState({});
   const [loading, setLoading] = useState(true);
@@ -90,6 +95,12 @@ export default function PlayerScreen({ route }) {
   }, [eventId]);
 
   const fetchRegistrations = async () => {
+    if (!eventId) {
+      setRegistrations({});
+      setLoading(false);
+      return;
+    }
+
     try {
       setLoading(true);
       const branches = [
@@ -102,23 +113,23 @@ export default function PlayerScreen({ route }) {
         "PHD",
         "MSc_ITEP",
       ];
-      const regData = {};
+      const regData = Object.fromEntries(
+        branches.map((branch) => [branch, []]),
+      );
 
-      for (const branch of branches) {
-        try {
-          const response = await axios.get(
-            `${backend_link}api/registration/team/${eventId}/${branch}`,
-          );
-          if (response.data?.registration) {
-            regData[branch] = response.data.registration.participants || [];
-          }
-        } catch (error) {
-          // 404 means no registration for this branch, which is OK
-          if (error.response?.status !== 404) {
-            console.error(`Error fetching ${branch} registration:`, error);
-          }
+      const response = await axios.get(
+        `${backend_link}api/registration/event/${eventId}`,
+      );
+      const registrations = response.data?.registrations || {};
+
+      branches.forEach((branch) => {
+        if (branch === "MSc_ITEP") {
+          regData[branch] =
+            registrations.MSc_ITEP || registrations.MSC_ITEP || [];
+        } else {
+          regData[branch] = registrations[branch] || [];
         }
-      }
+      });
 
       setRegistrations(regData);
     } catch (error) {

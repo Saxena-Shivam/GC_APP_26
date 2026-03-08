@@ -33,9 +33,19 @@ const ViewContentions = ({ navigation }) => {
 
   const fetchContentions = async () => {
     try {
+      const reviewerEmail = LoginCtx?.user?.email;
+      if (!reviewerEmail) {
+        setLoading(false);
+        Alert.alert("Error", "User email not found. Please login again.");
+        return;
+      }
+
       setLoading(true);
       const response = await axios.get(
         `${backend_link}api/contentions/getContentions`,
+        {
+          params: { email: reviewerEmail },
+        },
       );
       const dataObj = response.data || {};
 
