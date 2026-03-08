@@ -1,0 +1,178 @@
+{
+  "PHd": {
+    "coordinator": {
+      "name": "Vishva Ranjan Singh",
+      "email": "a25cs09019@iitbbs.ac.in"
+    },
+    "deputyCoordinator": {
+      "name": "Keya Biswas",
+      "email": "a25ce09008@iitbbs.ac.in"
+    },
+    "sportsCoordinator": {
+      "name": "Siddhant Kumar",
+      "email": "s25cs09003@iitbbs.ac.in"
+    },
+    "cultCoordinator": {
+      "name": "Akshara C",
+      "email": "a25en09001@iitbbs.ac.in"
+    },
+    "techCoordinator": {
+      "name": "Prayash Panda",
+      "email": "s25ec09007@iitbbs.ac.in"
+    }
+  },
+  "MECH_assumed": {
+    "coordinator": {
+      "name": "",
+      "email": "22me01038@iitbbs.ac.in"
+    },
+    "deputyCoordinator": {
+      "name": "",
+      "email": "23me01043@iitbbs.ac.in"
+    },
+    "sportsCoordinator": {
+      "name": "",
+      "email": "23me01051@iitbbs.ac.in"
+    },
+    "cultCoordinator": {
+      "name": "",
+      "email": "23me02017@iitbbs.ac.in"
+    },
+    "techCoordinator": {
+      "name": "",
+      "email": "22me01002@iitbbs.ac.in"
+    }
+  },
+  "CSE": {
+    "coordinator": {
+      "name": "M. Sai Prajwal",
+      "email": "22cs01045@iitbbs.ac.in"
+    },
+    "deputyCoordinator": {
+      "name": "C. Krishnaja",
+      "email": "22cs01024@iitbbs.ac.in"
+    },
+    "sportsCoordinator": {
+      "name": "G.N. Manikanta",
+      "email": "23cs01021@iitbbs.ac.in"
+    },
+    "cultCoordinator": {
+      "name": "M.P. Sai",
+      "email": "23cs01040@iitbbs.ac.in"
+    },
+    "techCoordinator": {
+      "name": "B. Lokesh",
+      "email": "23cs01012@iitbbs.ac.in"
+    }
+  },
+  "ECE_META_EP": {
+    "coordinator": {
+      "name": "Santosh Dudala",
+      "email": "22ec01018@iitbbs.ac.in"
+    },
+    "deputyCoordinator": {
+      "name": "Aditya Mishra",
+      "email": "21mm02002@iitbbs.ac.in"
+    },
+    "sportsCoordinator": {
+      "name": "M. Pragna",
+      "email": "23ec01027@iitbbs.ac.in"
+    },
+    "cultCoordinator": {
+      "name": "Utkarsh Malhotra",
+      "email": "23mm01025@iitbbs.ac.in"
+    },
+    "techCoordinator": {
+      "name": "Biswajit Rout",
+      "email": "22mm01002@iitbbs.ac.in"
+    }
+  },
+  "CIVIL": {
+    "coordinator": {
+      "name": "Dhananjay Sharma",
+      "email": "22ce02004@iitbbs.ac.in"
+    },
+    "deputyCoordinator": {
+      "name": "U. Joe Samuel Preetham",
+      "email": "23ce01060@iitbbs.ac.in"
+    },
+    "sportsCoordinator": {
+      "name": "Kaarthika Netha",
+      "email": "23ce01025@iitbbs.ac.in"
+    },
+    "cultCoordinator": {
+      "name": "Vansh Raj Gupta",
+      "email": "23ce01061@iitbbs.ac.in"
+    },
+    "techCoordinator": {
+      "name": "Shashank",
+      "email": "23ce02033@iitbbs.ac.in"
+    }
+  },
+  "ELECTRICAL": {
+    "coordinator": {
+      "name": "Jaisukh Reddy",
+      "email": "22ee01004@iitbbs.ac.in"
+    },
+    "deputyCoordinator": {
+      "name": "Rakshit Vel",
+      "email": "22ee01055@iitbbs.ac.in"
+    },
+    "sportsCoordinator": {
+      "name": "Deekshith Gubba",
+      "email": "23ee01016@iitbbs.ac.in"
+    },
+    "cultCoordinator": {
+      "name": "Adrija Roy",
+      "email": "22ee02006@iitbbs.ac.in"
+    },
+    "techCoordinator": {
+      "name": "Divyanshu Dubey",
+      "email": "23ee01012@iitbbs.ac.in"
+    }
+  },
+  "MSC_ITEP_MNC": {
+    "coordinator": {
+      "name": "Kumar Daksh Matuwa",
+      "email": "24ma05003@iitbbs.ac.in"
+    },
+    "deputyCoordinator": {
+      "name": "Maanya",
+      "email": "23ph03011@iitbbs.ac.in"
+    },
+    "sportsCoordinator": {
+      "name": "Devansh",
+      "email": "23hs03006@iitbbs.ac.in"
+    },
+    "cultCoordinator": {
+      "name": "Sandeep Navtiya",
+      "email": "23ma03007@iitbbs.ac.in"
+    },
+    "techCoordinator": {
+      "name": "Sparsho Chakraborty",
+      "email": "25ph05023@iitbbs.ac.in"
+    }
+  },
+  "MTECH": {
+    "coordinator": {
+      "name": "Rakesh Kumar Giri",
+      "email": "24ai06011@iitbbs.ac.in"
+    },
+    "deputyCoordinator": {
+      "name": "Deep Mandal",
+      "email": "24cs06007@iitbbs.ac.in"
+    },
+    "sportsCoordinator": {
+      "name": "Sonti Kiran Bhragav",
+      "email": "24sc06021@iitbbs.ac.in"
+    },
+    "cultCoordinator": {
+      "name": "Shweta Kundu",
+      "email": "24te06009@iitbbs.ac.in"
+    },
+    "techCoordinator": {
+      "name": "Ayan Dutta",
+      "email": "24ai06018@iitbbs.ac.in"
+    }
+  }
+}
