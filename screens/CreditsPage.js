@@ -4,14 +4,70 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CreditsPage({ navigation }) {
   const organisingMembers = [
-    { title: "Aarav Patel", role: "President" },
-    { title: "Meera Singh", role: "Vice President" },
-    { title: "Rohan Kapoor", role: "General Secretary" },
+    {
+      name: "Anirudh Kashyap",
+      email: "vpresident.sg@iitbbs.ac.in",
+      position: "Vice President",
+      image: require("../assets/oc/vp.jpg"),
+    },
+    {
+      name: "Aditya Kumar Giri",
+      email: "gsecsnt.sg@iitbbs.ac.in",
+      position: "General Secretary",
+      image: require("../assets/oc/tech_sec.jpg"),
+    },
+
+    {
+      name: "Anubhav Mishra",
+      email: "gseccul.sg@iitbbs.ac.in",
+      position: "General Secretary",
+      image: require("../assets/oc/cult_sec.jpg"),
+    },
+    {
+      name: "NIDAMANJURI AJAY KUMAR",
+      email: "gsecsports.sg@iitbbs.ac.in",
+      position: "General Secretary",
+      image: require("../assets/oc/sport_sec.jpeg"),
+    },
+    {
+      name: "Yashika Agarwal",
+      email: "ugrep.sg@iitbbs.ac.in",
+      position: "UG Representative",
+      image: require("../assets/oc/ug_rep.jpg"),
+    },
+    {
+      name: "Tanuj Kumar Gupta",
+      email: "Ugrep.sg@iitbbs.ac.in",
+      position: "UG Representative",
+      image: require("../assets/oc/ug_rep1.jpg"),
+    },
+    {
+      name: "Milind Singh",
+      email: "rs.rep@iitbbs.ac.in",
+      position: "PhD Representative",
+      image: require("../assets/oc/phd_rep.jpeg"),
+    },
+    {
+      name: "Sudhanshu Ranjan",
+      email: "pgrep.sg@iitbbs.ac.in",
+      position: "PG Representative",
+      image: require("../assets/oc/pg_rep.png"),
+    },
   ];
 
   const leadBy = [
-    { title: "Suvansh Sharma" },
-    { title: "Siddarth.K", image: require("../assets/DevTeam/siddarth.jpeg") },
+    {
+      name: "Suvansh Sharma",
+      position: "Secretary, Neuromancers",
+      email: "secyprogsoc.sg@iitbbs.ac.in",
+      image: require("../assets/oc/suvansh.jpeg"),
+    },
+    {
+      name: "Siddarth.K",
+      position: "App Developer",
+      email: "23cs01027@iitbbs.ac.in",
+      image: require("../assets/DevTeam/siddarth.jpeg"),
+    },
   ];
 
   const developedBy = [
@@ -22,7 +78,9 @@ export default function CreditsPage({ navigation }) {
     //   image: require("../assets/DevTeam/jeeban.jpeg"),
     // },
     {
-      title: "Shivam Saxena",
+      name: "Shivam Saxena",
+      position: "Developer",
+      email: "24ee001@iitbbs.ac.in",
       image: require("../assets/DevTeam/shivam_profile.jpg"),
     },
   ];
@@ -38,25 +96,41 @@ export default function CreditsPage({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.hero}>
-        <Text style={styles.title}>Credits</Text>
-        <Text style={styles.subtitle}>Organizing and development team</Text>
-      </View>
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled
+        keyboardShouldPersistTaps="handled"
+      >
+        <View style={styles.hero}>
+          <Text style={styles.title}>Credits</Text>
+          <Text style={styles.subtitle}>Organizing and development team</Text>
+        </View>
 
-      <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.sectionHeader}>
           <Text style={styles.sectionTitle}>Organising Committee</Text>
           <View style={styles.sectionRule} />
         </View>
 
         {organisingMembers.map((member) => (
-          <View key={member.title} style={styles.card}>
-            <View style={styles.avatarPlaceholder}>
-              <Text style={styles.avatarText}>{getInitials(member.role)}</Text>
-            </View>
+          <View key={`${member.position}-${member.email}`} style={styles.card}>
+            {member.image ? (
+              <Image source={member.image} style={styles.avatar} />
+            ) : (
+              <View style={styles.avatarPlaceholder}>
+                <Text style={styles.avatarText}>
+                  {getInitials(member.position)}
+                </Text>
+              </View>
+            )}
             <View style={styles.cardText}>
-              <Text style={styles.cardTitle}>{member.title}</Text>
-              <Text style={styles.cardSubtitle}>{member.role}</Text>
+              <Text style={styles.cardTitle}>{member.name}</Text>
+              <Text style={styles.cardSubtitle}>{member.position}</Text>
+              <Text style={styles.cardMeta}>{member.email}</Text>
+              {member.imageName ? (
+                <Text style={styles.cardMeta}>{member.imageName}</Text>
+              ) : null}
             </View>
           </View>
         ))}
@@ -67,19 +141,20 @@ export default function CreditsPage({ navigation }) {
         </View>
 
         {leadBy.map((member) => (
-          <View key={member.title} style={styles.card}>
+          <View key={`${member.name}-${member.email}`} style={styles.card}>
             {member.image ? (
               <Image source={member.image} style={styles.avatar} />
             ) : (
               <View style={styles.avatarPlaceholder}>
                 <Text style={styles.avatarText}>
-                  {getInitials(member.title)}
+                  {getInitials(member.name)}
                 </Text>
               </View>
             )}
             <View style={styles.cardText}>
-              <Text style={styles.cardTitle}>{member.title}</Text>
-              <Text style={styles.cardSubtitle}>Lead</Text>
+              <Text style={styles.cardTitle}>{member.name}</Text>
+              <Text style={styles.cardSubtitle}>{member.position}</Text>
+              <Text style={styles.cardMeta}>{member.email}</Text>
             </View>
           </View>
         ))}
@@ -90,19 +165,20 @@ export default function CreditsPage({ navigation }) {
         </View>
 
         {developedBy.map((member) => (
-          <View key={member.title} style={styles.card}>
+          <View key={`${member.name}-${member.email}`} style={styles.card}>
             {member.image ? (
               <Image source={member.image} style={styles.avatar} />
             ) : (
               <View style={styles.avatarPlaceholder}>
                 <Text style={styles.avatarText}>
-                  {getInitials(member.title)}
+                  {getInitials(member.name)}
                 </Text>
               </View>
             )}
             <View style={styles.cardText}>
-              <Text style={styles.cardTitle}>{member.title}</Text>
-              <Text style={styles.cardSubtitle}>Developer</Text>
+              <Text style={styles.cardTitle}>{member.name}</Text>
+              <Text style={styles.cardSubtitle}>{member.position}</Text>
+              <Text style={styles.cardMeta}>{member.email}</Text>
             </View>
           </View>
         ))}
@@ -116,6 +192,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#0F1419",
   },
+  scrollView: {
+    flex: 1,
+  },
   hero: {
     paddingHorizontal: 20,
     paddingTop: 10,
@@ -123,7 +202,8 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     paddingHorizontal: 20,
-    paddingBottom: 60,
+    paddingBottom: 120,
+    flexGrow: 1,
   },
   title: {
     color: "#D41D77",
@@ -201,5 +281,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#9AA3AF",
     marginTop: 2,
+  },
+  cardMeta: {
+    fontSize: 11,
+    color: "#6B7280",
+    marginTop: 3,
   },
 });
