@@ -28,8 +28,8 @@ function TechCultEventCard(props) {
     .toString()
     .toLowerCase();
   const isTech = eventCategory === "tech";
-  const topGradient = isTech ? ["#9FC3E5", "#C3D4E6"] : ["#DAB6E8", "#d2dbdc"];
-  const bottomBackground = isTech ? "#0E3153" : "#1f737d";
+  const topGradient = isTech ? ["#9FC3E5", "#C3D4E6"] : ["#c4b8c9", "#85e0ea"];
+  const bottomBackground = isTech ? "#0E3153" : "#034f58";
   const bottomShadow = isTech ? "#194D80" : "#9578a8";
   const eventTimeStamp = details?.timestamp;
 
