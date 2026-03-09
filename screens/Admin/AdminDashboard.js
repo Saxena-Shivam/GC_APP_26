@@ -45,6 +45,8 @@ const handleBetsUpdate = async () => {
 
 const AdminDashboard = ({ navigation }) => {
   const LoginCtx = useContext(LoginContext);
+  const isAdmin = !!LoginCtx?.isAdmin;
+  const isCoordinator = !!LoginCtx?.isCoordinator;
   const AddPoints = () => {
     return navigation.navigate("AdminAddScoreStack");
   };
@@ -109,51 +111,7 @@ const AdminDashboard = ({ navigation }) => {
               <Text style={styles.cardDescription}>Sports Events</Text>
             </Pressable>
           </View>
-
-          {/* Row 2 */}
-          <View style={styles.row}>
-            {/* Live Events */}
-            <Pressable
-              style={({ pressed }) => [
-                styles.card,
-                styles.liveCard,
-                pressed && styles.cardPressed,
-              ]}
-              onPress={() => navigation.navigate("LiveEvents")}
-            >
-              <View style={styles.cardIconContainer}>
-                <MaterialCommunityIcons
-                  name="flag-checkered"
-                  size={28}
-                  color="#fff"
-                />
-              </View>
-              <Text style={styles.cardTitle}>Live Events</Text>
-              <Text style={styles.cardDescription}>Add or Update</Text>
-            </Pressable>
-
-            {/* Update Points */}
-            <Pressable
-              style={({ pressed }) => [
-                styles.card,
-                styles.pointsCard,
-                pressed && styles.cardPressed,
-              ]}
-              onPress={() => handleBetsUpdate()}
-            >
-              <View style={styles.cardIconContainer}>
-                <MaterialCommunityIcons
-                  name="chart-line"
-                  size={28}
-                  color="#fff"
-                />
-              </View>
-              <Text style={styles.cardTitle}>Update Points</Text>
-              <Text style={styles.cardDescription}>Fantasy League</Text>
-            </Pressable>
-          </View>
-
-          {/* Row 3 */}
+          {/* Row 2*/}
           <View style={styles.row}>
             {/* Sports Result */}
             <Pressable
@@ -190,11 +148,53 @@ const AdminDashboard = ({ navigation }) => {
               <Text style={styles.cardDescription}>Add Participants</Text>
             </Pressable>
           </View>
+          {/* Row 3 */}
+          {/* <View style={styles.row}> */}
+          {/* Update Points */}
+          {/* <Pressable
+              style={({ pressed }) => [
+                styles.card,
+                styles.pointsCard,
+                pressed && styles.cardPressed,
+              ]}
+              onPress={() => handleBetsUpdate()}
+            >
+              <View style={styles.cardIconContainer}>
+                <MaterialCommunityIcons
+                  name="chart-line"
+                  size={28}
+                  color="#fff"
+                />
+              </View>
+              <Text style={styles.cardTitle}>Update Points</Text>
+              <Text style={styles.cardDescription}>Fantasy League</Text>
+            </Pressable> */}
+          {/* </View> */}
 
           {/* Row 4 */}
           <View style={styles.row}>
+            {/* Live Events */}
+            <Pressable
+              style={({ pressed }) => [
+                styles.card,
+                styles.liveCard,
+                pressed && styles.cardPressed,
+              ]}
+              onPress={() => navigation.navigate("LiveEvents")}
+            >
+              <View style={styles.cardIconContainer}>
+                <MaterialCommunityIcons
+                  name="flag-checkered"
+                  size={28}
+                  color="#fff"
+                />
+              </View>
+              <Text style={styles.cardTitle}>Live Events</Text>
+              <Text style={styles.cardDescription}>Add or Update</Text>
+            </Pressable>
+
             {/* View Contentions */}
-            {LoginCtx?.isAdmin && (
+            {isAdmin && (
               <Pressable
                 style={({ pressed }) => [
                   styles.card,
@@ -215,7 +215,7 @@ const AdminDashboard = ({ navigation }) => {
               </Pressable>
             )}
             {/* Report Cheating - coordinators only */}
-            {!LoginCtx?.isAdmin && (
+            {!isAdmin && isCoordinator && (
               <Pressable
                 style={({ pressed }) => [
                   styles.card,
@@ -235,6 +235,9 @@ const AdminDashboard = ({ navigation }) => {
                 <Text style={styles.cardDescription}>File Complaint</Text>
               </Pressable>
             )}
+
+            {/* Fallback to keep row balanced when role flags are unavailable */}
+            {!isAdmin && !isCoordinator && <View style={styles.emptySlot} />}
           </View>
         </View>
         <View style={{ height: 40 }} />
@@ -360,5 +363,8 @@ const styles = StyleSheet.create({
   registerCard: {
     backgroundColor: "#1a1a1a",
     borderColor: "#444",
+  },
+  emptySlot: {
+    flex: 1,
   },
 });

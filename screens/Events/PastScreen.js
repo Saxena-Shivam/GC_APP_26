@@ -5,7 +5,9 @@ import Loader from "../../Components/Loader";
 import { EventsContext } from "../../store/EventsContext"; // Import EventsContext
 
 const sortData = (data) => {
-  return data.sort((a, b) => new Date(b.details.timestamp) - new Date(a.details.timestamp)); // Sort by date descending
+  return data.sort(
+    (a, b) => new Date(b.details.timestamp) - new Date(a.details.timestamp),
+  ); // Sort by date descending
 };
 
 function PastScreen({ search }) {
@@ -63,7 +65,12 @@ function PastScreen({ search }) {
         alwaysBounceVertical={false}
       />
       <View style={{ minHeight: 0 }}>
-        <Loader visible={isLoading} top={300} bottom={0} setModalVisible={() => {}} />
+        <Loader
+          visible={isLoading}
+          top={300}
+          bottom={0}
+          setModalVisible={() => {}}
+        />
       </View>
     </View>
   );
