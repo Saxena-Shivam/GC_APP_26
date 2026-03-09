@@ -123,9 +123,9 @@ const AddTechCultEvent = () => {
     try {
       const response = await axios.post(
         backend_link + "api/event/addEvent",
-        body
+        body,
       );
-      console.log(response.data);
+      //console.log(response.data);
       Alert.alert("Success", response.data.message);
 
       setSelectedType("");
@@ -153,7 +153,7 @@ const AddTechCultEvent = () => {
         },
         { text: "Yes", onPress: submitHandler },
       ],
-      { cancelable: false }
+      { cancelable: false },
     );
   };
   return (

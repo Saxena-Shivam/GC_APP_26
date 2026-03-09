@@ -195,7 +195,7 @@ const UpdateEvent = ({ route, navigation }) => {
         backend_link + "api/event/updateEvent",
         body,
       );
-      console.log(response.data);
+      //console.log(response.data);
       Alert.alert("Success", response.data.message);
       setSelectedType("");
       setVenue("");

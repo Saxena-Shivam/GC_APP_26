@@ -13,20 +13,20 @@ export default function CreditsPage({ navigation }) {
     {
       name: "Aditya Kumar Giri",
       email: "gsecsnt.sg@iitbbs.ac.in",
-      position: "General Secretary",
+      position: "General Secretary Tech",
       image: require("../assets/oc/tech_sec.jpg"),
     },
 
     {
       name: "Anubhav Mishra",
       email: "gseccul.sg@iitbbs.ac.in",
-      position: "General Secretary",
+      position: "General Secretary Cultural",
       image: require("../assets/oc/cult_sec.jpg"),
     },
     {
       name: "NIDAMANJURI AJAY KUMAR",
       email: "gsecsports.sg@iitbbs.ac.in",
-      position: "General Secretary",
+      position: "General Secretary Sports",
       image: require("../assets/oc/sport_sec.jpeg"),
     },
     {

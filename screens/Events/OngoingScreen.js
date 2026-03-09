@@ -5,7 +5,7 @@ import Loader from "../../Components/Loader";
 import { EventsContext } from "../../store/EventsContext"; // Import EventsContext
 
 const sortData = (data) => {
-  return data.sort(
+  return [...data].sort(
     (a, b) => new Date(a.details.timestamp) - new Date(b.details.timestamp),
   ); // Sort by date ascending
 };
@@ -45,7 +45,6 @@ function OngoingScreen({ search }) {
   return (
     <View style={styles.eventsContainer}>
       <FlatList
-        key={1}
         data={filteredData}
         renderItem={({ item }) => (
           <OngoingEventCard
@@ -58,7 +57,7 @@ function OngoingScreen({ search }) {
             scoreB={item.scoreB}
           />
         )}
-        keyExtractor={(item, index) => `${item.id}-${item.gameName}-${index}`}
+        keyExtractor={(item) => `${item.id}-${item.gameName || "event"}`}
         alwaysBounceVertical={false}
       />
       <Loader
@@ -75,7 +74,6 @@ export default OngoingScreen;
 
 const styles = StyleSheet.create({
   eventsContainer: {
-    flex: 5,
-    maxHeight: "60%",
+    flex: 1,
   },
 });

@@ -24,14 +24,14 @@ const FollowTeamComponent = (props) => {
       console.log("Hi");
       const email = LoginCtx?.user?.email;
       const response = await axios.post(
-        backend_link + "api/user/follow?email=" + email + "&team=" + teamName
+        backend_link + "api/user/follow?email=" + email + "&team=" + teamName,
       );
       const response1 = await axios.post(
         backend_link +
           "api/teams/addFollower?email=" +
           email +
           "&team=" +
-          teamName
+          teamName,
       );
       console.log(response.data);
       console.log(response1.data);
@@ -52,17 +52,17 @@ const FollowTeamComponent = (props) => {
       console.log("Bye");
       const email = LoginCtx?.user?.email;
       const response = await axios.post(
-        backend_link + "api/user/unfollow?email=" + email + "&team=" + teamName
+        backend_link + "api/user/unfollow?email=" + email + "&team=" + teamName,
       );
       const response1 = await axios.post(
         backend_link +
           "api/teams/removeFollower?email=" +
           email +
           "&team=" +
-          teamName
+          teamName,
       );
-      console.log(response.data);
-      console.log(response1.data);
+      //console.log(response.data);
+      //console.log(response1.data);
       Alert.alert("You have Unfollowed the team " + teamName);
       props.setReload((prev) => !prev);
 

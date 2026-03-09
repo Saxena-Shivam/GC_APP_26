@@ -74,7 +74,7 @@ const AddLiveEvents = () => {
         },
         { text: "Yes", onPress: handleSubmit },
       ],
-      { cancelable: false }
+      { cancelable: false },
     );
   };
 
@@ -123,7 +123,7 @@ const AddLiveEvents = () => {
       return;
     }
 
-    console.log('sending this date: ', new Date(timestamp));
+    console.log("sending this date: ", new Date(timestamp));
     const data = {
       eventId: eventIdFormatted,
       subEventId: subEventID,
@@ -150,9 +150,9 @@ const AddLiveEvents = () => {
     try {
       const response = await axios.post(
         backend_link + "api/event/scheduleLiveEvent",
-        data
+        data,
       );
-      console.log(response.data);
+      //console.log(response.data);
       Alert.alert("Success", "Event added successfully");
     } catch (e) {
       console.log(e);

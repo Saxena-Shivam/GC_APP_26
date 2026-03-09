@@ -1,12 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
-  TextInput,
-  RefreshControl,
-  FlatList,
-} from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, TextInput } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Icon } from "react-native-elements";
 import { useState, useContext, useEffect, useCallback } from "react";
@@ -77,11 +69,9 @@ export default function Events({ route, navigation }) {
   };
 
   const sortData = (data) => {
-    console.log("data", data);
-
     let prevdata = [];
     let nextdata = [];
-    data.map((item) => {
+    data.forEach((item) => {
       if (
         new Date(item.data.details?.timestamp) >
         new Date() - 24 * 60 * 60 * 1000
@@ -419,19 +409,7 @@ export default function Events({ route, navigation }) {
     </>
   );
 
-  return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        data={[1]} // Dummy data to render a single item
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={() => content}
-        contentContainerStyle={{ flexGrow: 1 }}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      />
-    </SafeAreaView>
-  );
+  return <SafeAreaView style={styles.container}>{content}</SafeAreaView>;
 }
 
 const styles = StyleSheet.create({
@@ -469,8 +447,7 @@ const styles = StyleSheet.create({
   },
   // Make the screen container taller:
   screenContainer: {
-    flex: 1.2, // Increase flex to give more space
-    minHeight: 600, // Alternatively, give a fixed minimum height
-    paddingBottom: 20, // Extra padding if needed
+    flex: 1,
+    paddingBottom: 20,
   },
 });

@@ -10,6 +10,7 @@ import {
   Alert,
   ScrollView,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import {
   sendNotificationAll,
@@ -124,11 +125,14 @@ const AddNotification = ({ navigation }) => {
 
   return (
     <KeyboardAvoidingView
-      behavior="padding"
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
       style={styles.container}
-      keyboardVerticalOffset={100}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0}
     >
-      <ScrollView>
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode={Platform.OS === "ios" ? "interactive" : "on-drag"}
+      >
         <View style={styles.container}>
           <View style={styles.liveEventsContainer}>
             <Text style={styles.liveEventsText}>Notification</Text>

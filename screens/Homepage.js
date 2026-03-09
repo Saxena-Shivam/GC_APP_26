@@ -457,21 +457,21 @@ export default function HomePage({ navigation }) {
     try {
       const response = await axios.get(backend_link + "api/user/getAllDetails");
       // co
-      console.log(response.data);
+      //console.log(response.data);
       // setUser()
       // console.log(data);
 
       // console.log(userData);
       const { userArray } = response.data;
-      console.log("a;sfjads;lfj", response.data);
+      //console.log("a;sfjads;lfj", response.data);
       const result = userArray.find((obj) => obj.mail === userEmail);
       setUser(result);
       // console.log("jeeeban test: ", userArray[userEmail], userEmail);
       initializeCoins(userArray);
       const data = userArray;
-      console.log("leaderboard dat: ", data);
+      //console.log("leaderboard dat: ", data);
       const sortedData = data.sort((a, b) => b.coins - a.coins).slice(0, 10);
-      console.log("sorted testing: ", sortedData);
+      //console.log("sorted testing: ", sortedData);
       setLeaderboardData(sortedData);
     } catch (error) {
       console.error("Error fetching leaderboard data:", error);

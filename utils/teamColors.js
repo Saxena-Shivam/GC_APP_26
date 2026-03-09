@@ -8,7 +8,7 @@ const teamColors = {
     bottomColor: "#a8d1f7",
   },
   ECE_META: {
-    topColor: "#ffe800",
+    topColor: "#bcb786",
     bottomColor: "#c0af01",
   },
   CIVIL: {

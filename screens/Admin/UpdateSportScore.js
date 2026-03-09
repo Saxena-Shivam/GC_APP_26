@@ -54,7 +54,7 @@ function UpdateSportScreen(props) {
           backend_link + "api/event/getAllLiveEvents",
         );
         console.log("adarsh is tthe best");
-        console.log(response.data); // array of live events
+        //console.log(response.data); // array of live events
         const data = response.data.events;
         const newData = data.map((item) => {
           const gameName = item.eventId;
@@ -75,13 +75,9 @@ function UpdateSportScreen(props) {
               status: item1.data.status,
               gameName: gameName,
               id:
-                (item1?.data?.details?.title || gameName)
-                  .split(" ")
-                  .join("") +
+                (item1?.data?.details?.title || gameName).split(" ").join("") +
                 "++" +
-                (item1?.subEventId || "")
-                  .split(" ")
-                  .join(""),
+                (item1?.subEventId || "").split(" ").join(""),
 
               teamA: teamAObj?.name || fallbackTeamA,
               teamB: teamBObj?.name || fallbackTeamB,

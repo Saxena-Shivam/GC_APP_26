@@ -33,7 +33,7 @@ const LoginProvider = ({ children }) => {
           const resp = await axios.get(
             backend_link + "api/user/getDetails?email=" + email,
           );
-          console.log(resp.data?.userDetails);
+          // console.log(resp.data?.userDetails);
           setDetail(resp.data?.userDetails);
           console.log("Qwerty");
         } catch (err) {

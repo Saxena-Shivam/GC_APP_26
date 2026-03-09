@@ -7,7 +7,7 @@ import axios from "axios";
 import { backend_link } from "../../utils/constants";
 
 const sortData = (data) => {
-  return data.sort(
+  return [...data].sort(
     (a, b) => new Date(a.details.timestamp) - new Date(b.details.timestamp),
   ); // Sort by date ascending
 };
@@ -70,7 +70,6 @@ function UpcomingScreen({ search, navigation }) {
   return (
     <View style={styles.eventsContainer}>
       <FlatList
-        key={1}
         data={filteredData}
         renderItem={(itemData) => (
           <UpcomingEventCard
@@ -89,7 +88,7 @@ function UpcomingScreen({ search, navigation }) {
             navigation={navigation}
           />
         )}
-        keyExtractor={(item, index) => `${item.id}-${item.gameName}-${index}`}
+        keyExtractor={(item) => `${item.id}-${item.gameName || "event"}`}
         alwaysBounceVertical={false}
       />
       <View style={{ minHeight: 0 }}>
@@ -108,7 +107,6 @@ export default UpcomingScreen;
 
 const styles = StyleSheet.create({
   eventsContainer: {
-    flex: 5,
-    maxHeight: "60%",
+    flex: 1,
   },
 });

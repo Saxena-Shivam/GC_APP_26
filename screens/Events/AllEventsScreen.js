@@ -5,7 +5,7 @@ import TechCultEventCard from "../../Components/TechCultEventCard";
 import Loader from "../../Components/Loader";
 
 const sortData = (data) => {
-  return data.sort(
+  return [...data].sort(
     (a, b) => new Date(b.details.timestamp) - new Date(a.details.timestamp),
   ); // Sort by date descending
 };
@@ -48,7 +48,6 @@ function AllEventsScreen({ search, allEvents, navigation, branchCoords }) {
   return (
     <View style={styles.eventsContainer}>
       <FlatList
-        key={1}
         data={filteredData}
         renderItem={({ item }) =>
           item.eventType === "techCult" ? (
@@ -69,7 +68,9 @@ function AllEventsScreen({ search, allEvents, navigation, branchCoords }) {
             />
           )
         }
-        keyExtractor={(item, index) => `${item.id}-${item.gameName}-${index}`}
+        keyExtractor={(item) =>
+          `${item.eventType || "sports"}-${item.id}-${item.gameName || "event"}`
+        }
         alwaysBounceVertical={false}
       />
       <View style={{ minHeight: 0 }}>
@@ -88,7 +89,6 @@ export default AllEventsScreen;
 
 const styles = StyleSheet.create({
   eventsContainer: {
-    flex: 5,
-    maxHeight: "60%",
+    flex: 1,
   },
 });

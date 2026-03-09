@@ -72,9 +72,9 @@ function AdminSportEventCard(props) {
     try {
       const resp = await axios.post(
         backend_link + "api/event/deleteLiveEvent",
-        body
+        body,
       );
-      console.log(resp);
+      // console.log(resp);
       props.setIsEventUpdated((prev) => !prev);
       Alert.alert("Event Deleted");
     } catch (err) {
@@ -143,7 +143,7 @@ function AdminSportEventCard(props) {
     try {
       const resp = await axios.post(
         backend_link + "api/event/updateLiveEvent",
-        body
+        body,
       );
       console.log(resp);
       props.setIsEventUpdated((prev) => !prev);

@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import { FontAwesome5 } from "@expo/vector-icons";
 import TeamPointsComponent from "../Components/TeamPointsComponent";
 import { LinearGradient } from "expo-linear-gradient";
@@ -46,14 +47,31 @@ export default function TeamPoints({ route }) {
   const loginctx = useContext(LoginContext);
   const [loading, setLoading] = useState(true);
   const [eventPoints, setEventPoints] = useState([]);
-  const [Ids, setIds] = useState([]);
-  const [data, setdata] = useState([]);
-  const [lastUpdated, setLastUpdated] = useState("08/03/2023");
+  const [branchPointsCache, setBranchPointsCache] = useState({});
+  const [lastUpdated, setLastUpdated] = useState("08/03/2025");
 
-  const branch =
+  const defaultBranch =
     route.params?.branch ||
     setProperTeamName(loginctx?.detail?.dept || "MSc_ITEP");
-  const team = setProperTeamName(branch);
+  const [selectedBranch, setSelectedBranch] = useState(
+    setProperTeamName(defaultBranch),
+  );
+  const team = setProperTeamName(selectedBranch);
+
+  const branchOptions = [
+    "CSE",
+    "EE",
+    "ECE_META",
+    "CIVIL",
+    "MECH",
+    "MSc_ITEP",
+    "MTech",
+    "PHD",
+  ];
+
+  useEffect(() => {
+    setSelectedBranch(setProperTeamName(defaultBranch));
+  }, [defaultBranch]);
 
   useEffect(() => {
     const fetchlastUpdated = async () => {
@@ -72,52 +90,61 @@ export default function TeamPoints({ route }) {
   }, []);
 
   useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-  }, [branch]);
-  useEffect(() => {
-    const fetchData = async () => {
+    const buildPointsArray = (allEventIds, eventData) => {
+      const ids = Array.from(
+        new Set([...allEventIds, ...Object.keys(eventData)]),
+      );
+      const pointsArray = ids.map((id) => [
+        id,
+        Number(eventData?.[id]?.points ?? 0),
+      ]);
+      return sortPointsTable(pointsArray);
+    };
+
+    const prefetchAllBranches = async () => {
+      setLoading(true);
       try {
-        const response = await axios.get(
-          backend_link + "api/points/getPointsTableByTeam?teamId=" + team,
+        const allEventsResponse = await axios.get(
+          backend_link + "api/event/getAllEvents",
+        );
+        const allEventIds = (allEventsResponse?.data?.events || [])
+          .map((event) => event?.data?.eventId || event?.eventId)
+          .filter(Boolean);
+
+        const branchResponses = await Promise.all(
+          branchOptions.map(async (branchId) => {
+            const response = await axios.get(
+              backend_link +
+                "api/points/getPointsTableByTeam?teamId=" +
+                branchId,
+            );
+            return [branchId, response?.data?.pointsTable || {}];
+          }),
         );
 
-        console.log("respomnse", response.data);
+        const cache = {};
+        branchResponses.forEach(([branchId, pointsTable]) => {
+          cache[branchId] = buildPointsArray(allEventIds, pointsTable);
+        });
 
-        const eventData = response?.data?.pointsTable || {};
-
-        let allEventIds = [];
-        try {
-          const allEventsResponse = await axios.get(
-            backend_link + "api/event/getAllEvents",
-          );
-          allEventIds = (allEventsResponse?.data?.events || [])
-            .map((event) => event?.data?.eventId || event?.eventId)
-            .filter(Boolean);
-        } catch (allEventsError) {
-          console.log("Error fetching all events:", allEventsError);
-        }
-
-        const ids = Array.from(
-          new Set([...allEventIds, ...Object.keys(eventData)]),
-        );
-        setIds(ids);
-        const pointsArray = ids.map((id) => [
-          id,
-          Number(eventData?.[id]?.points ?? 0),
-        ]);
-        const newPointsArray = sortPointsTable(pointsArray);
-        setEventPoints(newPointsArray);
-        return pointsArray;
+        setBranchPointsCache(cache);
+        setEventPoints(cache[team] || []);
       } catch (err) {
         console.log(err);
-        Alert.alert("Error", err);
+        Alert.alert("Error", "Failed to fetch team points");
+      } finally {
+        setLoading(false);
       }
     };
-    fetchData();
-  }, [branch]);
+
+    prefetchAllBranches();
+  }, []);
+
+  useEffect(() => {
+    if (branchPointsCache[team]) {
+      setEventPoints(branchPointsCache[team]);
+    }
+  }, [team, branchPointsCache]);
 
   const totalPoints = () => {
     let sum = eventPoints.reduce((acc, curr) => acc * 1 + curr[1] * 1, 0);
@@ -144,6 +171,26 @@ export default function TeamPoints({ route }) {
           <View style={styles.hero}>
             <Text style={styles.heroTitle}>Team Points</Text>
             <Text style={styles.heroSubtitle}>Branch performance</Text>
+          </View>
+
+          <View style={styles.branchPickerWrap}>
+            <Text style={styles.branchPickerLabel}>Select Branch</Text>
+            <View style={styles.branchPickerBox}>
+              <Picker
+                selectedValue={team}
+                onValueChange={(itemValue) => setSelectedBranch(itemValue)}
+                dropdownIconColor="#FFFFFF"
+                style={styles.branchPicker}
+              >
+                {branchOptions.map((branchId) => (
+                  <Picker.Item
+                    key={branchId}
+                    label={branchId}
+                    value={branchId}
+                  />
+                ))}
+              </Picker>
+            </View>
           </View>
 
           <View style={styles.summaryCard}>
@@ -187,7 +234,7 @@ export default function TeamPoints({ route }) {
                   </View>
                 );
               }}
-              keyExtractor={(item) => String(item[0])} // Ensure unique key
+              keyExtractor={(item) => String(item[0])}
               alwaysBounceVertical={false}
               showsVerticalScrollIndicator={false}
             />
@@ -227,9 +274,31 @@ const styles = StyleSheet.create({
     color: "#9AA3AF",
     marginTop: 6,
   },
+  branchPickerWrap: {
+    marginTop: 8,
+    paddingHorizontal: 16,
+  },
+  branchPickerLabel: {
+    color: "#9AA3AF",
+    fontSize: 12,
+    marginBottom: 6,
+    textTransform: "uppercase",
+    letterSpacing: 0.4,
+  },
+  branchPickerBox: {
+    borderWidth: 1,
+    borderColor: "#2A3038",
+    borderRadius: 12,
+    backgroundColor: "#1A1F26",
+    overflow: "hidden",
+  },
+  branchPicker: {
+    color: "#FFFFFF",
+    height: 52,
+  },
   summaryCard: {
     marginHorizontal: 16,
-    marginTop: 8,
+    marginTop: 10,
     borderRadius: 20,
     overflow: "hidden",
     borderWidth: 1,
