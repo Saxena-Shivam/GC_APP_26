@@ -63,7 +63,7 @@ function UpcomingEventCard(props) {
         start={{ x: -0.4, y: 0.0 }}
         end={{ x: 0.7, y: 1 }}
         locations={[0.2, 0.8]}
-        colors={["#B0B0B0", "#E0E0E0"]}
+        colors={["#A7D8CC", "#C9E7DF"]}
         style={styles.cardTop}
       >
         <View style={styles.headerContainer}>
@@ -201,11 +201,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     padding: 10,
-    backgroundColor: "#1A1A2E",
+    backgroundColor: "#0B4B4D",
     borderBottomRightRadius: 16,
     borderBottomLeftRadius: 16,
     elevation: 6,
-    shadowColor: "#d41d77",
+    shadowColor: "#0A747A",
     shadowOffset: { width: 0, height: 3 },
     shadowRadius: 0.5,
     shadowOpacity: 1,

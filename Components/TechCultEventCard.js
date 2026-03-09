@@ -20,6 +20,17 @@ function TechCultEventCard(props) {
   const eventData = props?.data?.data || props?.data?.item || props?.data;
   const isCompact = props.compact === true;
   const details = eventData?.data?.details || eventData?.details || {};
+  const eventCategory = (
+    eventData?.data?.category ||
+    eventData?.category ||
+    "cult"
+  )
+    .toString()
+    .toLowerCase();
+  const isTech = eventCategory === "tech";
+  const topGradient = isTech ? ["#9FC3E5", "#C3D4E6"] : ["#DAB6E8", "#d2dbdc"];
+  const bottomBackground = isTech ? "#0E3153" : "#1f737d";
+  const bottomShadow = isTech ? "#194D80" : "#9578a8";
   const eventTimeStamp = details?.timestamp;
 
   const formattedDate = eventTimeStamp
@@ -66,7 +77,7 @@ function TechCultEventCard(props) {
         start={{ x: -0.4, y: 0.0 }}
         end={{ x: 0.7, y: 1 }}
         locations={[0.2, 0.8]}
-        colors={["#B0B0B0", "#E0E0E0"]}
+        colors={topGradient}
         style={[styles.cardTop, isCompact && styles.cardTopCompact]}
       >
         <View
@@ -120,7 +131,12 @@ function TechCultEventCard(props) {
           )}
       </LinearGradient>
 
-      <View style={styles.cardBottom}>
+      <View
+        style={[
+          styles.cardBottom,
+          { backgroundColor: bottomBackground, shadowColor: bottomShadow },
+        ]}
+      >
         <View>
           <Text style={styles.BottomTextTeams}>
             {details?.location || "TBA"}
@@ -194,7 +210,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   navigateButton: {
-    backgroundColor: "#d42070",
+    backgroundColor: "#D01C79",
     // width: 0.3 * deviceWidth,
     paddingLeft: 12,
     paddingRight: 12,
@@ -218,11 +234,11 @@ const styles = StyleSheet.create({
     height: 0.07 * deviceHeight,
     marginHorizontal: "4%",
     padding: 10,
-    backgroundColor: "#1A1A2E",
+    backgroundColor: "#0E3153",
     borderBottomRightRadius: 16,
     borderBottomLeftRadius: 16,
     elevation: 6,
-    shadowColor: "#d41d77",
+    shadowColor: "#194D80",
     shadowOffset: { width: 0, height: 3 },
     shadowRadius: 0.5,
     shadowOpacity: 1,
