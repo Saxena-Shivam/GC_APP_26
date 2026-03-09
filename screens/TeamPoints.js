@@ -9,7 +9,6 @@ import {
   Alert,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import { FontAwesome5 } from "@expo/vector-icons";
 import TeamPointsComponent from "../Components/TeamPointsComponent";
 import { LinearGradient } from "expo-linear-gradient";
 import logoPaths from "../utils/logoPaths";
@@ -48,6 +47,7 @@ export default function TeamPoints({ route }) {
   const [loading, setLoading] = useState(true);
   const [eventPoints, setEventPoints] = useState([]);
   const [branchPointsCache, setBranchPointsCache] = useState({});
+  const [allEventIds, setAllEventIds] = useState([]);
   const [lastUpdated, setLastUpdated] = useState("08/03/2025");
 
   const defaultBranch =
@@ -101,38 +101,50 @@ export default function TeamPoints({ route }) {
       return sortPointsTable(pointsArray);
     };
 
+    const fetchTeamPoints = async (branchId, ids) => {
+      const response = await axios.get(
+        backend_link + "api/points/getPointsTableByTeam?teamId=" + branchId,
+      );
+      const pointsTable = response?.data?.pointsTable || {};
+      return buildPointsArray(ids, pointsTable);
+    };
+
     const prefetchAllBranches = async () => {
       setLoading(true);
       try {
         const allEventsResponse = await axios.get(
           backend_link + "api/event/getAllEvents",
         );
-        const allEventIds = (allEventsResponse?.data?.events || [])
+        const ids = (allEventsResponse?.data?.events || [])
           .map((event) => event?.data?.eventId || event?.eventId)
           .filter(Boolean);
+        setAllEventIds(ids);
 
+        // Stage 1: load selected branch first so screen is usable quickly.
+        const selectedBranchPoints = await fetchTeamPoints(team, ids);
+        setBranchPointsCache({ [team]: selectedBranchPoints });
+        setEventPoints(selectedBranchPoints);
+        setLoading(false);
+
+        // Stage 2: prefetch remaining branches in background.
+        const remainingBranches = branchOptions.filter((b) => b !== team);
         const branchResponses = await Promise.all(
-          branchOptions.map(async (branchId) => {
-            const response = await axios.get(
-              backend_link +
-                "api/points/getPointsTableByTeam?teamId=" +
-                branchId,
-            );
-            return [branchId, response?.data?.pointsTable || {}];
+          remainingBranches.map(async (branchId) => {
+            const points = await fetchTeamPoints(branchId, ids);
+            return [branchId, points];
           }),
         );
 
-        const cache = {};
-        branchResponses.forEach(([branchId, pointsTable]) => {
-          cache[branchId] = buildPointsArray(allEventIds, pointsTable);
+        setBranchPointsCache((prev) => {
+          const merged = { ...prev };
+          branchResponses.forEach(([branchId, points]) => {
+            merged[branchId] = points;
+          });
+          return merged;
         });
-
-        setBranchPointsCache(cache);
-        setEventPoints(cache[team] || []);
       } catch (err) {
         console.log(err);
         Alert.alert("Error", "Failed to fetch team points");
-      } finally {
         setLoading(false);
       }
     };
@@ -143,7 +155,32 @@ export default function TeamPoints({ route }) {
   useEffect(() => {
     if (branchPointsCache[team]) {
       setEventPoints(branchPointsCache[team]);
+      return;
     }
+
+    const fetchSelectedBranchOnDemand = async () => {
+      if (!allEventIds.length) {
+        return;
+      }
+      try {
+        const response = await axios.get(
+          backend_link + "api/points/getPointsTableByTeam?teamId=" + team,
+        );
+        const pointsTable = response?.data?.pointsTable || {};
+        const ids = Array.from(
+          new Set([...allEventIds, ...Object.keys(pointsTable)]),
+        );
+        const points = sortPointsTable(
+          ids.map((id) => [id, Number(pointsTable?.[id]?.points ?? 0)]),
+        );
+        setBranchPointsCache((prev) => ({ ...prev, [team]: points }));
+        setEventPoints(points);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchSelectedBranchOnDemand();
   }, [team, branchPointsCache]);
 
   const totalPoints = () => {

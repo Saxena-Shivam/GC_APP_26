@@ -92,42 +92,54 @@ const AdminDashboard = ({ navigation }) => {
             </Pressable>
 
             {/* Add Score */}
-            <Pressable
-              style={({ pressed }) => [
-                styles.card,
-                styles.scoreCard,
-                pressed && styles.cardPressed,
-              ]}
-              onPress={() => navigation.navigate("AdminAddScoreStack")}
-            >
-              <View style={styles.cardIconContainer}>
-                <MaterialCommunityIcons
-                  name="star-circle"
-                  size={28}
-                  color="#fff"
-                />
-              </View>
-              <Text style={styles.cardTitle}>Add Score</Text>
-              <Text style={styles.cardDescription}>Sports Events</Text>
-            </Pressable>
+            {isAdmin ? (
+              <Pressable
+                style={({ pressed }) => [
+                  styles.card,
+                  styles.scoreCard,
+                  pressed && styles.cardPressed,
+                ]}
+                onPress={() => navigation.navigate("AdminAddScoreStack")}
+              >
+                <View style={styles.cardIconContainer}>
+                  <MaterialCommunityIcons
+                    name="star-circle"
+                    size={28}
+                    color="#fff"
+                  />
+                </View>
+                <Text style={styles.cardTitle}>Add Score</Text>
+                <Text style={styles.cardDescription}>Sports Events</Text>
+              </Pressable>
+            ) : (
+              <View style={styles.emptySlot} />
+            )}
           </View>
           {/* Row 2*/}
           <View style={styles.row}>
             {/* Sports Result */}
-            <Pressable
-              style={({ pressed }) => [
-                styles.card,
-                styles.resultsCard,
-                pressed && styles.cardPressed,
-              ]}
-              onPress={() => navigation.navigate("SportPoints")}
-            >
-              <View style={styles.cardIconContainer}>
-                <MaterialCommunityIcons name="trophy" size={28} color="#fff" />
-              </View>
-              <Text style={styles.cardTitle}>Sports Result</Text>
-              <Text style={styles.cardDescription}>Add Results</Text>
-            </Pressable>
+            {isAdmin ? (
+              <Pressable
+                style={({ pressed }) => [
+                  styles.card,
+                  styles.resultsCard,
+                  pressed && styles.cardPressed,
+                ]}
+                onPress={() => navigation.navigate("SportPoints")}
+              >
+                <View style={styles.cardIconContainer}>
+                  <MaterialCommunityIcons
+                    name="trophy"
+                    size={28}
+                    color="#fff"
+                  />
+                </View>
+                <Text style={styles.cardTitle}>Sports Result</Text>
+                <Text style={styles.cardDescription}>Add Results</Text>
+              </Pressable>
+            ) : (
+              <View style={styles.emptySlot} />
+            )}
             {/* Register Team */}
             <Pressable
               style={({ pressed }) => [
@@ -174,24 +186,28 @@ const AdminDashboard = ({ navigation }) => {
           {/* Row 4 */}
           <View style={styles.row}>
             {/* Live Events */}
-            <Pressable
-              style={({ pressed }) => [
-                styles.card,
-                styles.liveCard,
-                pressed && styles.cardPressed,
-              ]}
-              onPress={() => navigation.navigate("LiveEvents")}
-            >
-              <View style={styles.cardIconContainer}>
-                <MaterialCommunityIcons
-                  name="flag-checkered"
-                  size={28}
-                  color="#fff"
-                />
-              </View>
-              <Text style={styles.cardTitle}>Live Events</Text>
-              <Text style={styles.cardDescription}>Add or Update</Text>
-            </Pressable>
+            {isAdmin ? (
+              <Pressable
+                style={({ pressed }) => [
+                  styles.card,
+                  styles.liveCard,
+                  pressed && styles.cardPressed,
+                ]}
+                onPress={() => navigation.navigate("LiveEvents")}
+              >
+                <View style={styles.cardIconContainer}>
+                  <MaterialCommunityIcons
+                    name="flag-checkered"
+                    size={28}
+                    color="#fff"
+                  />
+                </View>
+                <Text style={styles.cardTitle}>Live Events</Text>
+                <Text style={styles.cardDescription}>Add or Update</Text>
+              </Pressable>
+            ) : (
+              <View style={styles.emptySlot} />
+            )}
 
             {/* View Contentions */}
             {isAdmin && (
@@ -212,6 +228,26 @@ const AdminDashboard = ({ navigation }) => {
                 </View>
                 <Text style={styles.cardTitle}>View Contentions</Text>
                 <Text style={styles.cardDescription}>Manage Complaints</Text>
+              </Pressable>
+            )}
+            {!isAdmin && isCoordinator && (
+              <Pressable
+                style={({ pressed }) => [
+                  styles.card,
+                  styles.viewCard,
+                  pressed && styles.cardPressed,
+                ]}
+                onPress={() => navigation.navigate("ViewContentions")}
+              >
+                <View style={styles.cardIconContainer}>
+                  <MaterialCommunityIcons
+                    name="clipboard-check"
+                    size={28}
+                    color="#fff"
+                  />
+                </View>
+                <Text style={styles.cardTitle}>My Contentions</Text>
+                <Text style={styles.cardDescription}>Track Status</Text>
               </Pressable>
             )}
             {/* Report Cheating - coordinators only */}

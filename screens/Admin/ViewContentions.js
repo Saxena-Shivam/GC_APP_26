@@ -19,6 +19,8 @@ import axios from "axios";
 
 const ViewContentions = ({ navigation }) => {
   const LoginCtx = useContext(LoginContext);
+  const isAdmin = !!LoginCtx?.isAdmin;
+  const isCoordinator = !!LoginCtx?.isCoordinator;
   const [contentions, setContentions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -28,18 +30,22 @@ const ViewContentions = ({ navigation }) => {
   const [filterStatus, setFilterStatus] = useState("all"); // all, pending, reviewed, resolved
 
   useEffect(() => {
-    if (!LoginCtx?.isAdmin) {
-      Alert.alert("Unauthorized", "Only admins can access View Contentions.", [
-        {
-          text: "OK",
-          onPress: () => navigation.goBack(),
-        },
-      ]);
+    if (!isAdmin && !isCoordinator) {
+      Alert.alert(
+        "Unauthorized",
+        "You are not authorized to access contentions.",
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.goBack(),
+          },
+        ],
+      );
       setLoading(false);
       return;
     }
     fetchContentions();
-  }, []);
+  }, [isAdmin, isCoordinator]);
 
   const fetchContentions = async () => {
     try {
@@ -234,7 +240,9 @@ const ViewContentions = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Contentions Portal</Text>
+        <Text style={styles.headerTitle}>
+          {isAdmin ? "Contentions Portal" : "My Contentions"}
+        </Text>
         <Text style={styles.headerSubtitle}>
           {contentions.length} total complaint(s)
         </Text>
@@ -379,56 +387,72 @@ const ViewContentions = ({ navigation }) => {
                     </View>
                   </View>
 
-                  <View style={styles.detailSection}>
-                    <Text style={styles.detailLabel}>Admin Notes:</Text>
-                    <TextInput
-                      style={styles.notesInput}
-                      placeholder="Add notes or response..."
-                      placeholderTextColor="#888"
-                      value={adminNotes}
-                      onChangeText={setAdminNotes}
-                      multiline
-                      numberOfLines={3}
-                    />
-                  </View>
+                  {isAdmin ? (
+                    <>
+                      <View style={styles.detailSection}>
+                        <Text style={styles.detailLabel}>Admin Notes:</Text>
+                        <TextInput
+                          style={styles.notesInput}
+                          placeholder="Add notes or response..."
+                          placeholderTextColor="#888"
+                          value={adminNotes}
+                          onChangeText={setAdminNotes}
+                          multiline
+                          numberOfLines={3}
+                        />
+                      </View>
 
-                  <View style={styles.actionButtons}>
-                    <TouchableOpacity
-                      style={[
-                        styles.actionButton,
-                        { backgroundColor: "#FFA500" },
-                      ]}
-                      onPress={() =>
-                        handleUpdateStatus(selectedContention.id, "pending")
-                      }
-                    >
-                      <Text style={styles.actionButtonText}>Mark Pending</Text>
-                    </TouchableOpacity>
+                      <View style={styles.actionButtons}>
+                        <TouchableOpacity
+                          style={[
+                            styles.actionButton,
+                            { backgroundColor: "#FFA500" },
+                          ]}
+                          onPress={() =>
+                            handleUpdateStatus(selectedContention.id, "pending")
+                          }
+                        >
+                          <Text style={styles.actionButtonText}>
+                            Mark Pending
+                          </Text>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity
-                      style={[
-                        styles.actionButton,
-                        { backgroundColor: "#4169E1" },
-                      ]}
-                      onPress={() =>
-                        handleUpdateStatus(selectedContention.id, "reviewed")
-                      }
-                    >
-                      <Text style={styles.actionButtonText}>Mark Reviewed</Text>
-                    </TouchableOpacity>
+                        <TouchableOpacity
+                          style={[
+                            styles.actionButton,
+                            { backgroundColor: "#4169E1" },
+                          ]}
+                          onPress={() =>
+                            handleUpdateStatus(
+                              selectedContention.id,
+                              "reviewed",
+                            )
+                          }
+                        >
+                          <Text style={styles.actionButtonText}>
+                            Mark Reviewed
+                          </Text>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity
-                      style={[
-                        styles.actionButton,
-                        { backgroundColor: "#00C853" },
-                      ]}
-                      onPress={() =>
-                        handleUpdateStatus(selectedContention.id, "resolved")
-                      }
-                    >
-                      <Text style={styles.actionButtonText}>Mark Resolved</Text>
-                    </TouchableOpacity>
-                  </View>
+                        <TouchableOpacity
+                          style={[
+                            styles.actionButton,
+                            { backgroundColor: "#00C853" },
+                          ]}
+                          onPress={() =>
+                            handleUpdateStatus(
+                              selectedContention.id,
+                              "resolved",
+                            )
+                          }
+                        >
+                          <Text style={styles.actionButtonText}>
+                            Mark Resolved
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    </>
+                  ) : null}
                 </>
               )}
             </ScrollView>

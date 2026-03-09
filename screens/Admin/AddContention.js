@@ -158,7 +158,11 @@ const AddContention = ({ navigation }) => {
       navigation.navigate("AdminDashboardStack");
     } catch (error) {
       console.log(error);
-      Alert.alert("Error", "Failed to submit contention: " + error.message);
+      const backendMessage = error?.response?.data?.message;
+      Alert.alert(
+        "Error",
+        backendMessage || "Failed to submit contention: " + error.message,
+      );
     } finally {
       setLoading(false);
     }

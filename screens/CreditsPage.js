@@ -85,6 +85,65 @@ export default function CreditsPage({ navigation }) {
     },
   ];
 
+  const coordinators = [
+    {
+      name: "M. Sai Prajwal",
+      email: "22cs01045@iitbbs.ac.in",
+      position: "Coordinator",
+      team: "CSE",
+      image: require("../assets/oc/coordinators/IMG_20240221_200305 - MADDIKUNTLA SAI PRAJWAL - Copy.jpg"),
+    },
+    {
+      name: "Kumar Daksh Matuwa",
+      email: "dakshu0806@gmail.com",
+      position: "Coordinator",
+      team: "M.Sc + ITEP + MnC",
+      image: require("../assets/oc/coordinators/IMG_8846 - Kumar Daksh Matuwa (1).jpeg"),
+    },
+    {
+      name: "Kali Charan Gara",
+      email: "22me01038@iitbbs.ac.in",
+      position: "Coordinator",
+      team: "Mechanical",
+      image: require("../assets/oc/coordinators/IMG_20260208_204717 - GARA KALI CHARAN (1).jpg"),
+    },
+    {
+      name: "Jaisukh Reddy",
+      email: "22ee01004@iitbbs.ac.in",
+      position: "Coordinator",
+      team: "Electrical",
+      image: require("../assets/oc/coordinators/image - TEDDU JAISUKH REDDY (1).png"),
+    },
+    {
+      name: "Vishva Ranjan Singh",
+      email: "a25cs09019@iitbbs.ac.in",
+      position: "Coordinator",
+      team: "PhD",
+      image: require("../assets/oc/coordinators/IMG_3227 - VISHVA RANJAN SINGH (1) (1).jpg"),
+    },
+    {
+      name: "Santosh Dudala",
+      email: "22ec01018@iitbbs.ac.in",
+      position: "Coordinator",
+      team: "ECE-META-EP",
+      image: require("../assets/oc/coordinators/Santosh Photo - DUDALA SANTOSH (1).png"),
+    },
+    {
+      name: "Rakesh Kumar Giri",
+      email: "24ai06011@iitbbs.ac.in",
+      position: "Coordinator",
+      team: "MTECH",
+      image: require("../assets/oc/coordinators/IMG_20260308_173719 - RAKESH KUMAR GIRI (1).jpg"),
+    },
+    {
+      name: "Dhananjay Sharma",
+      email: "22ce02004@iitbbs.ac.in",
+      position: "Coordinator",
+      team: "CIVIL",
+      image: require("../assets/oc/coordinators/IMG_9876 - DHANANJAY SHARMA (1).jpeg"),
+    },
+  ];
+
   const getInitials = (name) => {
     return name
       .split(" ")
@@ -131,6 +190,32 @@ export default function CreditsPage({ navigation }) {
               {member.imageName ? (
                 <Text style={styles.cardMeta}>{member.imageName}</Text>
               ) : null}
+            </View>
+          </View>
+        ))}
+
+        <View style={styles.sectionHeader}>
+          <Text style={styles.sectionTitle}>Branch Coordinators</Text>
+          <View style={styles.sectionRule} />
+        </View>
+
+        {coordinators.map((member) => (
+          <View key={`${member.team}-${member.email}`} style={styles.card}>
+            {member.image ? (
+              <Image source={member.image} style={styles.avatar} />
+            ) : (
+              <View style={styles.avatarPlaceholder}>
+                <Text style={styles.avatarText}>
+                  {getInitials(member.name)}
+                </Text>
+              </View>
+            )}
+            <View style={styles.cardText}>
+              <Text style={styles.cardTitle}>{member.name}</Text>
+              <Text style={styles.cardSubtitle}>
+                {member.team} {member.position}
+              </Text>
+              <Text style={styles.cardMeta}>{member.email}</Text>
             </View>
           </View>
         ))}
