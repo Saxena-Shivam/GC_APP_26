@@ -1,289 +1,246 @@
 import React from "react";
-import { View, Text, ScrollView, StyleSheet, Image } from "react-native";
+import { View, Text, FlatList, StyleSheet, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function CreditsPage({ navigation }) {
-  const organisingMembers = [
-    {
-      name: "Anirudh Kashyap",
-      email: "vpresident.sg@iitbbs.ac.in",
-      position: "Vice President",
-      image: require("../assets/oc/vp.jpg"),
-    },
-    {
-      name: "Aditya Kumar Giri",
-      email: "gsecsnt.sg@iitbbs.ac.in",
-      position: "General Secretary Tech",
-      image: require("../assets/oc/tech_sec.jpg"),
-    },
+const organisingMembers = [
+  {
+    name: "Anirudh Kashyap",
+    email: "vpresident.sg@iitbbs.ac.in",
+    position: "Vice President",
+    image: require("../assets/oc/vp.jpg"),
+  },
+  {
+    name: "Aditya Kumar Giri",
+    email: "gsecsnt.sg@iitbbs.ac.in",
+    position: "General Secretary Tech",
+    image: require("../assets/oc/tech_sec.jpg"),
+  },
+  {
+    name: "Anubhav Mishra",
+    email: "gseccul.sg@iitbbs.ac.in",
+    position: "General Secretary Cultural",
+    image: require("../assets/oc/cult_sec.jpg"),
+  },
+  {
+    name: "NIDAMANURI AJAY KUMAR",
+    email: "gsecsports.sg@iitbbs.ac.in",
+    position: "General Secretary Sports",
+    image: require("../assets/oc/sport_sec.jpeg"),
+  },
+  {
+    name: "Yashika Agarwal",
+    email: "ugrep.sg@iitbbs.ac.in",
+    position: "UG Representative",
+    image: require("../assets/oc/ug_rep.jpg"),
+  },
+  {
+    name: "Tanuj Kumar Gupta",
+    email: "Ugrep.sg@iitbbs.ac.in",
+    position: "UG Representative",
+    image: require("../assets/oc/ug_rep1.jpg"),
+  },
+  {
+    name: "Milind Singh",
+    email: "rs.rep@iitbbs.ac.in",
+    position: "PhD Representative",
+    image: require("../assets/oc/phd_rep.jpeg"),
+  },
+  {
+    name: "Sudhanshu Ranjan",
+    email: "pgrep.sg@iitbbs.ac.in",
+    position: "PG Representative",
+    image: require("../assets/oc/pg_rep.png"),
+  },
+  {
+    name: "Dhruvi Ladvaiya",
+    position: "Design Head",
+    image: require("../assets/oc/gc/dhruvi (1).jpeg"),
+  },
+  {
+    name: "Divyanshu Raj",
+    position: "Convenor",
+    image: require("../assets/oc/gc/divyanshu (1).jpeg"),
+  },
+  {
+    name: "Vishal Prajapati",
+    position: "PR Head",
+    image: require("../assets/oc/gc/prajapati (1).jpeg"),
+  },
+  {
+    name: "Ujjawal Saraf",
+    position: "Logistics Head",
+    image: require("../assets/oc/gc/ujjawal (1).jpeg"),
+  },
+];
 
-    {
-      name: "Anubhav Mishra",
-      email: "gseccul.sg@iitbbs.ac.in",
-      position: "General Secretary Cultural",
-      image: require("../assets/oc/cult_sec.jpg"),
-    },
-    {
-      name: "NIDAMANURI AJAY KUMAR",
-      email: "gsecsports.sg@iitbbs.ac.in",
-      position: "General Secretary Sports",
-      image: require("../assets/oc/sport_sec.jpeg"),
-    },
-    {
-      name: "Yashika Agarwal",
-      email: "ugrep.sg@iitbbs.ac.in",
-      position: "UG Representative",
-      image: require("../assets/oc/ug_rep.jpg"),
-    },
-    {
-      name: "Tanuj Kumar Gupta",
-      email: "Ugrep.sg@iitbbs.ac.in",
-      position: "UG Representative",
-      image: require("../assets/oc/ug_rep1.jpg"),
-    },
-    {
-      name: "Milind Singh",
-      email: "rs.rep@iitbbs.ac.in",
-      position: "PhD Representative",
-      image: require("../assets/oc/phd_rep.jpeg"),
-    },
-    {
-      name: "Sudhanshu Ranjan",
-      email: "pgrep.sg@iitbbs.ac.in",
-      position: "PG Representative",
-      image: require("../assets/oc/pg_rep.png"),
-    },
-    {
-      name: "Dhruvi Ladvaiya",
-      position: "Design Head",
-      image: require("../assets/oc/gc/dhruvi (1).jpeg"),
-    },
-    {
-      name: "Divyanshu Raj",
-      position: "Convenor",
-      image: require("../assets/oc/gc/divyanshu (1).jpeg"),
-    },
-    {
-      name: "Vishal Prajapati",
-      position: "PR Head",
-      image: require("../assets/oc/gc/prajapati (1).jpeg"),
-    },
-    {
-      name: "Ujjawal Saraf",
-      position: "Logistics Head",
-      image: require("../assets/oc/gc/ujjawal (1).jpeg"),
-    },
-  ];
+const leadBy = [
+  {
+    name: "Suvansh Sharma",
+    position: "Secretary, Neuromancers",
+    email: "secyprogsoc.sg@iitbbs.ac.in",
+    image: require("../assets/oc/suvansh.jpeg"),
+  },
+  {
+    name: "Siddarth.K",
+    position: "App Lead",
+    email: "23cs01027@iitbbs.ac.in",
+    image: require("../assets/DevTeam/siddarth.jpeg"),
+  },
+];
 
-  const leadBy = [
-    {
-      name: "Suvansh Sharma",
-      position: "Secretary, Neuromancers",
-      email: "secyprogsoc.sg@iitbbs.ac.in",
-      image: require("../assets/oc/suvansh.jpeg"),
-    },
-    {
-      name: "Siddarth.K",
-      position: "App Lead",
-      email: "23cs01027@iitbbs.ac.in",
-      image: require("../assets/DevTeam/siddarth.jpeg"),
-    },
-  ];
+const developedBy = [
+  {
+    name: "Shivam Saxena",
+    position: "Developer",
+    email: "24ee01074@iitbbs.ac.in",
+    image: require("../assets/DevTeam/shivam_profile.jpg"),
+  },
+];
 
-  const developedBy = [
-    {
-      name: "Shivam Saxena",
-      position: "Developer",
-      email: "24ee01074@iitbbs.ac.in",
-      image: require("../assets/DevTeam/shivam_profile.jpg"),
-    },
-  ];
+const coordinators = [
+  {
+    name: "M. Sai Prajwal",
+    email: "22cs01045@iitbbs.ac.in",
+    position: "Coordinator",
+    team: "CSE",
+    image: require("../assets/oc/coordinators/IMG_20240221_200305 - MADDIKUNTLA SAI PRAJWAL - Copy.jpg"),
+  },
+  {
+    name: "Kumar Daksh Matuwa",
+    email: "dakshu0806@gmail.com",
+    position: "Coordinator",
+    team: "M.Sc + ITEP + MnC",
+    image: require("../assets/oc/coordinators/IMG_8846 - Kumar Daksh Matuwa (1).jpeg"),
+  },
+  {
+    name: "Kali Charan Gara",
+    email: "22me01038@iitbbs.ac.in",
+    position: "Coordinator",
+    team: "Mechanical",
+    image: require("../assets/oc/coordinators/IMG_20260208_204717 - GARA KALI CHARAN (1).jpg"),
+  },
+  {
+    name: "Jaisukh Reddy",
+    email: "22ee01004@iitbbs.ac.in",
+    position: "Coordinator",
+    team: "Electrical",
+    image: require("../assets/oc/coordinators/image - TEDDU JAISUKH REDDY (1).png"),
+  },
+  {
+    name: "Vishva Ranjan Singh",
+    email: "a25cs09019@iitbbs.ac.in",
+    position: "Coordinator",
+    team: "PhD",
+    image: require("../assets/oc/coordinators/IMG_3227 - VISHVA RANJAN SINGH (1) (1).jpg"),
+  },
+  {
+    name: "Santosh Dudala",
+    email: "22ec01018@iitbbs.ac.in",
+    position: "Coordinator",
+    team: "ECE-META-EP",
+    image: require("../assets/oc/coordinators/Santosh Photo - DUDALA SANTOSH (1).png"),
+  },
+  {
+    name: "Rakesh Kumar Giri",
+    email: "24ai06011@iitbbs.ac.in",
+    position: "Coordinator",
+    team: "MTECH",
+    image: require("../assets/oc/coordinators/IMG_20260308_173719 - RAKESH KUMAR GIRI (1).jpg"),
+  },
+  {
+    name: "Dhananjay Sharma",
+    email: "22ce02004@iitbbs.ac.in",
+    position: "Coordinator",
+    team: "CIVIL",
+    image: require("../assets/oc/coordinators/IMG_9876 - DHANANJAY SHARMA (1).jpeg"),
+  },
+];
 
-  const coordinators = [
-    {
-      name: "M. Sai Prajwal",
-      email: "22cs01045@iitbbs.ac.in",
-      position: "Coordinator",
-      team: "CSE",
-      image: require("../assets/oc/coordinators/IMG_20240221_200305 - MADDIKUNTLA SAI PRAJWAL - Copy.jpg"),
-    },
-    {
-      name: "Kumar Daksh Matuwa",
-      email: "dakshu0806@gmail.com",
-      position: "Coordinator",
-      team: "M.Sc + ITEP + MnC",
-      image: require("../assets/oc/coordinators/IMG_8846 - Kumar Daksh Matuwa (1).jpeg"),
-    },
-    {
-      name: "Kali Charan Gara",
-      email: "22me01038@iitbbs.ac.in",
-      position: "Coordinator",
-      team: "Mechanical",
-      image: require("../assets/oc/coordinators/IMG_20260208_204717 - GARA KALI CHARAN (1).jpg"),
-    },
-    {
-      name: "Jaisukh Reddy",
-      email: "22ee01004@iitbbs.ac.in",
-      position: "Coordinator",
-      team: "Electrical",
-      image: require("../assets/oc/coordinators/image - TEDDU JAISUKH REDDY (1).png"),
-    },
-    {
-      name: "Vishva Ranjan Singh",
-      email: "a25cs09019@iitbbs.ac.in",
-      position: "Coordinator",
-      team: "PhD",
-      image: require("../assets/oc/coordinators/IMG_3227 - VISHVA RANJAN SINGH (1) (1).jpg"),
-    },
-    {
-      name: "Santosh Dudala",
-      email: "22ec01018@iitbbs.ac.in",
-      position: "Coordinator",
-      team: "ECE-META-EP",
-      image: require("../assets/oc/coordinators/Santosh Photo - DUDALA SANTOSH (1).png"),
-    },
-    {
-      name: "Rakesh Kumar Giri",
-      email: "24ai06011@iitbbs.ac.in",
-      position: "Coordinator",
-      team: "MTECH",
-      image: require("../assets/oc/coordinators/IMG_20260308_173719 - RAKESH KUMAR GIRI (1).jpg"),
-    },
-    {
-      name: "Dhananjay Sharma",
-      email: "22ce02004@iitbbs.ac.in",
-      position: "Coordinator",
-      team: "CIVIL",
-      image: require("../assets/oc/coordinators/IMG_9876 - DHANANJAY SHARMA (1).jpeg"),
-    },
-  ];
+const sections = [
+  { key: "organising", title: "Organising Committee", data: organisingMembers },
+  { key: "coordinators", title: "Branch Coordinators", data: coordinators },
+  { key: "lead", title: "Lead By", data: leadBy },
+  { key: "dev", title: "Developed By", data: developedBy },
+];
 
-  const getInitials = (name) => {
-    return name
-      .split(" ")
-      .map((part) => part[0])
-      .slice(0, 2)
-      .join("")
-      .toUpperCase();
-  };
+const listData = sections.flatMap((section) => [
+  { type: "header", id: `header-${section.key}`, title: section.title },
+  ...section.data.map((member, index) => ({
+    type: "member",
+    id: `${section.key}-${member.name}-${member.email || index}`,
+    member,
+    sectionKey: section.key,
+  })),
+]);
+
+const getInitials = (name) => {
+  return name
+    .split(" ")
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+};
+
+function CreditsItem({ item }) {
+  if (item.type === "header") {
+    return (
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionTitle}>{item.title}</Text>
+        <View style={styles.sectionRule} />
+      </View>
+    );
+  }
+
+  const { member, sectionKey } = item;
+  const subtitle =
+    sectionKey === "coordinators"
+      ? `${member.team} ${member.position}`
+      : member.position;
 
   return (
+    <View style={styles.card}>
+      {member.image ? (
+        <Image source={member.image} style={styles.avatar} resizeMode="cover" />
+      ) : (
+        <View style={styles.avatarPlaceholder}>
+          <Text style={styles.avatarText}>{getInitials(member.name)}</Text>
+        </View>
+      )}
+      <View style={styles.cardText}>
+        <Text style={styles.cardTitle}>{member.name}</Text>
+        <Text style={styles.cardSubtitle}>{subtitle}</Text>
+        {member.email ? (
+          <Text style={styles.cardMeta}>{member.email}</Text>
+        ) : null}
+      </View>
+    </View>
+  );
+}
+
+const MemoCreditsItem = React.memo(CreditsItem);
+
+export default function CreditsPage() {
+  return (
     <SafeAreaView style={styles.container}>
-      <ScrollView
-        style={styles.scrollView}
+      <FlatList
+        data={listData}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <MemoCreditsItem item={item} />}
         contentContainerStyle={styles.contentContainer}
         showsVerticalScrollIndicator={false}
-        nestedScrollEnabled
-        keyboardShouldPersistTaps="handled"
-      >
-        <View style={styles.hero}>
-          <Text style={styles.title}>Credits</Text>
-          <Text style={styles.subtitle}>Organizing and development team</Text>
-        </View>
-
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Organising Committee</Text>
-          <View style={styles.sectionRule} />
-        </View>
-
-        {organisingMembers.map((member) => (
-          <View key={`${member.position}-${member.name}`} style={styles.card}>
-            {member.image ? (
-              <Image source={member.image} style={styles.avatar} />
-            ) : (
-              <View style={styles.avatarPlaceholder}>
-                <Text style={styles.avatarText}>
-                  {getInitials(member.position)}
-                </Text>
-              </View>
-            )}
-            <View style={styles.cardText}>
-              <Text style={styles.cardTitle}>{member.name}</Text>
-              <Text style={styles.cardSubtitle}>{member.position}</Text>
-              {member.email ? (
-                <Text style={styles.cardMeta}>{member.email}</Text>
-              ) : null}
-              {member.imageName ? (
-                <Text style={styles.cardMeta}>{member.imageName}</Text>
-              ) : null}
-            </View>
+        initialNumToRender={8}
+        maxToRenderPerBatch={8}
+        windowSize={7}
+        updateCellsBatchingPeriod={50}
+        removeClippedSubviews
+        ListHeaderComponent={
+          <View style={styles.hero}>
+            <Text style={styles.title}>Credits</Text>
+            <Text style={styles.subtitle}>Organizing and development team</Text>
           </View>
-        ))}
-
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Branch Coordinators</Text>
-          <View style={styles.sectionRule} />
-        </View>
-
-        {coordinators.map((member) => (
-          <View key={`${member.team}-${member.email}`} style={styles.card}>
-            {member.image ? (
-              <Image source={member.image} style={styles.avatar} />
-            ) : (
-              <View style={styles.avatarPlaceholder}>
-                <Text style={styles.avatarText}>
-                  {getInitials(member.name)}
-                </Text>
-              </View>
-            )}
-            <View style={styles.cardText}>
-              <Text style={styles.cardTitle}>{member.name}</Text>
-              <Text style={styles.cardSubtitle}>
-                {member.team} {member.position}
-              </Text>
-              <Text style={styles.cardMeta}>{member.email}</Text>
-            </View>
-          </View>
-        ))}
-
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Lead By</Text>
-          <View style={styles.sectionRule} />
-        </View>
-
-        {leadBy.map((member) => (
-          <View key={`${member.name}-${member.email}`} style={styles.card}>
-            {member.image ? (
-              <Image source={member.image} style={styles.avatar} />
-            ) : (
-              <View style={styles.avatarPlaceholder}>
-                <Text style={styles.avatarText}>
-                  {getInitials(member.name)}
-                </Text>
-              </View>
-            )}
-            <View style={styles.cardText}>
-              <Text style={styles.cardTitle}>{member.name}</Text>
-              <Text style={styles.cardSubtitle}>{member.position}</Text>
-              <Text style={styles.cardMeta}>{member.email}</Text>
-            </View>
-          </View>
-        ))}
-
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Developed By</Text>
-          <View style={styles.sectionRule} />
-        </View>
-
-        {developedBy.map((member) => (
-          <View key={`${member.name}-${member.email}`} style={styles.card}>
-            {member.image ? (
-              <Image source={member.image} style={styles.avatar} />
-            ) : (
-              <View style={styles.avatarPlaceholder}>
-                <Text style={styles.avatarText}>
-                  {getInitials(member.name)}
-                </Text>
-              </View>
-            )}
-            <View style={styles.cardText}>
-              <Text style={styles.cardTitle}>{member.name}</Text>
-              <Text style={styles.cardSubtitle}>{member.position}</Text>
-              <Text style={styles.cardMeta}>{member.email}</Text>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
+        }
+      />
     </SafeAreaView>
   );
 }
@@ -293,9 +250,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#0F1419",
   },
-  scrollView: {
-    flex: 1,
-  },
   hero: {
     paddingHorizontal: 20,
     paddingTop: 10,
@@ -304,7 +258,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 20,
     paddingBottom: 120,
-    flexGrow: 1,
   },
   title: {
     color: "#D41D77",

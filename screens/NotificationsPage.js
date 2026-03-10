@@ -72,12 +72,14 @@ export default function NotificationsPage() {
         `${backend_link}api/announcements/getAnnouncements`,
       );
 
-      // Backend returns object with uuid keys, convert to array
+      // Backend usually returns an object keyed by uuid, but handle arrays safely too.
       const dataObj = response.data || {};
-      const allNotifications = Object.keys(dataObj).map((id) => ({
-        id,
-        ...dataObj[id],
-      }));
+      const allNotifications = Array.isArray(dataObj)
+        ? dataObj
+        : Object.keys(dataObj).map((id) => ({
+            id,
+            ...dataObj[id],
+          }));
 
       // Filter notifications based on followed teams
       // Show all "All" notifications + notifications for followed teams
@@ -99,6 +101,15 @@ export default function NotificationsPage() {
 
       setNotifications(sortedNotifications);
     } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const status = error.response?.status;
+        // Treat "no announcements found" responses as a valid empty state.
+        if (status === 404 || status === 204) {
+          setNotifications([]);
+          return;
+        }
+      }
+
       console.error("Error fetching notifications:", error);
     } finally {
       setLoading(false);
