@@ -15,13 +15,15 @@ function AllEventsScreen({ search, allEvents, navigation, branchCoords }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (allEvents.length > 0) {
-      setFilteredData(sortData(allEvents)); // Set state when events are loaded
-    }
+    // Always sync list state with incoming tab data, including empty arrays.
+    setFilteredData(sortData(allEvents));
   }, [allEvents]);
 
   useEffect(() => {
-    if (!allEvents.length) return; // Prevent unnecessary filtering if no data is available
+    if (!allEvents.length) {
+      setFilteredData([]);
+      return;
+    }
 
     if (search.length === 0) {
       setFilteredData(sortData(allEvents)); // Reset if search is empty

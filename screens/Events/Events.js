@@ -97,6 +97,32 @@ export default function Events({ route, navigation }) {
     return nextdata.concat(prevdata);
   };
 
+  const toMs = (timestamp) => {
+    if (!timestamp) return 0;
+    if (timestamp instanceof Date) return timestamp.getTime();
+    if (typeof timestamp === "string") return new Date(timestamp).getTime();
+    if (typeof timestamp === "number") {
+      return timestamp < 10000000000 ? timestamp * 1000 : timestamp;
+    }
+    if (typeof timestamp === "object") {
+      if (typeof timestamp.toDate === "function")
+        return timestamp.toDate().getTime();
+      if (typeof timestamp._seconds === "number") {
+        const nanos =
+          typeof timestamp._nanoseconds === "number"
+            ? timestamp._nanoseconds
+            : 0;
+        return timestamp._seconds * 1000 + Math.floor(nanos / 1000000);
+      }
+      if (typeof timestamp.seconds === "number") {
+        const nanos =
+          typeof timestamp.nanoseconds === "number" ? timestamp.nanoseconds : 0;
+        return timestamp.seconds * 1000 + Math.floor(nanos / 1000000);
+      }
+    }
+    return 0;
+  };
+
   const fetchEventsMetadata = async () => {
     try {
       const [techResponse, cultResponse, branchResponse] = await Promise.all([
@@ -250,8 +276,7 @@ export default function Events({ route, navigation }) {
                   })),
                   ...techData
                     .filter(
-                      (item) =>
-                        new Date(item.data.details?.timestamp) > new Date(),
+                      (item) => toMs(item.data.details?.timestamp) > Date.now(),
                     )
                     .map((item) => ({
                       originalData: item,
@@ -266,8 +291,7 @@ export default function Events({ route, navigation }) {
                     })),
                   ...cultData
                     .filter(
-                      (item) =>
-                        new Date(item.data.details?.timestamp) > new Date(),
+                      (item) => toMs(item.data.details?.timestamp) > Date.now(),
                     )
                     .map((item) => ({
                       originalData: item,
@@ -294,8 +318,7 @@ export default function Events({ route, navigation }) {
                   })),
                   ...techData
                     .filter(
-                      (item) =>
-                        new Date(item.data.details?.timestamp) < new Date(),
+                      (item) => toMs(item.data.details?.timestamp) < Date.now(),
                     )
                     .map((item) => ({
                       originalData: item,
@@ -310,8 +333,7 @@ export default function Events({ route, navigation }) {
                     })),
                   ...cultData
                     .filter(
-                      (item) =>
-                        new Date(item.data.details?.timestamp) < new Date(),
+                      (item) => toMs(item.data.details?.timestamp) < Date.now(),
                     )
                     .map((item) => ({
                       originalData: item,

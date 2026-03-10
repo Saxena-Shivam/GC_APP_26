@@ -24,7 +24,7 @@ export default function CreditsPage({ navigation }) {
       image: require("../assets/oc/cult_sec.jpg"),
     },
     {
-      name: "NIDAMANJURI AJAY KUMAR",
+      name: "NIDAMANURI AJAY KUMAR",
       email: "gsecsports.sg@iitbbs.ac.in",
       position: "General Secretary Sports",
       image: require("../assets/oc/sport_sec.jpeg"),
@@ -53,6 +53,26 @@ export default function CreditsPage({ navigation }) {
       position: "PG Representative",
       image: require("../assets/oc/pg_rep.png"),
     },
+    {
+      name: "Dhruvi Ladvaiya",
+      position: "Design Head",
+      image: require("../assets/oc/gc/dhruvi (1).jpeg"),
+    },
+    {
+      name: "Divyanshu Raj",
+      position: "Convenor",
+      image: require("../assets/oc/gc/divyanshu (1).jpeg"),
+    },
+    {
+      name: "Vishal Prajapati",
+      position: "PR Head",
+      image: require("../assets/oc/gc/prajapati (1).jpeg"),
+    },
+    {
+      name: "Ujjawal Saraf",
+      position: "Logistics Head",
+      image: require("../assets/oc/gc/ujjawal (1).jpeg"),
+    },
   ];
 
   const leadBy = [
@@ -71,12 +91,6 @@ export default function CreditsPage({ navigation }) {
   ];
 
   const developedBy = [
-    // { title: "Adarsh Chandra", image: require("../assets/DevTeam/adarsh.jpg") },
-    // { title: "Avirat Joshi", image: require("../assets/DevTeam/avirat.jpeg") },
-    // {
-    //   title: "Jeeban Jyoti Patra",
-    //   image: require("../assets/DevTeam/jeeban.jpeg"),
-    // },
     {
       name: "Shivam Saxena",
       position: "Developer",
@@ -173,7 +187,7 @@ export default function CreditsPage({ navigation }) {
         </View>
 
         {organisingMembers.map((member) => (
-          <View key={`${member.position}-${member.email}`} style={styles.card}>
+          <View key={`${member.position}-${member.name}`} style={styles.card}>
             {member.image ? (
               <Image source={member.image} style={styles.avatar} />
             ) : (
@@ -186,7 +200,9 @@ export default function CreditsPage({ navigation }) {
             <View style={styles.cardText}>
               <Text style={styles.cardTitle}>{member.name}</Text>
               <Text style={styles.cardSubtitle}>{member.position}</Text>
-              <Text style={styles.cardMeta}>{member.email}</Text>
+              {member.email ? (
+                <Text style={styles.cardMeta}>{member.email}</Text>
+              ) : null}
               {member.imageName ? (
                 <Text style={styles.cardMeta}>{member.imageName}</Text>
               ) : null}
