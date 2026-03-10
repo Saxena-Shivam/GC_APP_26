@@ -15,8 +15,21 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { backend_link } from "../utils/constants";
 import FollowTeamComponent from "../Components/FollowTeamComponent";
+import displayTeamName from "../utils/displayTeamName";
 
 const { width } = Dimensions.get("window");
+
+const normalizeTeamKey = (team) => {
+  if (team === "ECE_META_EP") return "ECE_META";
+  if (
+    team === "MSc_ITEP_MNC" ||
+    team === "MSC_ITEP_MNC" ||
+    team === "MSC+ITEP+MNC"
+  ) {
+    return "MSc_ITEP";
+  }
+  return team;
+};
 
 export default function NotificationsPage() {
   const LoginCtx = useContext(LoginContext);
@@ -70,7 +83,7 @@ export default function NotificationsPage() {
       // Show all "All" notifications + notifications for followed teams
       const filteredNotifications = allNotifications.filter((notif) => {
         if (notif.team === "All") return true;
-        return followedTeams.includes(notif.team);
+        return followedTeams.includes(normalizeTeamKey(notif.team));
       });
 
       // Sort by timestamp (newest first)
@@ -135,6 +148,7 @@ export default function NotificationsPage() {
 
   const getTeamColor = (team) => {
     if (team === "All") return "#d41d77";
+    const normalizedTeam = normalizeTeamKey(team);
     const colors = {
       CSE: "#D41D77",
       ECE_META: "#4ECDC4",
@@ -145,7 +159,7 @@ export default function NotificationsPage() {
       MSc_ITEP: "#FCBAD3",
       PHD: "#A8E6CF",
     };
-    return colors[team] || "#888";
+    return colors[normalizedTeam] || "#888";
   };
 
   const renderNotification = ({ item }) => (
@@ -164,7 +178,9 @@ export default function NotificationsPage() {
               { backgroundColor: getTeamColor(item.team) },
             ]}
           >
-            {item.team || "General"}
+            {item.team === "All"
+              ? "All"
+              : displayTeamName(normalizeTeamKey(item.team)) || "General"}
           </Text>
         </View>
         <Text style={styles.timeText}>{formatDate(item.timestamp)}</Text>

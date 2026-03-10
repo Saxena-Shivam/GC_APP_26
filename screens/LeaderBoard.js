@@ -14,6 +14,7 @@ import axios from "axios";
 import { backend_link } from "../utils/constants";
 import setProperTeamName from "../utils/setProperTeamName";
 import { initialBranchesData } from "../utils/initialScoreData";
+import displayTeamName from "../utils/displayTeamName";
 
 const formatDate = (datestr) => {
   const date = new Date(datestr);
@@ -131,7 +132,7 @@ export default function Leaderboard() {
             />
           ) : null}
           <Text style={styles.podiumName}>
-            {top3[1]?.Name === "ECE_META" ? "ECE_META_EP" : top3[1]?.Name}
+            {displayTeamName(top3[1]?.Name)}
           </Text>
           <Text style={styles.podiumScore}>{top3[1]?.Score}</Text>
         </View>
@@ -147,7 +148,7 @@ export default function Leaderboard() {
             />
           ) : null}
           <Text style={styles.podiumName}>
-            {top3[0]?.Name === "ECE_META" ? "ECE_META_EP" : top3[0]?.Name}
+            {displayTeamName(top3[0]?.Name)}
           </Text>
           <Text style={styles.podiumScore}>{top3[0]?.Score}</Text>
         </View>
@@ -163,7 +164,7 @@ export default function Leaderboard() {
             />
           ) : null}
           <Text style={styles.podiumName}>
-            {top3[2]?.Name === "ECE_META" ? "ECE_META_EP" : top3[2]?.Name}
+            {displayTeamName(top3[2]?.Name)}
           </Text>
           <Text style={styles.podiumScore}>{top3[2]?.Score}</Text>
         </View>

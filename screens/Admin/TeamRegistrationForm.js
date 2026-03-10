@@ -128,6 +128,14 @@ const TeamRegistrationForm = ({ route, navigation }) => {
   };
 
   const submitRegistration = async (isDraft = false) => {
+    if (existingStatus === "submitted") {
+      Alert.alert(
+        "Locked",
+        "This registration is already submitted and cannot be edited.",
+      );
+      return;
+    }
+
     if (!validateParticipants()) return;
     if (!userEmail) {
       Alert.alert("Missing Email", "Login email not found. Please re-login.");
@@ -186,7 +194,8 @@ const TeamRegistrationForm = ({ route, navigation }) => {
   };
 
   const isPastEvent = timestamp && timestamp < Date.now();
-  const isFormLocked = loading || prefillLoading;
+  const isSubmitted = existingStatus === "submitted";
+  const isFormLocked = loading || prefillLoading || isSubmitted;
 
   return (
     <View style={styles.container}>
@@ -250,8 +259,10 @@ const TeamRegistrationForm = ({ route, navigation }) => {
               color="#4CAF50"
             />
             <Text style={styles.existingText}>
-              Registration already {existingStatus}. You can edit and submit
-              again.
+              Registration already {existingStatus}.
+              {isSubmitted
+                ? " It is locked and cannot be edited."
+                : " You can continue editing the draft."}
             </Text>
           </View>
         )}
@@ -372,7 +383,7 @@ const TeamRegistrationForm = ({ route, navigation }) => {
       </ScrollView>
 
       {/* Footer Buttons */}
-      {!isPastEvent && (
+      {!isPastEvent && !isSubmitted && (
         <View style={styles.footer}>
           <TouchableOpacity
             style={[styles.footerBtn, styles.draftBtn]}

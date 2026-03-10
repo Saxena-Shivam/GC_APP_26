@@ -150,13 +150,15 @@ const RegisterTeam = ({ navigation }) => {
   const renderEventCard = (event) => {
     const statusBadge = getStatusBadge(event.registrationStatus);
     const isPastEvent = event.timestamp && event.timestamp < Date.now();
+    const isSubmitted = event.registrationStatus === "submitted";
+    const canRegister = !isPastEvent && !isSubmitted;
 
     return (
       <TouchableOpacity
         key={event.eventId}
         style={[styles.eventCard, isPastEvent && styles.pastEventCard]}
-        onPress={() => !isPastEvent && handleRegister(event)}
-        disabled={isPastEvent}
+        onPress={() => canRegister && handleRegister(event)}
+        disabled={!canRegister}
       >
         {/* Header */}
         <View style={styles.cardHeader}>
@@ -234,7 +236,7 @@ const RegisterTeam = ({ navigation }) => {
             <Text style={styles.statusText}>{statusBadge.text}</Text>
           </View>
 
-          {!isPastEvent && (
+          {canRegister && (
             <TouchableOpacity
               style={styles.registerBtn}
               onPress={() => handleRegister(event)}
@@ -245,9 +247,17 @@ const RegisterTeam = ({ navigation }) => {
                 color="#fff"
               />
               <Text style={styles.registerBtnText}>
-                {event.registrationStatus ? "Edit" : "Register"}
+                {event.registrationStatus === "draft"
+                  ? "Edit Draft"
+                  : "Register"}
               </Text>
             </TouchableOpacity>
+          )}
+
+          {isSubmitted && (
+            <View style={styles.pastBadge}>
+              <Text style={styles.pastText}>Locked</Text>
+            </View>
           )}
 
           {isPastEvent && (

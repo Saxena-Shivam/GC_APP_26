@@ -14,6 +14,7 @@ import axios from "axios";
 import { backend_link } from "../utils/constants";
 import logoPaths from "../utils/logoPaths";
 import { ActivityIndicator } from "react-native-paper";
+import displayTeamName from "../utils/displayTeamName";
 
 const FollowTeamComponent = (props) => {
   const LoginCtx = useContext(LoginContext);
@@ -35,7 +36,7 @@ const FollowTeamComponent = (props) => {
       );
       console.log(response.data);
       console.log(response1.data);
-      Alert.alert("Now you are following team " + teamName);
+      Alert.alert("Now you are following team " + displayTeamName(teamName));
       props.setReload((prev) => !prev);
       return response;
     } catch (err) {
@@ -63,7 +64,7 @@ const FollowTeamComponent = (props) => {
       );
       //console.log(response.data);
       //console.log(response1.data);
-      Alert.alert("You have Unfollowed the team " + teamName);
+      Alert.alert("You have Unfollowed the team " + displayTeamName(teamName));
       props.setReload((prev) => !prev);
 
       return response;
@@ -85,7 +86,9 @@ const FollowTeamComponent = (props) => {
           />
         </View>
         <View style={styles.branchname}>
-          <Text style={styles.LeaderBoardNameHolder}>{props.branchData}</Text>
+          <Text style={styles.LeaderBoardNameHolder}>
+            {displayTeamName(props.branchData)}
+          </Text>
         </View>
 
         {!props.isFollowing ? (

@@ -123,7 +123,7 @@ const AddSportEventResult = () => {
     try {
       const response = await axios.post(
         backend_link + "api/event/addEvent",
-        body
+        body,
       );
       console.log(response.data);
       Alert.alert("Success", response.data.message);
@@ -153,7 +153,7 @@ const AddSportEventResult = () => {
         },
         { text: "Yes", onPress: submitHandler },
       ],
-      { cancelable: false }
+      { cancelable: false },
     );
   };
   return (
@@ -435,7 +435,7 @@ const AddSportEventResult = () => {
               }}
             >
               <View style={styles.box}>
-                <Text style={styles.text}>Team H: Msc-Itep</Text>
+                <Text style={styles.text}>Team H: MSc_ITEP_MNC</Text>
               </View>
               <View>
                 <TextInput

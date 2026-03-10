@@ -18,6 +18,7 @@ import {
 import logoPaths from "../../utils/logoPaths";
 import setProperTeamName from "../../utils/setProperTeamName";
 import { backend_link } from "../../utils/constants";
+import displayTeamName from "../../utils/displayTeamName";
 import { LoginContext } from "../../store/LoginContext";
 import { useContext, useState, useEffect } from "react";
 
@@ -172,7 +173,7 @@ export default function PlayerScreen({ route }) {
                 style={styles.voteButton}
               >
                 <Text style={styles.voteButtonText}>
-                  {key === "ECE_META" ? "ECE_META_EP" : key}
+                  {displayTeamName(key)}
                 </Text>
                 <Text style={[styles.voteButtonText, { fontSize: 10 }]}>
                   ({data.length})
@@ -196,7 +197,7 @@ export default function PlayerScreen({ route }) {
               <Text
                 style={{ fontWeight: "bold", fontSize: 20, marginBottom: 10 }}
               >
-                {key} - {data.length} Participant(s)
+                {displayTeamName(key)} - {data.length} Participant(s)
               </Text>
               <ScrollView style={{ maxHeight: 400 }}>
                 {data.length === 0 ? (

@@ -310,7 +310,7 @@ const AddContention = ({ navigation }) => {
                 <Picker.Item label="EE" value="EE" />
                 <Picker.Item label="PhD" value="PHD" />
                 <Picker.Item label="MECH" value="MECH" />
-                <Picker.Item label="MSc+ITEP" value="MSc_ITEP" />
+                <Picker.Item label="MSc_ITEP_MNC" value="MSc_ITEP" />
               </Picker>
             </View>
           </View>

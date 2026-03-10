@@ -595,7 +595,7 @@ const UpdateEvent = ({ route, navigation }) => {
               }}
             >
               <View style={styles.box}>
-                <Text style={styles.text}>Team H: MSC-ITEP</Text>
+                <Text style={styles.text}>Team H: MSc_ITEP_MNC</Text>
               </View>
               <View style={{ flex: 1 }}>
                 <TextInput

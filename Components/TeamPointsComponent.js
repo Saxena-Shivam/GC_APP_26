@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
+import displayTeamName from "../utils/displayTeamName";
 
 const TeamPointsComponent = (props) => {
   return (
@@ -6,7 +7,7 @@ const TeamPointsComponent = (props) => {
       <View style={styles.LeaderBoardElement}>
         <View style={styles.branchname}>
           <Text style={styles.LeaderBoardNameHolder}>
-            {props.branchData[0]}
+            {displayTeamName(props.branchData[0])}
           </Text>
         </View>
         <View style={styles.points}>

@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
+import displayTeamName from "../utils/displayTeamName";
 
 const LeaderBoardElement = (props) => {
   console.log("LeaderBoardElement", props);
@@ -16,9 +17,7 @@ const LeaderBoardElement = (props) => {
       </View>
       <View style={styles.branchname}>
         <Text style={styles.LeaderBoardNameHolder}>
-          {props.branchData.Name === "ECE_META"
-            ? "ECE_META_EP"
-            : props.branchData.Name}
+          {displayTeamName(props.branchData.Name)}
         </Text>
       </View>
       <View style={styles.points}>

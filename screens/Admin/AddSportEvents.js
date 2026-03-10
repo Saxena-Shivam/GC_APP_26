@@ -315,7 +315,7 @@ const AddLiveEvents = () => {
               <Picker.Item label="EE" value="EE" />
               <Picker.Item label="PhD" value="PHD" />
               <Picker.Item label="MECH" value="MECH" />
-              <Picker.Item label="MSC+ITEP" value="MSc_ITEP" />
+              <Picker.Item label="MSc_ITEP_MNC" value="MSc_ITEP" />
             </Picker>
           </TouchableOpacity>
         </View>
@@ -345,7 +345,7 @@ const AddLiveEvents = () => {
               <Picker.Item label="EE" value="EE" />
               <Picker.Item label="PhD" value="PHD" />
               <Picker.Item label="MECH" value="MECH" />
-              <Picker.Item label="MSC+ITEP" value="MSc_ITEP" />
+              <Picker.Item label="MSc_ITEP_MNC" value="MSc_ITEP" />
             </Picker>
           </TouchableOpacity>
         </View>

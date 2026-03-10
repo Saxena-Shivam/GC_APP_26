@@ -17,6 +17,7 @@ import teamColors from "../utils/teamColors";
 import { backend_link } from "../utils/constants";
 import axios from "axios";
 import { LoginContext } from "../store/LoginContext";
+import displayTeamName from "../utils/displayTeamName";
 
 const formatDate = (datestr) => {
   const date = new Date(datestr);
@@ -222,7 +223,7 @@ export default function TeamPoints({ route }) {
                 {branchOptions.map((branchId) => (
                   <Picker.Item
                     key={branchId}
-                    label={branchId}
+                    label={displayTeamName(branchId)}
                     value={branchId}
                   />
                 ))}
@@ -245,7 +246,7 @@ export default function TeamPoints({ route }) {
                 />
               </View>
               <View style={styles.summaryRight}>
-                <Text style={styles.branchName}>{team}</Text>
+                <Text style={styles.branchName}>{displayTeamName(team)}</Text>
                 <Text style={styles.branchTotalPoints}>{totalPoints()}</Text>
                 <Text style={styles.branchPointsLabel}>Total Points</Text>
               </View>

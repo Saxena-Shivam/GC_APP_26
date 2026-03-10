@@ -430,7 +430,7 @@ const AddTechCultEvent = () => {
               }}
             >
               <View style={styles.box}>
-                <Text style={styles.text}>Team H: Msc-Itep</Text>
+                <Text style={styles.text}>Team H: MSc_ITEP_MNC</Text>
               </View>
               <View>
                 <TextInput
